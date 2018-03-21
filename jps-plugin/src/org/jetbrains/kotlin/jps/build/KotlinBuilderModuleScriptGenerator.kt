@@ -116,7 +116,7 @@ object KotlinBuilderModuleScriptGenerator {
                     outputDir.absolutePath,
                     moduleSources,
                     findSourceRoots(context, target),
-                    findClassPathRoots(target),
+                    findClassPathRoots(target) + findCommonModulesOutputPathRoots(context, target),
                     findModularJdkRoot(target),
                     targetId.type,
                     (targetType as JavaModuleBuildTargetType).isTests,
@@ -177,6 +177,18 @@ object KotlinBuilderModuleScriptGenerator {
         return getProductionModulesWhichInternalsAreVisible(target).mapNotNullTo(SmartList<File>()) {
             JpsJavaExtensionService.getInstance().getOutputDirectory(it, false)
         }
+    }
+
+    private fun findCommonModulesOutputPathRoots(
+        context: CompileContext,
+        target: ModuleBuildTarget
+    ): Collection<File> {
+        val roots = context.projectDescriptor.buildRootIndex.getTempTargetRoots(target, context)
+        val result = ContainerUtil.newArrayList<File>()
+        for (root in roots) {
+            result += root.rootFile
+        }
+        return result
     }
 
     private fun findClassPathRoots(target: ModuleBuildTarget): Collection<File> {

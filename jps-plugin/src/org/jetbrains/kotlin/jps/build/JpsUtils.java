@@ -25,6 +25,7 @@ import org.jetbrains.jps.model.java.JpsJavaExtensionService;
 import org.jetbrains.jps.model.library.JpsLibrary;
 import org.jetbrains.jps.model.library.JpsLibraryRoot;
 import org.jetbrains.jps.model.library.JpsOrderRootType;
+import org.jetbrains.jps.model.module.JpsModule;
 import org.jetbrains.jps.util.JpsPathUtil;
 import org.jetbrains.kotlin.config.TargetPlatformKind;
 import org.jetbrains.kotlin.jps.JpsKotlinCompilerSettingsKt;
@@ -36,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 class JpsUtils {
     private static final Map<ModuleBuildTarget, Boolean> IS_KOTLIN_JS_MODULE_CACHE = new ConcurrentHashMap<ModuleBuildTarget, Boolean>();
+    private static final Map<JpsModule, Boolean> IS_KOTLIN_COMMON_MODULE_CACHE = new ConcurrentHashMap<JpsModule, Boolean>();
     private static final Map<String, Boolean> IS_KOTLIN_JS_STDLIB_JAR_CACHE = new ConcurrentHashMap<String, Boolean>();
     private JpsUtils() {}
 
@@ -43,6 +45,16 @@ class JpsUtils {
     static JpsJavaDependenciesEnumerator getAllDependencies(@NotNull ModuleBuildTarget target) {
         return JpsJavaExtensionService.dependencies(target.getModule()).recursively().exportedOnly()
                 .includedIn(JpsJavaClasspathKind.compile(target.isTests()));
+    }
+
+    static boolean isCommonKotlinModule(JpsModule module) {
+        Boolean cachedValue = IS_KOTLIN_COMMON_MODULE_CACHE.get(module);
+        if (cachedValue != null) return cachedValue;
+
+        boolean isKotlinCommonModule = isCommonKotlinModuleImpl(module);
+        IS_KOTLIN_COMMON_MODULE_CACHE.put(module, isKotlinCommonModule);
+
+        return isKotlinCommonModule;
     }
 
     static boolean isJsKotlinModule(@NotNull ModuleBuildTarget target) {
@@ -78,9 +90,15 @@ class JpsUtils {
         return false;
     }
 
+    private static boolean isCommonKotlinModuleImpl(JpsModule module) {
+        TargetPlatformKind<?> targetPlatform = JpsKotlinCompilerSettingsKt.getTargetPlatform(module);
+        return targetPlatform == TargetPlatformKind.Common.INSTANCE;
+    }
+
     @TestOnly
     static void resetCaches() {
         IS_KOTLIN_JS_MODULE_CACHE.clear();
+        IS_KOTLIN_COMMON_MODULE_CACHE.clear();
         IS_KOTLIN_JS_STDLIB_JAR_CACHE.clear();
     }
 }
