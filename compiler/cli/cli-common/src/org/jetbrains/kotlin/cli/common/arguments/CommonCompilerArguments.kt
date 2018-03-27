@@ -210,7 +210,31 @@ abstract class CommonCompilerArguments : CommonToolArguments() {
             if (properIeee754Comparisons) {
                 put(LanguageFeature.ProperIeee754Comparisons, LanguageFeature.State.ENABLED)
             }
+
+            if (internalArguments.isNotEmpty()) {
+                configureLanguageFeaturesFromInternalArgs(collector)
+            }
         }
+
+    private fun HashMap<LanguageFeature, LanguageFeature.State>.configureLanguageFeaturesFromInternalArgs(collector: MessageCollector) {
+        val languageSettingsParser = LanguageSettingsParser()
+        val featuresThatForcePreReleaseBinaries = mutableListOf<LanguageFeature>()
+        internalArguments
+            .mapNotNull { languageSettingsParser.parseInternalArgument(it, collector) }
+            .forEach { (feature, state) ->
+                put(feature, state)
+                if (state == LanguageFeature.State.ENABLED && feature.forcesPreReleaseBinariesIfEnabled()) {
+                    featuresThatForcePreReleaseBinaries += feature
+                }
+            }
+
+        if (featuresThatForcePreReleaseBinaries.isNotEmpty()) {
+            collector.report(
+                CompilerMessageSeverity.STRONG_WARNING,
+                "Manually enabled features ${featuresThatForcePreReleaseBinaries.joinToString()} will forced generation of pre-release binaries"
+            )
+        }
+    }
 
     fun configureLanguageVersionSettings(collector: MessageCollector): LanguageVersionSettings {
 
