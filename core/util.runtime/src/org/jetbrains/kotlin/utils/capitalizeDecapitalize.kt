@@ -58,6 +58,10 @@ fun String.capitalizeFirstWord(asciiOnly: Boolean = false): String {
     return toUpperCase(substring(0, secondWordStart)) + substring(secondWordStart)
 }
 
+fun String.capitalizeFirstLetter() =
+    if (this.isEmpty()) this
+    else this[0].toUpperCase() + substring(1)
+
 fun String.capitalizeAsciiOnly(): String {
     if (isEmpty()) return this
     val c = this[0]

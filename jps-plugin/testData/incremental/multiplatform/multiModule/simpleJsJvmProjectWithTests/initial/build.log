@@ -1,0 +1,52 @@
+Building cMain
+Exit code: OK
+------------------------------------------
+Building pJvmMain
+Compiling files:
+  cMain/src/serviceCMainHeader.kt
+  pJvmMain/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvmMain/src/JavaClass.java
+End of files
+Cleaning output files:
+  out/production/pJvmMain/META-INF/pJvmMain.kotlin_module
+  out/production/pJvmMain/ServiceImplKt.class
+End of files
+Compiling files:
+  cMain/src/serviceCMainHeader.kt
+  pJvmMain/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Building pJsMain
+Exit code: OK
+------------------------------------------
+Building cTests
+Exit code: OK
+------------------------------------------
+Building pJvmTests
+Compiling files:
+  cTests/src/serviceCTestsHeader.kt
+  pJvmTests/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvmTests/src/JavaClass.java
+End of files
+Cleaning output files:
+  out/production/pJvmTests/META-INF/pJvmTests.kotlin_module
+  out/production/pJvmTests/ServiceImplKt.class
+End of files
+Compiling files:
+  cTests/src/serviceCTestsHeader.kt
+  pJvmTests/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Building pJsTests
+Exit code: OK
+------------------------------------------

@@ -1,0 +1,52 @@
+Building ac
+Exit code: OK
+------------------------------------------
+Building bc
+Exit code: OK
+------------------------------------------
+Building aJs
+Exit code: OK
+------------------------------------------
+Building bJs
+Exit code: OK
+------------------------------------------
+Building aJvm
+Compiling files:
+  aJvm/src/serviceImpl.kt
+  ac/src/serviceAcHeader.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  aJvm/src/JavaClass.java
+End of files
+Cleaning output files:
+  out/production/aJvm/META-INF/aJvm.kotlin_module
+  out/production/aJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  aJvm/src/serviceImpl.kt
+  ac/src/serviceAcHeader.kt
+End of files
+Exit code: OK
+------------------------------------------
+Building bJvm
+Compiling files:
+  bJvm/src/serviceImpl.kt
+  bc/src/serviceBcHeader.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  bJvm/src/JavaClass.java
+End of files
+Cleaning output files:
+  out/production/bJvm/META-INF/bJvm.kotlin_module
+  out/production/bJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  bJvm/src/serviceImpl.kt
+  bc/src/serviceBcHeader.kt
+End of files
+Exit code: OK
+------------------------------------------

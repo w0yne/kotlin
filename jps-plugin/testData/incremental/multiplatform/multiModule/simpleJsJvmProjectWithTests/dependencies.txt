@@ -1,0 +1,20 @@
+cMain [common]
+cTests [common]
+
+cTests -> cMain [compile]
+
+// js
+pJsMain [js]
+pJsTests [js]
+
+pJsTests -> pJsMain [compile]
+pJsMain -> cMain [expectedBy]
+pJsTests -> cTests [expectedBy]
+
+// jvm
+pJvmMain [jvm]
+pJvmTests [jvm]
+
+pJvmTests -> pJvmMain [compile]
+pJvmMain -> cMain [expectedBy]
+pJvmTests -> cTests [expectedBy]
