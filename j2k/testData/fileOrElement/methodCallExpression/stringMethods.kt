@@ -1,5 +1,3 @@
-// ERROR: Type mismatch: inferred type is String but Charset was expected
-// ERROR: Type mismatch: inferred type is String but Charset was expected
 import java.nio.charset.Charset
 import java.util.*
 
