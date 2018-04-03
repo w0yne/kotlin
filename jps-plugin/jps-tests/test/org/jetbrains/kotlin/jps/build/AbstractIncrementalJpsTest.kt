@@ -42,17 +42,22 @@ import org.jetbrains.jps.incremental.messages.BuildMessage
 import org.jetbrains.jps.model.JpsModuleRootModificationUtil
 import org.jetbrains.jps.model.java.JpsJavaExtensionService
 import org.jetbrains.jps.util.JpsPathUtil
+import org.jetbrains.kotlin.cli.common.arguments.K2MetadataCompilerArguments
 import org.jetbrains.kotlin.config.IncrementalCompilation
 import org.jetbrains.kotlin.incremental.CacheVersion
 import org.jetbrains.kotlin.incremental.LookupSymbol
 import org.jetbrains.kotlin.incremental.testingUtils.*
+import org.jetbrains.kotlin.jps.build.dependeciestxt.DependenciesTxt
+import org.jetbrains.kotlin.jps.build.dependeciestxt.DependenciesTxtBuilder
 import org.jetbrains.kotlin.jps.incremental.getKotlinCache
 import org.jetbrains.kotlin.jps.incremental.withLookupStorage
 import org.jetbrains.kotlin.jps.model.JpsKotlinFacetModuleExtension
 import org.jetbrains.kotlin.test.KotlinTestUtils
 import org.jetbrains.kotlin.utils.Printer
-import org.jetbrains.kotlin.utils.keysToMap
-import java.io.*
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.PrintStream
 import java.util.*
 import java.util.concurrent.Future
 import kotlin.reflect.jvm.javaField
@@ -171,7 +176,7 @@ abstract class AbstractIncrementalJpsTest(
         }
     }
 
-    private fun initialMake(): MakeResult {
+    protected fun initialMake(): MakeResult {
         val makeResult = build()
 
         val initBuildLogFile = File(testDataDir, "init-build.log")
@@ -230,20 +235,11 @@ abstract class AbstractIncrementalJpsTest(
         rebuildAndCheckOutput(makeOverallResult)
     }
 
-    private fun readModuleDependencies(): Map<String, List<DependencyDescriptor>>? {
+    private fun readModuleDependencies(): DependenciesTxt? {
         val dependenciesTxt = File(testDataDir, "dependencies.txt")
         if (!dependenciesTxt.exists()) return null
 
-        val result = HashMap<String, List<DependencyDescriptor>>()
-        for (line in dependenciesTxt.readLines()) {
-            val split = line.split("->")
-            val module = split[0]
-            val dependencies = if (split.size > 1) split[1] else ""
-            val dependencyList = dependencies.split(",").filterNot { it.isEmpty() }
-            result[module] = dependencyList.map(::parseDependency)
-        }
-
-        return result
+        return DependenciesTxtBuilder().readFile(dependenciesTxt)
     }
 
     protected open fun createBuildLog(incrementalMakeResults: List<AbstractIncrementalJpsTest.MakeResult>): String =
@@ -277,6 +273,21 @@ abstract class AbstractIncrementalJpsTest(
         val lastMakeResult = otherMakeResults.last()
         rebuildAndCheckOutput(lastMakeResult)
         clearCachesRebuildAndCheckOutput(lastMakeResult)
+    }
+
+    protected open fun doInitialMakeTest(testDataPath: String) {
+        testDataDir = File(testDataPath)
+        workDir = FileUtilRt.createTempDirectory(TEMP_DIRECTORY_TO_USE, "jps-build", null)
+        Disposer.register(testRootDisposable, Disposable { FileUtilRt.delete(workDir) })
+
+        configureModules()
+        val results = initialMake()
+
+        val buildLogFile = buildLogFinder.findBuildLog(testDataDir)
+
+        if (buildLogFile != null && buildLogFile.exists()) {
+            UsefulTestCase.assertSameLinesWithFile(buildLogFile.absolutePath, results.log)
+        } else throw IllegalStateException("No build log file in $testDataDir")
     }
 
     private fun createMappingsDump(project: ProjectDescriptor) =
@@ -372,7 +383,7 @@ abstract class AbstractIncrementalJpsTest(
     }
 
     // null means one module
-    private fun configureModules(): Set<String>? {
+    protected fun configureModules(): Set<String>? {
         fun prepareModuleSources(moduleName: String?) {
             val sourceDirName = moduleName?.let { "$it/src" } ?: "src"
             val filePrefix = moduleName?.let { "${it}_" } ?: ""
@@ -382,42 +393,63 @@ abstract class AbstractIncrementalJpsTest(
             preProcessSources(sourceDestinationDir)
         }
 
-        JpsJavaExtensionService.getInstance().getOrCreateProjectExtension(myProject).outputUrl = JpsPathUtil.pathToUrl(getAbsolutePath("out"))
+        val outputUrl = JpsPathUtil.pathToUrl(getAbsolutePath("out"))
+        JpsJavaExtensionService.getInstance().getOrCreateProjectExtension(myProject).outputUrl = outputUrl
 
         val jdk = addJdk("my jdk")
-        val moduleDependencies = readModuleDependencies()
+        val dependenciesTxt = readModuleDependencies()
         mapWorkingToOriginalFile = hashMapOf()
 
         val moduleNames: Set<String>?
-        if (moduleDependencies == null) {
+        if (dependenciesTxt == null) {
             addModule("module", arrayOf(getAbsolutePath("src")), null, null, jdk)
             prepareModuleSources(moduleName = null)
             moduleNames = null
-        }
-        else {
-            val nameToModule = moduleDependencies.keys
-                    .keysToMap { addModule(it, arrayOf(getAbsolutePath("$it/src")), null, null, jdk)!! }
+        } else {
+            dependenciesTxt.modules.forEach {
+                val module = addModule(
+                    it.name,
+                    arrayOf(getAbsolutePath("${it.name}/src")),
+                    null,
+                    null,
+                    jdk
+                )!!
 
-            for ((moduleName, dependencies) in moduleDependencies) {
-                val module = nameToModule[moduleName]!!
+                val kotlinFacetSettings = it.kotlinFacetSettings
+                if (kotlinFacetSettings != null) {
+                    val compilerArguments = kotlinFacetSettings.compilerArguments
+                    if (compilerArguments is K2MetadataCompilerArguments) {
+                        compilerArguments.destination = outputUrl
+                    }
 
-                for (dependency in dependencies) {
-                    JpsModuleRootModificationUtil.addDependency(module, nameToModule[dependency.name],
-                                                                JpsJavaDependencyScope.COMPILE, dependency.exported)
+                    module.container.setChild(
+                        JpsKotlinFacetModuleExtension.KIND,
+                        JpsKotlinFacetModuleExtension(kotlinFacetSettings)
+                    )
                 }
+
+                it.jpsModule = module
             }
 
-            for (module in nameToModule.values) {
-                prepareModuleSources(module.name)
+            dependenciesTxt.dependencies.forEach {
+                JpsModuleRootModificationUtil.addDependency(
+                    it.from.jpsModule,
+                    it.to.jpsModule,
+                    it.scope,
+                    it.exported
+                )
             }
 
-            moduleNames = nameToModule.keys
+            dependenciesTxt.modules.forEach {
+                prepareModuleSources(it.name)
+            }
+
+            moduleNames = dependenciesTxt.modules.map { it.name }.toSet()
         }
         AbstractKotlinJpsBuildTestCase.addKotlinStdlibDependency(myProject)
         AbstractKotlinJpsBuildTestCase.addKotlinTestDependency(myProject)
         return moduleNames
     }
-
 
     protected open fun preProcessSources(srcDir: File) {
     }
@@ -512,10 +544,3 @@ private class MockConstantSearch(private val workDir: File) : Callbacks.Constant
 
 internal val ProjectDescriptor.allModuleTargets: Collection<ModuleBuildTarget>
     get() = buildTargetIndex.allTargets.filterIsInstance<ModuleBuildTarget>()
-
-private class DependencyDescriptor(val name: String, val exported: Boolean)
-
-private fun parseDependency(dependency: String): DependencyDescriptor =
-        DependencyDescriptor(dependency.removeSuffix(EXPORTED_SUFFIX), dependency.endsWith(EXPORTED_SUFFIX))
-
-private val EXPORTED_SUFFIX = "[exported]"

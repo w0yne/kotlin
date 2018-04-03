@@ -1,0 +1,10 @@
+c1 [common]
+c2 [common]
+pJvm [jvm]
+pJs [js]
+
+pJvm -> c1 [expectedBy]
+pJvm -> c2 [expectedBy]
+
+pJs -> c1 [expectedBy]
+pJs -> c2 [expectedBy]

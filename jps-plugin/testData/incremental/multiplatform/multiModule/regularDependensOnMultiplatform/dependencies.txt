@@ -1,0 +1,12 @@
+c [common]
+pJvm [jvm]
+pJs [js]
+
+pJvm -> c [expectedBy]
+pJs -> c [expectedBy]
+
+rJvm [jvm]
+rJvm -> pJvm [compile]
+
+rJs [js]
+rJs -> pJs [compile]

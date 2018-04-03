@@ -149,6 +149,7 @@ import org.jetbrains.kotlin.j2k.AbstractJavaToKotlinConverterMultiFileTest
 import org.jetbrains.kotlin.j2k.AbstractJavaToKotlinConverterSingleFileTest
 import org.jetbrains.kotlin.jps.build.*
 import org.jetbrains.kotlin.jps.build.android.AbstractAndroidJpsTestCase
+import org.jetbrains.kotlin.jps.build.dependeciestxt.generateMppJpsIncTestCases
 import org.jetbrains.kotlin.jps.incremental.AbstractJsProtoComparisonTest
 import org.jetbrains.kotlin.jps.incremental.AbstractJvmProtoComparisonTest
 import org.jetbrains.kotlin.kapt3.test.AbstractClassFileToSourceStubConverterTest
@@ -927,6 +928,15 @@ fun main(args: Array<String>) {
             model("incremental/withJava", extension = null, excludeParentDirs = true)
             model("incremental/inlineFunCallSite", extension = null, excludeParentDirs = true)
             model("incremental/classHierarchyAffected", extension = null, excludeParentDirs = true)
+        }
+
+        generateMppJpsIncTestCases(testDataRoot, "incremental/multiplatform/multiModule")
+
+        testClass<AbstractMultiplatformJpsTest> {
+            model(
+                "incremental/multiplatform/multiModule", extension = null, excludeParentDirs = true,
+                testClassName = "MultiplatformMultiModule", recursive = true
+            )
         }
 
         testClass<AbstractJvmLookupTrackerTest> {

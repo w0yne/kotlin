@@ -64,4 +64,118 @@ public class IncrementalMultiplatformJsCompilerRunnerTestGenerated extends Abstr
             KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/touchExpect"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
         }
     }
+
+    @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule")
+    @TestDataPath("$PROJECT_ROOT")
+    @RunWith(JUnit3RunnerWithInners.class)
+    public static class MultiModule extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+        public void testAllFilesPresentInMultiModule() throws Exception {
+            KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/dependent")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class Dependent extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInDependent() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/dependent"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/dependent/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/multiplatformDependsOnRegular")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class MultiplatformDependsOnRegular extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInMultiplatformDependsOnRegular() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/multiplatformDependsOnRegular"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/multiplatformDependsOnRegular/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommon")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class OnePlatformTwoCommon extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInOnePlatformTwoCommon() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommon"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommon/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class OnePlatformTwoCommonDependent extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInOnePlatformTwoCommonDependent() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/regularDependensOnMultiplatform")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class RegularDependensOnMultiplatform extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInRegularDependensOnMultiplatform() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/regularDependensOnMultiplatform"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/regularDependensOnMultiplatform/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/simple")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class Simple extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInSimple() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/simple"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/simple/initial/");
+                doTest(fileName);
+            }
+        }
+
+        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/simpleJsJvmProjectWithTests")
+        @TestDataPath("$PROJECT_ROOT")
+        @RunWith(JUnit3RunnerWithInners.class)
+        public static class SimpleJsJvmProjectWithTests extends AbstractIncrementalMultiplatformJsCompilerRunnerTest {
+            public void testAllFilesPresentInSimpleJsJvmProjectWithTests() throws Exception {
+                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/simpleJsJvmProjectWithTests"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
+            }
+
+            @TestMetadata("initial")
+            public void testInitial() throws Exception {
+                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/simpleJsJvmProjectWithTests/initial/");
+                doTest(fileName);
+            }
+        }
+    }
 }

@@ -1,0 +1,31 @@
+Building c2
+Exit code: OK
+------------------------------------------
+Building c1
+Exit code: OK
+------------------------------------------
+Building pJs
+Exit code: OK
+------------------------------------------
+Building pJvm
+Compiling files:
+  c1/src/serviceC1Header.kt
+  c2/src/serviceC2Header.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvm/src/JavaClass.java
+End of files
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  c1/src/serviceC1Header.kt
+  c2/src/serviceC2Header.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------

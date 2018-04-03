@@ -1,0 +1,13 @@
+// regular module R
+
+r [jvm]
+
+// common module
+
+c [common]
+pJvm [jvm]
+pJs [js]
+
+pJvm -> r [compile]
+pJvm -> c [expectedBy]
+pJs -> c [expectedBy]
