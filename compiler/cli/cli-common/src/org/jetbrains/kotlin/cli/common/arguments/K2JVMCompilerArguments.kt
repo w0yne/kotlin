@@ -228,6 +228,13 @@ class K2JVMCompilerArguments : CommonCompilerArguments() {
     )
     var noExceptionOnExplicitEqualsForBoxedNull by FreezableVar(false)
 
+    @Argument(
+        value = "-Xoutput-imports",
+        valueDescription = "<path>",
+        description = "Output imports from all compiled files to the specified file in JSON format"
+    )
+    var outputImports: String? by FreezableVar(null)
+
     // Paths to output directories for friend modules.
     var friendPaths: Array<String>? by FreezableVar(null)
 

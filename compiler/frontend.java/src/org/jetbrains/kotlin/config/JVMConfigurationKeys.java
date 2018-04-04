@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.descriptors.impl.ModuleDescriptorImpl;
 import org.jetbrains.kotlin.load.java.JavaClassesTracker;
 import org.jetbrains.kotlin.load.kotlin.incremental.components.IncrementalCompilationComponents;
 import org.jetbrains.kotlin.modules.Module;
+import org.jetbrains.kotlin.resolve.jvm.extensions.AnalysisHandlerExtension;
 import org.jetbrains.kotlin.script.KotlinScriptDefinition;
 
 import java.io.File;
@@ -135,4 +136,7 @@ public class JVMConfigurationKeys {
 
     public static final CompilerConfigurationKey<List<String>> ADDITIONAL_JAVA_MODULES =
             CompilerConfigurationKey.create("additional Java modules");
+
+    public static final CompilerConfigurationKey<String> OUTPUT_IMPORTS =
+            CompilerConfigurationKey.create("output imports");
 }
