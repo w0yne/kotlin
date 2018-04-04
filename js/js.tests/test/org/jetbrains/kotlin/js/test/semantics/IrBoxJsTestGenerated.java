@@ -1348,18 +1348,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureFunctionAsArgument.kt")
         public void testClosureFunctionAsArgument() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureFunctionAsArgument.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureFunctionByInnerFunction.kt")
@@ -1501,18 +1490,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureInWithInsideWith.kt")
         public void testClosureInWithInsideWith() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureInWithInsideWith.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureLambdaVarInLambda.kt")

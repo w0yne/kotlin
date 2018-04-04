@@ -6,18 +6,22 @@
 package org.jetbrains.kotlin.ir.backend.js.transformers.irToJs
 
 import org.jetbrains.kotlin.ir.backend.js.JsIntrinsics
+import org.jetbrains.kotlin.ir.backend.js.JsIrBackendContext
 import org.jetbrains.kotlin.ir.backend.js.utils.Namer
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
 import org.jetbrains.kotlin.js.backend.ast.*
 
 typealias IrCallTransformer = (IrCall, List<JsExpression>) -> JsExpression
 
-class JsIntrinsicTransformers(intrinsics: JsIntrinsics) {
+class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
     private val transformers: Map<IrSymbol, IrCallTransformer>
 
     init {
+        val intrinsics = backendContext.intrinsics
+
         transformers = mutableMapOf()
 
         transformers.apply {
@@ -62,12 +66,22 @@ class JsIntrinsicTransformers(intrinsics: JsIntrinsics) {
                 val classToCreate = call.getTypeArgument(0)!!
                 val prototype = prototypeOf(classToCreate.constructor.declarationDescriptor!!.name.toJsName().makeRef())
                 JsInvocation(Namer.JS_OBJECT_CREATE_FUNCTION, prototype)
+            }
 
+            add(backendContext.sharedVariablesManager.closureBoxConstrctorTypeSymbol) { _, args ->
+                val initializer = args[0]
+                val propertyInit = JsPropertyInitializer(JsNameRef("v"), initializer)
+                val objectLiteral = JsObjectLiteral()
+                objectLiteral.apply { propertyInitializers += propertyInit }
             }
         }
     }
 
     operator fun get(symbol: IrSymbol): IrCallTransformer? = transformers[symbol]
+}
+
+private fun MutableMap<IrSymbol, IrCallTransformer>.add(functionSymbol: IrSymbol, t: IrCallTransformer) {
+    put(functionSymbol, t)
 }
 
 private fun MutableMap<IrSymbol, IrCallTransformer>.add(function: IrFunction, t: IrCallTransformer) {
