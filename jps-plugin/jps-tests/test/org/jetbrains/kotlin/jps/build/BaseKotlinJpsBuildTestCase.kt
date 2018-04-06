@@ -17,13 +17,18 @@
 package org.jetbrains.kotlin.jps.build
 
 import org.jetbrains.jps.builders.JpsBuildTestCase
+import org.jetbrains.kotlin.cli.common.KOTLIN_COMPILER_ENVIRONMENT_KEEPALIVE_PROPERTY
 
 abstract class BaseKotlinJpsBuildTestCase : JpsBuildTestCase() {
+    private var keepAliveBackup: String? = null
+
     @Throws(Exception::class)
     override fun setUp() {
         super.setUp()
         JpsUtils.resetCaches()
         System.setProperty("kotlin.jps.tests", "true")
+        keepAliveBackup = getKeepAlive()
+        setKeepAlive("true")
     }
 
     @Throws(Exception::class)
@@ -33,5 +38,16 @@ abstract class BaseKotlinJpsBuildTestCase : JpsBuildTestCase() {
         super.tearDown()
         myModel = null
         myBuildParams.clear()
+        setKeepAlive(keepAliveBackup)
+    }
+
+    private fun getKeepAlive() =
+        System.getProperty(KOTLIN_COMPILER_ENVIRONMENT_KEEPALIVE_PROPERTY)
+
+    private fun setKeepAlive(newValue: String?) {
+        when (newValue) {
+            null -> System.clearProperty(KOTLIN_COMPILER_ENVIRONMENT_KEEPALIVE_PROPERTY)
+            else -> System.setProperty(KOTLIN_COMPILER_ENVIRONMENT_KEEPALIVE_PROPERTY, newValue)
+        }
     }
 }
