@@ -5,6 +5,7 @@ import java.util.*
 import java.io.File
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.plugins.ide.idea.model.IdeaModel
+import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.Kotlin2JsCompile
 import proguard.gradle.ProGuardTask
@@ -649,5 +650,74 @@ tasks.create("findShadowJarsInClasspath").doLast {
     for (project in rootProject.allprojects) {
         project.checkConfig("compileClasspath")
         project.checkConfig("testCompileClasspath")
+    }
+}
+
+private class BuildTimeReporter : TaskExecutionListener {
+    private enum class TaskCategory {
+        COMPILING_KOTLIN,
+        COMPILING_JAVA,
+        PROCESSING_JARS,
+        UNCATEGORIZED;
+
+        private fun String.toTitleCase() =
+            if (length <= 1) capitalize() else { get(0).toUpperCase() + substring(1).toLowerCase() }
+
+        fun description(): String =
+            name.replace("_", " ").toTitleCase()
+    }
+
+    private val taskStartTime = HashMap<Task, Long>()
+    private val categoryTimeNs = HashMap<TaskCategory, Long>()
+    private var totalTimeNs = 0L
+
+    @Synchronized
+    override fun beforeExecute(task: Task) {
+        taskStartTime[task] = System.nanoTime()
+    }
+
+    @Synchronized
+    override fun afterExecute(task: Task, state: TaskState) {
+        val startTimeNs = taskStartTime.remove(task) ?: return
+        val endTimeNs = System.nanoTime()
+        val timeNs = endTimeNs - startTimeNs
+        totalTimeNs += timeNs
+        val category = taskCategory(task)
+        categoryTimeNs[category] = (categoryTimeNs[category] ?: 0L) + timeNs
+    }
+
+    private fun taskCategory(task: Task): TaskCategory = when (task) {
+        is AbstractKotlinCompile<*> -> TaskCategory.COMPILING_KOTLIN
+        is JavaCompile -> TaskCategory.COMPILING_JAVA
+        is Jar, is ProGuardTask -> TaskCategory.PROCESSING_JARS
+        else -> TaskCategory.UNCATEGORIZED
+    }
+
+    private fun Double.asShortString() =
+        String.format("%.2f", this)
+
+    @Synchronized
+    fun report(log: Logger) {
+        val secondInNs = 1000_000_000
+        val totalTimeSec = totalTimeNs.toDouble() / secondInNs
+        if (totalTimeSec < 1) return
+
+        log.warn("Build time for tasks:")
+        for (category in TaskCategory.values()) {
+            val timeNs = categoryTimeNs[category] ?: 0L
+            val timeSec = timeNs.toDouble() / secondInNs
+            if (timeSec < 1) continue
+
+            val percent = timeSec / totalTimeSec * 100
+            log.warn("${category.description()}: ${timeSec.asShortString()}s (${percent.asShortString()}% of total time)")
+        }
+    }
+}
+
+afterEvaluate {
+    val listener = BuildTimeReporter()
+    gradle.taskGraph.addTaskExecutionListener(listener)
+    gradle.buildFinished {
+        listener.report(logger)
     }
 }
