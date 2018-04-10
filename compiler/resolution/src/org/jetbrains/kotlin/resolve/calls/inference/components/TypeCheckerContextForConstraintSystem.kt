@@ -65,11 +65,11 @@ abstract class TypeCheckerContextForConstraintSystem : TypeCheckerContext(errorT
 
         var answer: Boolean? = null
 
-        if (superType.anyBound(this::isMyTypeVariable)) {
+        if (superType.anyBound { this.isMyTypeVariable(it) }) {
             answer = simplifyLowerConstraint(superType, subType)
         }
 
-        if (subType.anyBound(this::isMyTypeVariable)) {
+        if (subType.anyBound { this.isMyTypeVariable(it) }) {
             return simplifyUpperConstraint(subType, superType) && (answer ?: true)
         } else {
             extractTypeVariableForSubtype(subType)?.let {
