@@ -5,3 +5,6 @@
 
 expect fun cMain_platformDependentCMain(): String
 fun cMain_platformIndependentCMain() = "common"
+
+fun cMainTest() {
+}

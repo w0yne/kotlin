@@ -118,21 +118,6 @@ public class IncrementalMultiplatformJvmCompilerRunnerTestGenerated extends Abst
             }
         }
 
-        @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent")
-        @TestDataPath("$PROJECT_ROOT")
-        @RunWith(JUnit3RunnerWithInners.class)
-        public static class OnePlatformTwoCommonDependent extends AbstractIncrementalMultiplatformJvmCompilerRunnerTest {
-            public void testAllFilesPresentInOnePlatformTwoCommonDependent() throws Exception {
-                KotlinTestUtils.assertAllTestsPresentByMetadata(this.getClass(), new File("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent"), Pattern.compile("^([^\\.]+)$"), TargetBackend.ANY, true);
-            }
-
-            @TestMetadata("initial")
-            public void testInitial() throws Exception {
-                String fileName = KotlinTestUtils.navigationMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/onePlatformTwoCommonDependent/initial/");
-                doTest(fileName);
-            }
-        }
-
         @TestMetadata("jps-plugin/testData/incremental/multiplatform/multiModule/regularDependensOnMultiplatform")
         @TestDataPath("$PROJECT_ROOT")
         @RunWith(JUnit3RunnerWithInners.class)
