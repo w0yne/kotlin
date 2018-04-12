@@ -79,7 +79,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
         }
 
         val allFiles = rootDir.walkTopDown().toSet()
-        val toDelete = allFiles.filter {!isSrc(it) && it !in actualFiles }
+        val toDelete = allFiles.filter { !isSrc(it) && it !in actualFiles }
         for (file in toDelete) {
             println("File deleted: $file")
             file.deleteRecursively()
@@ -129,14 +129,12 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
                     generateCommonFile(
                         module,
                         platformDependent = false,
-                        platformIndependent = true,
                         serviceName = "New",
                         fileNameSuffix = ".new.1"
                     )
                     generateCommonFile(
                         module,
                         platformDependent = false,
-                        platformIndependent = true,
                         serviceName = "New",
                         fileNameSuffix = ".touch.2"
                     )
@@ -232,7 +230,6 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
         private fun generateCommonFile(
             module: DependenciesTxt.Module,
             platformDependent: Boolean = true,
-            platformIndependent: Boolean = true,
             serviceName: String = "",
             fileNameSuffix: String = ""
         ) {
@@ -243,8 +240,21 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
                 if (platformDependent)
                     appendln("expect fun ${module.name}_platformDependent${serviceName(module, serviceName)}(): String")
 
-                if (platformIndependent)
-                    appendln("fun ${module.name}_platformIndependent${serviceName(module, serviceName)}() = \"common$fileNameSuffix\"")
+                appendln("fun ${module.name}_platformIndependent${serviceName(module, serviceName)}() = \"common$fileNameSuffix\"")
+
+                appendln()
+                appendln("fun ${module.name}Test() {")
+
+                if (platformDependent) {
+                    for (expectedBy in module.dependencies) {
+                        appendln("  ${expectedBy.to.name}_platformIndependent${serviceName(expectedBy.to, serviceName)}()")
+
+                        if (platformDependent)
+                            appendln("  ${expectedBy.to.name}_platformDependent${serviceName(expectedBy.to, serviceName)}()")
+                    }
+                }
+
+                appendln("}")
             })
         }
 
@@ -265,7 +275,12 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
 
                     if (platformDependent) {
                         for (expectedBy in module.expectedBy) {
-                            appendln("actual fun ${expectedBy.to.name}_platformDependent${serviceName(expectedBy.to, serviceName)}(): String = \"${module.name}$fileNameSuffix\"")
+                            appendln(
+                                "actual fun ${expectedBy.to.name}_platformDependent${serviceName(
+                                    expectedBy.to,
+                                    serviceName
+                                )}(): String = \"${module.name}$fileNameSuffix\""
+                            )
                         }
                     }
 

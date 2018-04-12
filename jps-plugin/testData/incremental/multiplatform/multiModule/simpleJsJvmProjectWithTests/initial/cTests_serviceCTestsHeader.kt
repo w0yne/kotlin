@@ -5,3 +5,8 @@
 
 expect fun cTests_platformDependentCTests(): String
 fun cTests_platformIndependentCTests() = "common"
+
+fun cTestsTest() {
+  cMain_platformIndependentCMain()
+  cMain_platformDependentCMain()
+}

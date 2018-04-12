@@ -13,10 +13,14 @@ import org.jetbrains.jps.incremental.CompileContext
 import org.jetbrains.jps.incremental.FSOperations
 import org.jetbrains.jps.incremental.ModuleBuildTarget
 import org.jetbrains.jps.incremental.fs.CompilationRound
+import org.jetbrains.jps.model.library.JpsOrderRootType
+import org.jetbrains.jps.model.module.JpsModule
+import org.jetbrains.jps.util.JpsPathUtil
 import org.jetbrains.kotlin.cli.common.arguments.CommonCompilerArguments
 import org.jetbrains.kotlin.compilerRunner.JpsCompilerEnvironment
 import org.jetbrains.kotlin.compilerRunner.JpsKotlinCompilerRunner
 import org.jetbrains.kotlin.jps.build.FSOperationsHelper
+import org.jetbrains.kotlin.jps.model.k2JsCompilerArguments
 import org.jetbrains.kotlin.jps.model.k2MetadataCompilerArguments
 import org.jetbrains.kotlin.jps.model.kotlinCompilerSettings
 import java.io.File
@@ -45,9 +49,47 @@ class KotlinCommonModuleBuildTarget(jpsModuleBuildTarget: ModuleBuildTarget) :
             module.k2MetadataCompilerArguments,
             module.kotlinCompilerSettings,
             environment,
+            dependenciesOutputDirs + libraryFiles,
             sources
         )
 
         return true
+    }
+
+    private val libraryFiles: List<String>
+        get() = mutableListOf<String>().also { result ->
+            for (library in allDependencies.libraries) {
+                for (root in library.getRoots(JpsOrderRootType.COMPILED)) {
+                    result.add(JpsPathUtil.urlToPath(root.url))
+                }
+            }
+        }
+
+    private val dependenciesOutputDirs: List<String>
+        get() = mutableListOf<String>().also { result ->
+            allDependencies.processModules { module ->
+                if (isTests) addDependencyMetaFile(module, result, isTests = true)
+
+                // note: production targets should be also added as dependency to test targets
+                addDependencyMetaFile(module, result, isTests = false)
+            }
+        }
+
+    val destination: String
+        get() = module.k2MetadataCompilerArguments.destination ?: outputDir.absolutePath
+
+    private fun addDependencyMetaFile(
+        module: JpsModule,
+        result: MutableList<String>,
+        isTests: Boolean
+    ) {
+        val dependencyBuildTarget = ModuleBuildTarget(module, isTests).kotlinData
+
+        if (dependencyBuildTarget != this@KotlinCommonModuleBuildTarget &&
+            dependencyBuildTarget is KotlinCommonModuleBuildTarget &&
+            dependencyBuildTarget.sources.isNotEmpty()
+        ) {
+            result.add(dependencyBuildTarget.destination)
+        }
     }
 }

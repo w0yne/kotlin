@@ -419,7 +419,9 @@ abstract class AbstractIncrementalJpsTest(
                 if (kotlinFacetSettings != null) {
                     val compilerArguments = kotlinFacetSettings.compilerArguments
                     if (compilerArguments is K2MetadataCompilerArguments) {
-                        compilerArguments.destination = outputUrl
+                        val out = getAbsolutePath("${it.name}/out")
+                        File(out).mkdirs()
+                        compilerArguments.destination = out
                     }
 
                     module.container.setChild(

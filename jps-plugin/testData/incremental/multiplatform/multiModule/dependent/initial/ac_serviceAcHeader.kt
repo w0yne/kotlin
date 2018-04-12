@@ -5,3 +5,6 @@
 
 expect fun ac_platformDependentAc(): String
 fun ac_platformIndependentAc() = "common"
+
+fun acTest() {
+}

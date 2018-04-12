@@ -5,3 +5,6 @@
 
 expect fun c2_platformDependentC2(): String
 fun c2_platformIndependentC2() = "common"
+
+fun c2Test() {
+}

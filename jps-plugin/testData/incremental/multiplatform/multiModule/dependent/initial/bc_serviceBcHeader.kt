@@ -5,3 +5,8 @@
 
 expect fun bc_platformDependentBc(): String
 fun bc_platformIndependentBc() = "common"
+
+fun bcTest() {
+  ac_platformIndependentAc()
+  ac_platformDependentAc()
+}
