@@ -16,8 +16,11 @@
 
 package org.jetbrains.kotlin.load.java.lazy.types
 
+import org.jetbrains.kotlin.builtins.functions.FunctionClassDescriptor
+import org.jetbrains.kotlin.builtins.functions.FunctionInvokeDescriptor
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
+import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.load.java.components.TypeUsage
 import org.jetbrains.kotlin.load.java.components.TypeUsage.COMMON
 import org.jetbrains.kotlin.load.java.components.TypeUsage.SUPERTYPE
@@ -28,7 +31,9 @@ import org.jetbrains.kotlin.load.java.lazy.types.JavaTypeFlexibility.*
 import org.jetbrains.kotlin.load.java.structure.*
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.platform.JavaToKotlinClassMap
+import org.jetbrains.kotlin.resolve.constants.IntValue
 import org.jetbrains.kotlin.types.*
 import org.jetbrains.kotlin.types.Variance.*
 import org.jetbrains.kotlin.types.typeUtil.createProjection
@@ -91,10 +96,10 @@ class JavaTypeResolver(
         }
 
         val lower =
-                computeSimpleJavaClassifierType(javaType, attr.withFlexibility(FLEXIBLE_LOWER_BOUND), lowerResult = null)
+                computeSimpleJavaClassifierType(javaType, attr.withFlexibility(JavaTypeFlexibility.FLEXIBLE_LOWER_BOUND), lowerResult = null)
                 ?: return errorType()
         val upper =
-                computeSimpleJavaClassifierType(javaType, attr.withFlexibility(FLEXIBLE_UPPER_BOUND), lowerResult = lower)
+                computeSimpleJavaClassifierType(javaType, attr.withFlexibility(JavaTypeFlexibility.FLEXIBLE_UPPER_BOUND), lowerResult = lower)
                 ?: return errorType()
 
         return if (isRaw) {
@@ -155,7 +160,9 @@ class JavaTypeResolver(
 
         val javaToKotlin = JavaToKotlinClassMap
 
-        val kotlinDescriptor = javaToKotlin.mapJavaToKotlin(fqName, c.module.builtIns) ?: return null
+        val kotlinDescriptor = javaToKotlin.mapJavaToKotlin(
+            fqName, c.module.builtIns, attr.relatedDeclarationAnnotations?.loadFunctionTypeArity()
+        ) ?: return null
 
         if (javaToKotlin.isReadOnly(kotlinDescriptor)) {
             if (attr.flexibility == FLEXIBLE_LOWER_BOUND ||
@@ -166,6 +173,12 @@ class JavaTypeResolver(
         }
 
         return kotlinDescriptor
+    }
+
+    private fun Annotations.loadFunctionTypeArity(): Int? {
+        val annotation = findAnnotation(FqName("kotlin.jvm.functions.Arity")) ?: return null
+        val value = annotation.allValueArguments[Name.identifier("value")] as? IntValue ?: return null
+        return value.value
     }
 
     // Returns true for covariant read-only container that has mutable pair with invariant parameter
@@ -221,18 +234,32 @@ class JavaTypeResolver(
                         }
 
                 RawSubstitution.computeProjection(
-                        parameter,
+                    parameter,
                         // if erasure happens due to invalid arguments number, use star projections instead
-                        if (isRaw) attr else attr.withFlexibility(INFLEXIBLE),
-                        erasedUpperBound
+                    if (isRaw) attr else attr.withFlexibility(JavaTypeFlexibility.INFLEXIBLE),
+                    erasedUpperBound
                 )
             }.toList()
         }
 
         if (typeParameters.size != javaType.typeArguments.size) {
+            // Function types with big arities can be denoted in Java code as `@Arity(42) FunctionN<String>`, which we translate to
+            // `(Any?, Any?, Any?, ..., Any?) -> String`
+            val functionClassArity = (constructor.declarationDescriptor as? FunctionClassDescriptor)?.arity
+            if (functionClassArity != null && functionClassArity >= FunctionInvokeDescriptor.BIG_ARITY) {
+                assert(javaType.typeArguments.isNotEmpty()) {
+                    "FunctionN type is either raw, or has at least one type argument representing the function return type: $javaType"
+                }
+                assert(typeParameters.size == functionClassArity + 1) { "$typeParameters != ${functionClassArity + 1}" }
+                val nullableAny = TypeProjectionImpl(c.module.builtIns.nullableAnyType)
+                return List(functionClassArity) { nullableAny } +
+                        transformToTypeProjection(javaType.typeArguments.first(), COMMON.toAttributes(), typeParameters.last())
+            }
+
             // Most of the time this means there is an error in the Java code
             return typeParameters.map { p -> TypeProjectionImpl(ErrorUtils.createErrorType(p.name.asString())) }.toList()
         }
+
         return javaType.typeArguments.withIndex().map {
             indexedArgument ->
             val (i, javaTypeArgument) = indexedArgument
@@ -275,7 +302,7 @@ class JavaTypeResolver(
     }
 
     private fun JavaTypeAttributes.isNullable(): Boolean {
-        if (flexibility == FLEXIBLE_LOWER_BOUND) return false
+        if (flexibility == JavaTypeFlexibility.FLEXIBLE_LOWER_BOUND) return false
 
         // even if flexibility is FLEXIBLE_UPPER_BOUND it's still can be not nullable for supetypes and annotation parameters
         return !isForAnnotationParameter && howThisTypeIsUsed != SUPERTYPE
@@ -292,12 +319,17 @@ internal fun makeStarProjection(
         StarProjectionImpl(typeParameter)
 }
 
+/**
+ * @param upperBoundOfTypeParameter if not null, the current type is an upper bound of this type parameter
+ * @param relatedDeclarationAnnotations for example, the method or field that this type is return type of. Is used to populate TYPE_USE annotations
+ * for classes compiled with older JVM targets where TYPE_USE is not available
+ */
 data class JavaTypeAttributes(
-        val howThisTypeIsUsed: TypeUsage,
-        val flexibility: JavaTypeFlexibility = INFLEXIBLE,
-        val isForAnnotationParameter: Boolean = false,
-        // Current type is upper bound of this type parameter
-        val upperBoundOfTypeParameter: TypeParameterDescriptor? = null
+    val howThisTypeIsUsed: TypeUsage,
+    val flexibility: JavaTypeFlexibility = INFLEXIBLE,
+    val isForAnnotationParameter: Boolean = false,
+    val upperBoundOfTypeParameter: TypeParameterDescriptor? = null,
+    val relatedDeclarationAnnotations: Annotations? = null
 ) {
     fun withFlexibility(flexibility: JavaTypeFlexibility) = copy(flexibility = flexibility)
 }
@@ -308,13 +340,15 @@ enum class JavaTypeFlexibility {
     FLEXIBLE_LOWER_BOUND
 }
 
-fun TypeUsage.toAttributes(
-        isForAnnotationParameter: Boolean = false,
-        upperBoundForTypeParameter: TypeParameterDescriptor? = null
-) = JavaTypeAttributes(
-        this,
-        isForAnnotationParameter = isForAnnotationParameter,
-        upperBoundOfTypeParameter = upperBoundForTypeParameter
+internal fun TypeUsage.toAttributes(
+    isForAnnotationParameter: Boolean = false,
+    upperBoundForTypeParameter: TypeParameterDescriptor? = null,
+    relatedDeclarationAnnotations: Annotations? = null
+): JavaTypeAttributes = JavaTypeAttributes(
+    this,
+    isForAnnotationParameter = isForAnnotationParameter,
+    upperBoundOfTypeParameter = upperBoundForTypeParameter,
+    relatedDeclarationAnnotations = relatedDeclarationAnnotations
 )
 
 // Definition:

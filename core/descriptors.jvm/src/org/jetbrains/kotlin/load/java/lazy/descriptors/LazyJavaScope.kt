@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.load.java.lazy.descriptors
 
 import org.jetbrains.kotlin.builtins.KotlinBuiltIns
 import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.descriptors.impl.PropertyDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.incremental.components.LookupLocation
@@ -125,7 +126,7 @@ abstract class LazyJavaScope(protected val c: LazyJavaResolverContext) : MemberS
         val methodTypeParameters = method.typeParameters.map { p -> c.typeParameterResolver.resolveTypeParameter(p)!! }
         val valueParameters = resolveValueParameters(c, functionDescriptorImpl, method.valueParameters)
 
-        val returnType = computeMethodReturnType(method, c)
+        val returnType = computeMethodReturnType(method, c, annotations)
 
         val effectiveSignature = resolveMethodSignature(method, methodTypeParameters, returnType, valueParameters.descriptors)
 
@@ -152,10 +153,11 @@ abstract class LazyJavaScope(protected val c: LazyJavaResolverContext) : MemberS
         return functionDescriptorImpl
     }
 
-    protected fun computeMethodReturnType(method: JavaMethod, c: LazyJavaResolverContext): KotlinType {
+    protected fun computeMethodReturnType(method: JavaMethod, c: LazyJavaResolverContext, annotations: Annotations): KotlinType {
         val annotationMethod = method.containingClass.isAnnotationType
         val returnTypeAttrs = TypeUsage.COMMON.toAttributes(
-                isForAnnotationParameter = annotationMethod
+            isForAnnotationParameter = annotationMethod,
+            relatedDeclarationAnnotations = annotations
         )
         return c.typeResolver.transformJavaType(method.returnType, returnTypeAttrs)
     }
@@ -172,7 +174,7 @@ abstract class LazyJavaScope(protected val c: LazyJavaResolverContext) : MemberS
 
         val descriptors = jValueParameters.withIndex().map { (index, javaParameter) ->
             val annotations = c.resolveAnnotations(javaParameter)
-            val typeUsage = TypeUsage.COMMON.toAttributes()
+            val typeUsage = TypeUsage.COMMON.toAttributes(relatedDeclarationAnnotations = annotations)
             val parameterName = annotations
                     .findAnnotation(JvmAnnotationNames.PARAMETER_NAME_FQ_NAME)
                     ?.firstArgument()
@@ -269,7 +271,7 @@ abstract class LazyJavaScope(protected val c: LazyJavaResolverContext) : MemberS
         val propertyDescriptor = createPropertyDescriptor(field)
         propertyDescriptor.initialize(null, null)
 
-        val propertyType = getPropertyType(field)
+        val propertyType = getPropertyType(field, propertyDescriptor.annotations)
 
         propertyDescriptor.setType(propertyType, listOf(), getDispatchReceiverParameter(), null as KotlinType?)
 
@@ -298,12 +300,12 @@ abstract class LazyJavaScope(protected val c: LazyJavaResolverContext) : MemberS
     private val JavaField.isFinalStatic: Boolean
         get() = isFinal && isStatic
 
-    private fun getPropertyType(field: JavaField): KotlinType {
+    private fun getPropertyType(field: JavaField, annotations: Annotations): KotlinType {
         // Fields do not have their own generic parameters.
         // Simple static constants should not have flexible types.
         val propertyType = c.typeResolver.transformJavaType(
-                field.type,
-                TypeUsage.COMMON.toAttributes()
+            field.type,
+            TypeUsage.COMMON.toAttributes(relatedDeclarationAnnotations = annotations)
         )
         val isNotNullable =
                 (KotlinBuiltIns.isPrimitiveType(propertyType) || KotlinBuiltIns.isString(propertyType)) &&

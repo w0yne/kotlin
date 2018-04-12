@@ -64,7 +64,10 @@ import org.jetbrains.org.objectweb.asm.util.TraceMethodVisitor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import static org.jetbrains.kotlin.builtins.KotlinBuiltIns.isNullableAny;
 import static org.jetbrains.kotlin.codegen.AsmUtil.*;
@@ -1295,11 +1298,23 @@ public class FunctionCodegen {
         if (!state.getClassBuilderMode().generateBodies) return;
 
         mv.visitCode();
+        InstructionAdapter iv = new InstructionAdapter(mv);
 
         Type[] argTypes = bridge.getArgumentTypes();
         Type[] originalArgTypes = delegateTo.getArgumentTypes();
 
-        InstructionAdapter iv = new InstructionAdapter(mv);
+        boolean isVarargInvoke = JvmCodegenUtil.isOverrideOfBigArityFunctionInvoke(descriptor);
+        if (isVarargInvoke) {
+            assert argTypes.length == 1 && argTypes[0].equals(AsmUtil.getArrayType(OBJECT_TYPE)) :
+                    "Vararg invoke must have one parameter of type [Ljava/lang/Object;: " + bridge;
+            AsmUtil.generateVarargInvokeArityAssert(iv, originalArgTypes.length);
+        }
+        else {
+            assert argTypes.length == originalArgTypes.length :
+                    "Number of parameters of the bridge and delegate must be the same.\n" +
+                    "Descriptor: " + descriptor + "\nBridge: " + bridge + "\nDelegate: " + delegateTo;
+        }
+
         MemberCodegen.markLineNumberForDescriptor(owner.getThisDescriptor(), iv);
 
         if (delegateTo.getArgumentTypes().length > 0 && isSpecialBridge) {
@@ -1307,10 +1322,17 @@ public class FunctionCodegen {
         }
 
         iv.load(0, OBJECT_TYPE);
-        for (int i = 0, reg = 1; i < argTypes.length; i++) {
-            StackValue.local(reg, argTypes[i]).put(originalArgTypes[i], iv);
-            //noinspection AssignmentToForLoopParameter
-            reg += argTypes[i].getSize();
+        for (int i = 0, reg = 1; i < originalArgTypes.length; i++) {
+            StackValue value;
+            if (isVarargInvoke) {
+                value = StackValue.arrayElement(OBJECT_TYPE, null, StackValue.local(1, argTypes[0]), StackValue.constant(i));
+            }
+            else {
+                value = StackValue.local(reg, argTypes[i]);
+                //noinspection AssignmentToForLoopParameter
+                reg += argTypes[i].getSize();
+            }
+            value.put(originalArgTypes[i], iv);
         }
 
         if (isStubDeclarationWithDelegationToSuper) {

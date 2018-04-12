@@ -20,7 +20,9 @@ import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.load.kotlin.header.KotlinClassHeader
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtDeclarationWithBody
+import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtFunction
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.descriptorUtil.builtIns
 import org.jetbrains.kotlin.resolve.descriptorUtil.module
@@ -192,7 +194,7 @@ class CoroutineCodegenForLambda private constructor(
             val bridgeParameters = (1 until delegate.argumentTypes.size).map { AsmTypes.OBJECT_TYPE } + delegate.argumentTypes.last()
             val bridge = Method(delegate.name, delegate.returnType, bridgeParameters.toTypedArray())
 
-            generateBridge(bridge, createCoroutineDescriptor.returnType, delegate, createCoroutineDescriptor.returnType)
+            generateBridge(bridge, createCoroutineDescriptor.returnType, delegate, createCoroutineDescriptor.returnType, false)
         }
     }
 

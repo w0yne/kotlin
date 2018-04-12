@@ -424,7 +424,7 @@ class LazyJavaClassMemberScope(
         val getter = DescriptorFactory.createDefaultGetter(propertyDescriptor, Annotations.EMPTY)
         propertyDescriptor.initialize(getter, null)
 
-        val returnType = givenType ?: computeMethodReturnType(method, c.childForMethod(propertyDescriptor, method))
+        val returnType = givenType ?: computeMethodReturnType(method, c.childForMethod(propertyDescriptor, method), annotations)
         propertyDescriptor.setType(returnType, listOf(), getDispatchReceiverParameter(), null as KotlinType?)
         getter.initialize(returnType)
 

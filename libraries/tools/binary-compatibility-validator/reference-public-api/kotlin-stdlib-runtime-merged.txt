@@ -2300,6 +2300,10 @@ public abstract interface annotation class kotlin/jvm/Transient : java/lang/anno
 public abstract interface annotation class kotlin/jvm/Volatile : java/lang/annotation/Annotation {
 }
 
+public abstract interface annotation class kotlin/jvm/functions/Arity : java/lang/annotation/Annotation {
+	public abstract fun value ()I
+}
+
 public abstract interface class kotlin/jvm/functions/Function0 : kotlin/Function {
 	public abstract fun invoke ()Ljava/lang/Object;
 }
@@ -2390,6 +2394,11 @@ public abstract interface class kotlin/jvm/functions/Function8 : kotlin/Function
 
 public abstract interface class kotlin/jvm/functions/Function9 : kotlin/Function {
 	public abstract fun invoke (Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+}
+
+public abstract interface class kotlin/jvm/functions/FunctionN : kotlin/Function, kotlin/jvm/internal/FunctionBase {
+	public abstract fun getArity ()I
+	public abstract fun invoke ([Ljava/lang/Object;)Ljava/lang/Object;
 }
 
 public final class kotlin/jvm/internal/ArrayIteratorKt {
