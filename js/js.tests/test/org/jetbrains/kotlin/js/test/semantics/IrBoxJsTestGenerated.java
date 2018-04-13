@@ -240,18 +240,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("closureWithSideEffect.kt")
             public void testClosureWithSideEffect() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/closureWithSideEffect.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("constructorFromTopLevelNoArgs.kt")
@@ -308,52 +297,19 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("extension.kt")
             public void testExtension() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extension.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromClass.kt")
             public void testExtensionFromClass() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromClass.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromExtension.kt")
             public void testExtensionFromExtension() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromExtension.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromTopLevel.kt")
@@ -376,69 +332,25 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("extensionFromTopLevelStringNoArgs.kt")
             public void testExtensionFromTopLevelStringNoArgs() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromTopLevelStringNoArgs.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromTopLevelStringOneStringArg.kt")
             public void testExtensionFromTopLevelStringOneStringArg() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromTopLevelStringOneStringArg.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromTopLevelUnitNoArgs.kt")
             public void testExtensionFromTopLevelUnitNoArgs() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromTopLevelUnitNoArgs.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionFromTopLevelUnitOneStringArg.kt")
             public void testExtensionFromTopLevelUnitOneStringArg() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionFromTopLevelUnitOneStringArg.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("extensionToPrimitive.kt")
@@ -461,18 +373,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("extensionWithClosure.kt")
             public void testExtensionWithClosure() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/extensionWithClosure.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("localAndTopLevelExtensions.kt")
@@ -495,18 +396,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("localLocal.kt")
             public void testLocalLocal() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/localLocal.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("recursiveClosure.kt")
@@ -529,52 +419,19 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("simple.kt")
             public void testSimple() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/simple.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("simpleClosure.kt")
             public void testSimpleClosure() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/simpleClosure.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("simpleWithArg.kt")
             public void testSimpleWithArg() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/simpleWithArg.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("stringNativeExtension.kt")
@@ -631,18 +488,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("topLevelFromTopLevelStringNoArgs.kt")
             public void testTopLevelFromTopLevelStringNoArgs() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/callableReference/function/topLevelFromTopLevelStringNoArgs.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("topLevelFromTopLevelWithArg.kt")
@@ -1405,18 +1251,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureInNestedFunctions.kt")
         public void testClosureInNestedFunctions() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureInNestedFunctions.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureInNestedFunctionsInMethod.kt")
@@ -1439,18 +1274,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureInNestedFunctionsWhichMixedWithObject.kt")
         public void testClosureInNestedFunctionsWhichMixedWithObject() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureInNestedFunctionsWhichMixedWithObject.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureInNestedLambdasInObject.kt")
@@ -1564,18 +1388,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureLocalInNestedObject.kt")
         public void testClosureLocalInNestedObject() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureLocalInNestedObject.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureLocalLiteralFunction.kt")
@@ -1700,18 +1513,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureThisInExtLambdaInsideMethod.kt")
         public void testClosureThisInExtLambdaInsideMethod() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureThisInExtLambdaInsideMethod.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureThisInFunctionWhichNamedSameAsParentClass.kt")
@@ -1734,18 +1536,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureThisInLambdaInsideMethod.kt")
         public void testClosureThisInLambdaInsideMethod() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/closureThisInLambdaInsideMethod.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureThisInLambdaInsideObject.kt")
@@ -1870,18 +1661,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("enclosingClassFromLocalClass.kt")
         public void testEnclosingClassFromLocalClass() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/enclosingClassFromLocalClass.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("implicitGenericReceiverInExtensionInLocalClass.kt")
@@ -2006,35 +1786,13 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("recursiveFunction.kt")
         public void testRecursiveFunction() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/recursiveFunction.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("recursiveFunctionWithSameNameDeclaration.kt")
         public void testRecursiveFunctionWithSameNameDeclaration() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/closure/recursiveFunctionWithSameNameDeclaration.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("withManyClosuresInNestedFunctionsAndObjects.kt")
@@ -4680,18 +4438,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("closureWithParameter.kt")
         public void testClosureWithParameter() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/closureWithParameter.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("closureWithParameterAndBoxing.kt")
@@ -4714,18 +4461,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("doubleEnclosedLocalVariable.kt")
         public void testDoubleEnclosedLocalVariable() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/doubleEnclosedLocalVariable.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("enclosed.kt")
@@ -4748,18 +4484,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("enclosingLocalVariable.kt")
         public void testEnclosingLocalVariable() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/enclosingLocalVariable.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("extensionClosure.kt")
@@ -4811,18 +4536,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("inheritedInnerClass.kt")
         public void testInheritedInnerClass() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/inheritedInnerClass.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("inheritedMethod.kt")
@@ -4983,35 +4697,13 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("simplestClosure.kt")
         public void testSimplestClosure() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/simplestClosure.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("simplestClosureAndBoxing.kt")
         public void testSimplestClosureAndBoxing() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/examples/simplestClosureAndBoxing.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("traitproperty.kt")
@@ -7444,18 +7136,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("invokeInFunctionLiteral.kt")
             public void testInvokeInFunctionLiteral() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/invoke/invokeInFunctionLiteral.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("invokeMethod.kt")
@@ -7478,35 +7159,13 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("invokeOnExprByConvention.kt")
             public void testInvokeOnExprByConvention() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/invoke/invokeOnExprByConvention.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("invokeWithDispatchAndExtensionReceivers.kt")
             public void testInvokeWithDispatchAndExtensionReceivers() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/invoke/invokeWithDispatchAndExtensionReceivers.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("invokeWithDispatchReceiver.kt")
@@ -7518,18 +7177,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("invokeWithExtensionReceiver.kt")
             public void testInvokeWithExtensionReceiver() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/invoke/invokeWithExtensionReceiver.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("invokeWithImplicitDispatchReceiverAndExtensionReceiver.kt")
@@ -7720,35 +7368,13 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("funInConstructor.kt")
             public void testFunInConstructor() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/misc/funInConstructor.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("funInConstructorBlock.kt")
             public void testFunInConstructorBlock() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/misc/funInConstructorBlock.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("inheritFromJetIterator.kt")
@@ -7822,18 +7448,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("KT-1361-1.kt")
             public void testKT_1361_1() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/misc/KT-1361-1.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("KT-1361-2.kt")
@@ -8055,18 +7670,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("packagePropertyCalledAsFun.kt")
             public void testPackagePropertyCalledAsFun() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/misc/packagePropertyCalledAsFun.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("propertiesWithExplicitlyDefinedAccessorsWithoutBodies.kt")
@@ -8078,18 +7682,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
             @TestMetadata("propertyAsFunCalledOnConstructor.kt")
             public void testPropertyAsFunCalledOnConstructor() throws Exception {
                 String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/expression/misc/propertyAsFunCalledOnConstructor.kt");
-                if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                    doTest(fileName);
-                    return;
-                }
-                try {
-                    doTest(fileName);
-                }
-                catch (Throwable ignore) {
-                    ignore.printStackTrace();
-                    return;
-                }
-                throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+                doTest(fileName);
             }
 
             @TestMetadata("rightAssocForGeneratedConditionalOperator.kt")
@@ -9169,18 +8762,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("extensionForSuperclass.kt")
         public void testExtensionForSuperclass() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/extensionForSuperclass.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("extensionFunctionCalledFromExtensionFunction.kt")
@@ -9209,18 +8791,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("extensionFunctionOnExpression.kt")
         public void testExtensionFunctionOnExpression() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/extensionFunctionOnExpression.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("extensionInsideFunctionLiteral.kt")
@@ -9277,52 +8848,19 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("extensionPropertyOnClassWithExplicitAndImplicitReceiver.kt")
         public void testExtensionPropertyOnClassWithExplicitAndImplicitReceiver() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/extensionPropertyOnClassWithExplicitAndImplicitReceiver.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("extensionUsedInsideClass.kt")
         public void testExtensionUsedInsideClass() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/extensionUsedInsideClass.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("extensionWithImplicitReceiver.kt")
         public void testExtensionWithImplicitReceiver() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/extensionWithImplicitReceiver.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("generic.kt")
@@ -9362,69 +8900,25 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("intExtension.kt")
         public void testIntExtension() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/intExtension.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("superClassMemberInExtension.kt")
         public void testSuperClassMemberInExtension() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/superClassMemberInExtension.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("virtualExtension.kt")
         public void testVirtualExtension() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/virtualExtension.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("virtualExtensionOverride.kt")
         public void testVirtualExtensionOverride() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionFunction/virtualExtensionOverride.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
     }
 
@@ -9479,35 +8973,13 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("privateExtensionProperty.kt")
         public void testPrivateExtensionProperty() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionProperty/privateExtensionProperty.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("propertyWithGetterAndSetter.kt")
         public void testPropertyWithGetterAndSetter() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/extensionProperty/propertyWithGetterAndSetter.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("simplePropertyWithGetter.kt")
@@ -10904,18 +10376,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("innerOuterThis.kt")
         public void testInnerOuterThis() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/innerOuterThis.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("iteratorOnInlineFunctionResult.kt")
@@ -11210,18 +10671,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("rootConstructor.kt")
         public void testRootConstructor() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/rootConstructor.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("safeCall.kt")
@@ -11267,18 +10717,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("severalUsage.kt")
         public void testSeveralUsage() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/severalUsage.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("simpleDouble.kt")
@@ -11335,18 +10774,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("simpleLambda.kt")
         public void testSimpleLambda() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inline/simpleLambda.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("simpleObject.kt")
@@ -11463,18 +10891,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("alsoWithReassingment.kt")
         public void testAlsoWithReassingment() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inlineEvaluationOrder/alsoWithReassingment.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("argumentOfCall.kt")
@@ -13428,18 +12845,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("inlineLambdaCleanup.kt")
         public void testInlineLambdaCleanup() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inlineSizeReduction/inlineLambdaCleanup.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("inlineOrder.kt")
@@ -13496,18 +12902,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("noDuplicateVariableDeclaration.kt")
         public void testNoDuplicateVariableDeclaration() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/inlineSizeReduction/noDuplicateVariableDeclaration.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("oneTopLevelReturn.kt")
@@ -17290,18 +16685,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("nested.kt")
         public void testNested() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/nestedTypes/nested.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("nestedInInterface.kt")
@@ -17954,18 +17338,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("kt3684.kt")
         public void testKt3684() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/objectDeclaration/kt3684.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("lambdaInObjectInsideObject.kt")
@@ -18022,18 +17395,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("objectInMethod.kt")
         public void testObjectInMethod() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/objectDeclaration/objectInMethod.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
 
         @TestMetadata("objectInObject.kt")
@@ -18107,18 +17469,7 @@ public class IrBoxJsTestGenerated extends AbstractIrBoxJsTest {
         @TestMetadata("objectWithMethods.kt")
         public void testObjectWithMethods() throws Exception {
             String fileName = KotlinTestUtils.navigationMetadata("js/js.translator/testData/box/objectDeclaration/objectWithMethods.kt");
-            if (KotlinTestUtils.RUN_IGNORED_TESTS_AS_REGULAR) {
-                doTest(fileName);
-                return;
-            }
-            try {
-                doTest(fileName);
-            }
-            catch (Throwable ignore) {
-                ignore.printStackTrace();
-                return;
-            }
-            throw new AssertionError("Looks like this test can be unmuted. Remove IGNORE_BACKEND directive or add it to whitelist for that.");
+            doTest(fileName);
         }
     }
 
