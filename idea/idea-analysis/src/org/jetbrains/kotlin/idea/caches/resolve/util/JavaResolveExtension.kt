@@ -38,10 +38,10 @@ import org.jetbrains.kotlin.resolve.jvm.platform.JvmPlatform
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 
 @JvmOverloads
-fun PsiMethod.getJavaMethodDescriptor(resolutionFacade: ResolutionFacade = javaResolutionFacade()): FunctionDescriptor? {
+fun PsiMethod.getJavaMethodDescriptor(resolutionFacade: ResolutionFacade? = null): FunctionDescriptor? {
     val method = originalElement as? PsiMethod ?: return null
     if (method.containingClass == null || !Name.isValidIdentifier(method.name)) return null
-    val resolver = method.getJavaDescriptorResolver(resolutionFacade)
+    val resolver = method.getJavaDescriptorResolver(resolutionFacade ?: javaResolutionFacade())
     return when {
         method.isConstructor -> resolver?.resolveConstructor(JavaConstructorImpl(method))
         else -> resolver?.resolveMethod(JavaMethodImpl(method))
