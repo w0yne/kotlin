@@ -51,7 +51,7 @@ data class DependenciesTxt(
             get() = dependencies.filter { it.expectedBy }
 
         val generateEditingTests: Boolean
-            get() = false
+            get() = true
     }
 
     data class Dependency(

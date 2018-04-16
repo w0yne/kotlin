@@ -1,0 +1,76 @@
+================ Step #1 =================
+
+Building c
+Exit code: NOTHING_DONE
+------------------------------------------
+Cleaning output files:
+  out/production/pJs/pJs.js
+  out/production/pJs/pJs.meta.js
+  out/production/pJs/pJs/root-package.kjsm
+End of files
+Building pJs
+Exit code: OK
+------------------------------------------
+Building rJs
+Exit code: NOTHING_DONE
+------------------------------------------
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/ServiceCHeaderKt.class
+End of files
+Building pJvm
+Compiling files:
+  c/src/serviceCHeader.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Building rJvm
+Compiling files:
+  rJvm/src/serviceNewImpl.kt
+End of files
+Exit code: ABORT
+------------------------------------------
+COMPILATION FAILED
+Unresolved reference: pJvm_platformOnly
+
+================ Step #2 =================
+
+Building c
+Exit code: NOTHING_DONE
+------------------------------------------
+Building pJs
+Exit code: NOTHING_DONE
+------------------------------------------
+Building rJs
+Exit code: NOTHING_DONE
+------------------------------------------
+Building pJvm
+Exit code: NOTHING_DONE
+------------------------------------------
+Building rJvm
+Compiling files:
+  rJvm/src/serviceNewImpl.kt
+End of files
+Exit code: ABORT
+------------------------------------------
+COMPILATION FAILED
+Unresolved reference: pJvm_platformOnly
+
+================ Step #3 =================
+
+Building c
+Exit code: NOTHING_DONE
+------------------------------------------
+Building pJs
+Exit code: NOTHING_DONE
+------------------------------------------
+Building rJs
+Exit code: NOTHING_DONE
+------------------------------------------
+Building pJvm
+Exit code: NOTHING_DONE
+------------------------------------------
+Building rJvm
+Exit code: NOTHING_DONE
+------------------------------------------

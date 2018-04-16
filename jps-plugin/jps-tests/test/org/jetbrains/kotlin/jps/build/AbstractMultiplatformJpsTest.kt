@@ -12,6 +12,10 @@ abstract class AbstractMultiplatformJpsTest :
     ) {
 
     override fun doTest(testDataPath: String) {
-        doInitialMakeTest(testDataPath)
+        if (getTestName(true) == "initial") {
+            doInitialMakeTest(testDataPath)
+        } else {
+            super.doTest(testDataPath)
+        }
     }
 }

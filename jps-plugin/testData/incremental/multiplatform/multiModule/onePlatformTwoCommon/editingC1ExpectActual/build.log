@@ -1,0 +1,112 @@
+================ Step #1 =================
+
+Building c2
+Exit code: NOTHING_DONE
+------------------------------------------
+Building c1
+Exit code: OK
+------------------------------------------
+Cleaning output files:
+  out/production/pJs/pJs.js
+  out/production/pJs/pJs.meta.js
+  out/production/pJs/pJs/root-package.kjsm
+End of files
+Building pJs
+Exit code: OK
+------------------------------------------
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/ServiceC1HeaderKt.class
+End of files
+Cleaning output files:
+  out/production/pJvm/ServiceC2HeaderKt.class
+End of files
+Building pJvm
+Cleaning output files:
+  out/production/pJvm/PJvmJavaClass.class
+  out/production/pJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  c1/src/serviceC1Header.kt
+  c2/src/serviceC2Header.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvm/src/PJvmJavaClass.java
+  pJvm/src/PJvmNewJavaClass.java
+End of files
+
+================ Step #2 =================
+
+Building c2
+Exit code: NOTHING_DONE
+------------------------------------------
+Building c1
+Exit code: OK
+------------------------------------------
+Building pJs
+Cleaning output files:
+  out/production/pJs/pJs.js
+  out/production/pJs/pJs.meta.js
+  out/production/pJs/pJs/root-package.kjsm
+End of files
+Exit code: OK
+------------------------------------------
+Building pJvm
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/PJvmJavaClass.class
+  out/production/pJvm/PJvmNewJavaClass.class
+  out/production/pJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  c1/src/serviceC1Header.kt
+  c2/src/serviceC2Header.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvm/src/PJvmJavaClass.java
+  pJvm/src/PJvmNewJavaClass.java
+End of files
+
+================ Step #3 =================
+
+Building c2
+Exit code: NOTHING_DONE
+------------------------------------------
+Building c1
+Exit code: NOTHING_DONE
+------------------------------------------
+Cleaning output files:
+  out/production/pJs/pJs.js
+  out/production/pJs/pJs.meta.js
+  out/production/pJs/pJs/root-package.kjsm
+End of files
+Building pJs
+Exit code: OK
+------------------------------------------
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/ServiceC1HeaderKt.class
+End of files
+Cleaning output files:
+  out/production/pJvm/ServiceC2HeaderKt.class
+End of files
+Building pJvm
+Cleaning output files:
+  out/production/pJvm/PJvmNewJavaClass.class
+End of files
+Compiling files:
+  c1/src/serviceC1Header.kt
+  c2/src/serviceC2Header.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvm/src/PJvmNewJavaClass.java
+End of files
