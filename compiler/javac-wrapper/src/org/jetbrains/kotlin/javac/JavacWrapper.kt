@@ -304,6 +304,7 @@ class JavacWrapper(
         elements.getPackageElement(fqName)?.let { symbol ->
             SymbolBasedPackage(symbol, this)
         }.let { symbolBasedPackage ->
+            println("### $fqName -> $symbolBasedPackage")
             symbolBasedPackagesCache[fqName] = symbolBasedPackage
             return symbolBasedPackage
         }
