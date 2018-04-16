@@ -156,9 +156,16 @@ internal class ProjectResolutionFacade(
 
     internal fun resolverForElement(element: PsiElement): ResolverForModule {
         val infos = element.getModuleInfos()
+        return resolverForElementIfAny(element, infos)
+                ?: cachedResolverForProject.diagnoseUnknownModuleInfo(infos.toList())
+    }
+
+    internal fun resolverForElementIfAny(
+        element: PsiElement,
+        infos: Sequence<IdeaModuleInfo> = element.getModuleInfos()
+    ): ResolverForModule? {
         return infos.asIterable().firstNotNullResult { cachedResolverForProject.tryGetResolverForModule(it) }
                 ?: cachedResolverForProject.tryGetResolverForModule(NotUnderContentRootModuleInfo)
-                ?: cachedResolverForProject.diagnoseUnknownModuleInfo(infos.toList())
     }
 
     internal fun resolverForDescriptor(moduleDescriptor: ModuleDescriptor) = cachedResolverForProject.resolverForModuleDescriptor(moduleDescriptor)

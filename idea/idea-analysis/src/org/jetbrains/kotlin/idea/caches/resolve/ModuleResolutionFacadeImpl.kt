@@ -84,7 +84,7 @@ internal class ModuleResolutionFacadeImpl(
     }
 
     override fun <T : Any> tryGetFrontendService(element: PsiElement, serviceClass: Class<T>): T? {
-        return projectFacade.resolverForElement(element).componentProvider.tryGetService(serviceClass)
+        return projectFacade.resolverForElementIfAny(element)?.componentProvider?.tryGetService(serviceClass)
     }
 
     private fun <T : Any> getFrontendService(ideaModuleInfo: IdeaModuleInfo, serviceClass: Class<T>): T {
