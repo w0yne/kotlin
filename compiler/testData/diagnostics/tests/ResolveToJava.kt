@@ -12,7 +12,7 @@ import <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.lang.Comparable<!> as Com
 
 val l : MutableList<in Int> = ArrayList<Int>()
 
-fun test(<!UNUSED_PARAMETER!>l<!> : <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.util.List<Int><!>) {
+fun test(<!UNUSED_PARAMETER!>l<!> : <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.util.List<Int><!>, ba: ByteArray) {
   val <!UNUSED_VARIABLE!>x<!> : java.<!UNRESOLVED_REFERENCE!>List<!>
   val <!UNUSED_VARIABLE!>y<!> : <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.util.List<Int><!>
   val <!UNUSED_VARIABLE!>b<!> : <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.lang.Object<!>
@@ -48,6 +48,10 @@ fun test(<!UNUSED_PARAMETER!>l<!> : <!PLATFORM_CLASS_MAPPED_TO_KOTLIN!>java.util
 
 //  Collections.sort<Integer>(ArrayList<Integer>())
   xxx.<!UNRESOLVED_REFERENCE!>Class<!>()
+
+  java.lang.<!OI;PLATFORM_CLASS_CONSTRUCTION!>String<!>("")
+  java.lang.<!OI;PLATFORM_CLASS_CONSTRUCTION!>String<!>(ba, "")
+  <!OI;PLATFORM_CLASS_CONSTRUCTION!>String<!>(ba, "")
 }
 
 

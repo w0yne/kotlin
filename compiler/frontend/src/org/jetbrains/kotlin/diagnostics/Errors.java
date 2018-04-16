@@ -124,6 +124,7 @@ public interface Errors {
     DiagnosticFactory2<KtExpression, KotlinType, Collection<ClassDescriptor>> INACCESSIBLE_TYPE = DiagnosticFactory2.create(WARNING);
 
     DiagnosticFactory1<KtElement, Collection<ClassDescriptor>> PLATFORM_CLASS_MAPPED_TO_KOTLIN = DiagnosticFactory1.create(WARNING);
+    DiagnosticFactory2<PsiElement, FqName, Collection<ClassDescriptor>> PLATFORM_CLASS_CONSTRUCTION = DiagnosticFactory2.create(ERROR);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

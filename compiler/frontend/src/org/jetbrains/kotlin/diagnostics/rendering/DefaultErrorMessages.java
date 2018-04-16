@@ -180,6 +180,7 @@ public class DefaultErrorMessages {
         MAP.put(CONFLICTING_IMPORT, "Conflicting import, imported name ''{0}'' is ambiguous", STRING);
         MAP.put(OPERATOR_RENAMED_ON_IMPORT, "Operator renamed to a different operator on import");
         MAP.put(PLATFORM_CLASS_MAPPED_TO_KOTLIN, "This class shouldn''t be used in Kotlin. Use {0} instead.", CLASSES_OR_SEPARATED);
+        MAP.put(PLATFORM_CLASS_CONSTRUCTION, "This creates an instance of the class {0} that shouldn''t be used in Kotlin. Use {1} instead.", TO_STRING, CLASSES_OR_SEPARATED);
 
         MAP.put(CANNOT_INFER_PARAMETER_TYPE, "Cannot infer a type for this parameter. Please specify it explicitly.");
 

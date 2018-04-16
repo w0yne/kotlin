@@ -97,5 +97,6 @@ object JvmPlatformConfigurator : PlatformConfigurator(
         container.useImpl<JvmModuleAccessibilityChecker.ClassifierUsage>()
         container.useInstance(JvmTypeSpecificityComparator)
         container.useImpl<JvmDefaultSuperCallChecker>()
+        container.useImpl<PlatformClassConstructorCallChecker>()
     }
 }

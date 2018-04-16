@@ -1,3 +1,5 @@
+// ERROR: This creates an instance of the class java.lang.String that shouldn't be used in Kotlin. Use kotlin.String instead.
+// ERROR: This creates an instance of the class java.lang.String that shouldn't be used in Kotlin. Use kotlin.String instead.
 import java.nio.charset.Charset
 import java.util.*
 
