@@ -7,7 +7,10 @@ actual fun bc_platformDependentBc(): String = "bJs"
 fun bJs_platformOnly() = "bJs"
 
 fun bJsTest() {
+  bJs_platformOnly()
   bc_platformIndependentBc()
   bc_platformDependentBc()
-  bJs_platformOnly()
+  ac_platformIndependentAc()
+  ac_platformDependentAc()
+  aJs_platformOnly()
 }

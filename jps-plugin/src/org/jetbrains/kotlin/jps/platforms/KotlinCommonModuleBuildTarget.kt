@@ -50,7 +50,7 @@ class KotlinCommonModuleBuildTarget(jpsModuleBuildTarget: ModuleBuildTarget) :
             module.kotlinCompilerSettings,
             environment,
             dependenciesOutputDirs + libraryFiles,
-            sources
+            filesToCompile.get(jpsModuleBuildTarget)
         )
 
         return true

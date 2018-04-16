@@ -7,7 +7,10 @@ actual fun cTests_platformDependentCTests(): String = "pJsTests"
 fun pJsTests_platformOnly() = "pJsTests"
 
 fun pJsTestsTest() {
+  pJsTests_platformOnly()
+  pJsMain_platformOnly()
+  cMain_platformIndependentCMain()
+  cMain_platformDependentCMain()
   cTests_platformIndependentCTests()
   cTests_platformDependentCTests()
-  pJsTests_platformOnly()
 }

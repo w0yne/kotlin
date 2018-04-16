@@ -9,7 +9,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  pJvmMain/src/JavaClass.java
+  pJvmMain/src/PJvmMainJavaClass.java
 End of files
 Cleaning output files:
   out/production/pJvmMain/META-INF/pJvmMain.kotlin_module
@@ -35,7 +35,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  pJvmTests/src/JavaClass.java
+  pJvmTests/src/PJvmTestsJavaClass.java
 End of files
 Cleaning output files:
   out/production/pJvmTests/META-INF/pJvmTests.kotlin_module

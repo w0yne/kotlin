@@ -7,8 +7,12 @@ actual fun bc_platformDependentBc(): String = "bJvm"
 fun bJvm_platformOnly() = "bJvm"
 
 fun bJvmTest() {
+  bJvm_platformOnly()
+  BJvmJavaClass().doStuff()
   bc_platformIndependentBc()
   bc_platformDependentBc()
-  bJvm_platformOnly()
-  JavaClass().doStuff()
+  ac_platformIndependentAc()
+  ac_platformDependentAc()
+  aJvm_platformOnly()
+  AJvmJavaClass().doStuff()
 }

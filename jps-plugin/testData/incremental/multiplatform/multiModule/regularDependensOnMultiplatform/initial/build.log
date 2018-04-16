@@ -5,7 +5,7 @@ Building pJs
 Exit code: OK
 ------------------------------------------
 Building rJs
-Exit code: NOTHING_DONE
+Exit code: OK
 ------------------------------------------
 Building pJvm
 Compiling files:
@@ -15,7 +15,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  pJvm/src/JavaClass.java
+  pJvm/src/PJvmJavaClass.java
 End of files
 Cleaning output files:
   out/production/pJvm/META-INF/pJvm.kotlin_module
@@ -28,5 +28,20 @@ End of files
 Exit code: OK
 ------------------------------------------
 Building rJvm
-Exit code: NOTHING_DONE
+Compiling files:
+  rJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  rJvm/src/RJvmJavaClass.java
+End of files
+Cleaning output files:
+  out/production/rJvm/META-INF/rJvm.kotlin_module
+  out/production/rJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  rJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
 ------------------------------------------

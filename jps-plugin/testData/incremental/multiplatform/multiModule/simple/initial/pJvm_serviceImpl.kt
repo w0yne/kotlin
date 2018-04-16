@@ -7,8 +7,8 @@ actual fun c_platformDependentC(): String = "pJvm"
 fun pJvm_platformOnly() = "pJvm"
 
 fun pJvmTest() {
+  pJvm_platformOnly()
+  PJvmJavaClass().doStuff()
   c_platformIndependentC()
   c_platformDependentC()
-  pJvm_platformOnly()
-  JavaClass().doStuff()
 }

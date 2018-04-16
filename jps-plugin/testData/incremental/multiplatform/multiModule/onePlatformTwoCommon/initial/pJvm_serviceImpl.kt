@@ -8,10 +8,10 @@ actual fun c2_platformDependentC2(): String = "pJvm"
 fun pJvm_platformOnly() = "pJvm"
 
 fun pJvmTest() {
+  pJvm_platformOnly()
+  PJvmJavaClass().doStuff()
   c1_platformIndependentC1()
   c1_platformDependentC1()
   c2_platformIndependentC2()
   c2_platformDependentC2()
-  pJvm_platformOnly()
-  JavaClass().doStuff()
 }

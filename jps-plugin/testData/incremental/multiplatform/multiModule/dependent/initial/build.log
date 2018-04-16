@@ -18,7 +18,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  aJvm/src/JavaClass.java
+  aJvm/src/AJvmJavaClass.java
 End of files
 Cleaning output files:
   out/production/aJvm/META-INF/aJvm.kotlin_module
@@ -38,7 +38,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  bJvm/src/JavaClass.java
+  bJvm/src/BJvmJavaClass.java
 End of files
 Cleaning output files:
   out/production/bJvm/META-INF/bJvm.kotlin_module

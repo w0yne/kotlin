@@ -3,10 +3,11 @@
 // from `incremental/multiplatform/multiModule/regularDependensOnMultiplatform/dependencies.txt`
 //
 
-actual fun c_platformDependentC(): String = "pJvm"
-fun pJvm_platformOnly() = "pJvm"
+fun rJvm_platformOnly() = "rJvm"
 
-fun pJvmTest() {
+fun rJvmTest() {
+  rJvm_platformOnly()
+  RJvmJavaClass().doStuff()
   pJvm_platformOnly()
   PJvmJavaClass().doStuff()
   c_platformIndependentC()

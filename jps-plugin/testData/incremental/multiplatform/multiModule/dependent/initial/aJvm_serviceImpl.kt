@@ -7,8 +7,8 @@ actual fun ac_platformDependentAc(): String = "aJvm"
 fun aJvm_platformOnly() = "aJvm"
 
 fun aJvmTest() {
+  aJvm_platformOnly()
+  AJvmJavaClass().doStuff()
   ac_platformIndependentAc()
   ac_platformDependentAc()
-  aJvm_platformOnly()
-  JavaClass().doStuff()
 }

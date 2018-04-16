@@ -8,9 +8,9 @@ actual fun c2_platformDependentC2(): String = "pJs"
 fun pJs_platformOnly() = "pJs"
 
 fun pJsTest() {
+  pJs_platformOnly()
   c1_platformIndependentC1()
   c1_platformDependentC1()
   c2_platformIndependentC2()
   c2_platformDependentC2()
-  pJs_platformOnly()
 }

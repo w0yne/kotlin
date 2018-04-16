@@ -7,7 +7,7 @@ actual fun cMain_platformDependentCMain(): String = "pJsMain"
 fun pJsMain_platformOnly() = "pJsMain"
 
 fun pJsMainTest() {
+  pJsMain_platformOnly()
   cMain_platformIndependentCMain()
   cMain_platformDependentCMain()
-  pJsMain_platformOnly()
 }

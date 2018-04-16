@@ -7,7 +7,7 @@ actual fun c_platformDependentC(): String = "pJs"
 fun pJs_platformOnly() = "pJs"
 
 fun pJsTest() {
+  pJs_platformOnly()
   c_platformIndependentC()
   c_platformDependentC()
-  pJs_platformOnly()
 }

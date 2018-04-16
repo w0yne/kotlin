@@ -7,7 +7,7 @@ actual fun ac_platformDependentAc(): String = "aJs"
 fun aJs_platformOnly() = "aJs"
 
 fun aJsTest() {
+  aJs_platformOnly()
   ac_platformIndependentAc()
   ac_platformDependentAc()
-  aJs_platformOnly()
 }

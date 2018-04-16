@@ -10,17 +10,18 @@ import java.io.File
 
 /**
  * Utility for generating common/platform module stub contents based on it's dependencies.
- * By default files generated only for modules without any file.
  *
  * Generated files:
- *  - for common modules: `service.kt` with:
+ *  - for common modules:
  *    - `expect fun platformDependent(): String`
  *    - `fun platformIndependent() = "platformIndependent"`
- *  - for platform modules: `service.kt` with:
+ *    - `fun test() { /* platformDependent/platformIndependent calls for all dependencies */ }`
+ *  - for platform modules:
  *    - `actual fun platformDependent() = "$platformName"`
  *    - `fun platformOnly() = "$platformName only"`
- *  - for JVM
- *    - `class PlatformOnly { public static void main() {  } }`
+ *    - `fun test() { /* platformDependent/platformIndependent/platformOnly/JavaClass().doStuff() calls for all dependencies */ }`
+ *  - for JVM:
+ *    - `public class JavaClass { public String doStuff() { return "pJvm"; } }`
  *
  * Editions:
  *  - common module file with `newPlatformIndependentService.kt`
@@ -68,12 +69,11 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
 
         txt.modules.forEach {
             if (it.generateEditingTests) {
-                val nameSuffix = it.name.capitalizeFirstLetter()
-                TestCase("editing${nameSuffix}Kotlin").generateEditing(it, changeJavaClass = false)
+                TestCase("editing${it.capitalName}Kotlin").generateEditing(it, changeJavaClass = false)
 
                 when {
-                    it.isJvmModule -> TestCase("editing${nameSuffix}Java").generateEditing(it, changeJavaClass = true)
-                    it.isCommonModule -> TestCase("editing${nameSuffix}ExpectActual").generateEditingExpectActual(it)
+                    it.isJvmModule -> TestCase("editing${it.capitalName}Java").generateEditing(it, changeJavaClass = true)
+                    it.isCommonModule -> TestCase("editing${it.capitalName}ExpectActual").generateEditingExpectActual(it)
                 }
             }
         }
@@ -148,7 +148,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
                 else -> {
                     generatePlatformFile(
                         module,
-                        platformDependent = false,
+                        generatePlatformDependent = false,
                         ktFile = true, // for testing calling java from kotlin
                         javaFile = changeJavaClass,
                         serviceName = "New",
@@ -157,7 +157,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
 
                     generatePlatformFile(
                         module,
-                        platformDependent = false,
+                        generatePlatformDependent = false,
                         ktFile = !changeJavaClass,
                         javaFile = changeJavaClass,
                         serviceName = "New",
@@ -194,7 +194,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
             )
 
             txt.modules.forEach {
-                generateModuleStub(it)
+                generateModuleContents(it)
             }
 
             val buildLog = File(dir, "build.log")
@@ -203,19 +203,27 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
             }
         }
 
-        private fun generateModuleStub(module: DependenciesTxt.Module) {
-            if (module.isCommonModule) {
-                generateCommonFile(module)
-            } else {
-                // common module platform implementation
-                module.expectedBy.forEach {
+        private fun generateModuleContents(module: DependenciesTxt.Module) {
+            when {
+                module.isCommonModule -> generateCommonFile(module)
+                module.expectedBy.isEmpty() -> {
+                    // regular module
                     generatePlatformFile(module)
+                }
+                else -> {
+                    // common module platform implementation
+                    module.expectedBy.forEach {
+                        generatePlatformFile(module)
+                    }
                 }
             }
         }
 
         private fun serviceName(commonModule: DependenciesTxt.Module, suffix: String) =
-            commonModule.name.capitalizeFirstLetter() + suffix
+            commonModule.capitalName + suffix
+
+        private fun javaClassName(module: DependenciesTxt.Module, serviceName: String) =
+            "${module.capitalName}${serviceName}JavaClass"
 
         fun serviceKtFile(module: DependenciesTxt.Module, serviceName: String = "", fileNameSuffix: String = ""): File {
             val suffix = if (module.isCommonModule) "Header" else "Impl"
@@ -223,7 +231,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
         }
 
         fun serviceJavaFile(module: DependenciesTxt.Module, serviceName: String = "", fileNameSuffix: String = ""): File {
-            val javaClassName = "${serviceName}JavaClass"
+            val javaClassName = javaClassName(module, serviceName)
             return File(dir, "${module.name}_$javaClassName.java$fileNameSuffix")
         }
 
@@ -233,7 +241,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
             serviceName: String = "",
             fileNameSuffix: String = ""
         ) {
-            val uniqServiceName = module.name.capitalizeFirstLetter() + serviceName
+            val uniqServiceName = module.capitalName + serviceName
             serviceKtFile(module, uniqServiceName, fileNameSuffix).setFileContent(buildString {
                 appendln(generatedByComment)
 
@@ -260,20 +268,21 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
 
         private fun generatePlatformFile(
             module: DependenciesTxt.Module,
-            platformDependent: Boolean = true,
+            generatePlatformDependent: Boolean = true,
             ktFile: Boolean = true,
             javaFile: Boolean = true,
             serviceName: String = "",
             fileNameSuffix: String = ""
         ) {
             val isJvm = module.isJvmModule
-            val javaClassName = "${serviceName}JavaClass"
+
+            val javaClassName = javaClassName(module, serviceName)
 
             if (ktFile) {
                 serviceKtFile(module, serviceName, fileNameSuffix).setFileContent(buildString {
                     appendln(generatedByComment)
 
-                    if (platformDependent) {
+                    if (generatePlatformDependent) {
                         for (expectedBy in module.expectedBy) {
                             appendln(
                                 "actual fun ${expectedBy.to.name}_platformDependent${serviceName(
@@ -287,18 +296,27 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
                     appendln("fun ${module.name}_platformOnly$serviceName() = \"${module.name}$fileNameSuffix\"")
 
                     appendln()
-                    appendln("fun ${module.name}Test() {")
+                    appendln("fun ${module.name}Test$serviceName() {")
 
-                    if (platformDependent) {
-                        for (expectedBy in module.expectedBy) {
-                            appendln("  ${expectedBy.to.name}_platformIndependent${serviceName(expectedBy.to, serviceName)}()")
-                            appendln("  ${expectedBy.to.name}_platformDependent${serviceName(expectedBy.to, serviceName)}()")
+                    // call all functions declared in this module and all of its dependencies recursively
+                    val thisAndDependencies = mutableSetOf(module)
+                    module.collectDependenciesRecursivelyTo(thisAndDependencies)
+                    thisAndDependencies.forEach { thisOrDependent ->
+                        if (thisOrDependent.isCommonModule) {
+                            appendln("  ${thisOrDependent.name}_platformIndependent${serviceName(thisOrDependent, serviceName)}()")
+
+                            if (generatePlatformDependent) {
+                                appendln("  ${thisOrDependent.name}_platformDependent${serviceName(thisOrDependent, serviceName)}()")
+                            }
+                        } else {
+                            // platform module
+                            appendln("  ${thisOrDependent.name}_platformOnly$serviceName()")
+
+                            if (thisOrDependent.isJvmModule) {
+                                appendln("  ${javaClassName(thisOrDependent, serviceName)}().doStuff()")
+                            }
                         }
                     }
-
-                    appendln("  ${module.name}_platformOnly$serviceName()")
-
-                    if (isJvm) appendln("  $javaClassName().doStuff()")
 
                     appendln("}")
                 })
@@ -307,6 +325,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
             if (isJvm && javaFile) {
                 serviceJavaFile(module, serviceName, fileNameSuffix).setFileContent(
                     """
+                    |$generatedByComment
                     |public class $javaClassName {
                     |    public String doStuff() {
                     |       return "${module.name}$fileNameSuffix";
@@ -314,6 +333,14 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
                     |}
                     """.trimMargin()
                 )
+            }
+        }
+
+        private fun DependenciesTxt.Module.collectDependenciesRecursivelyTo(collection: MutableCollection<DependenciesTxt.Module>) {
+            dependencies.forEach {
+                val dependentModule = it.to
+                collection.add(dependentModule)
+                dependentModule.collectDependenciesRecursivelyTo(collection)
             }
         }
     }

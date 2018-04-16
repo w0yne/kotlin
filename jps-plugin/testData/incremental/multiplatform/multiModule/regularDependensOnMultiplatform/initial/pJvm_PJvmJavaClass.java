@@ -3,11 +3,8 @@
 // from `incremental/multiplatform/multiModule/regularDependensOnMultiplatform/dependencies.txt`
 //
 
-actual fun c_platformDependentC(): String = "pJs"
-fun pJs_platformOnly() = "pJs"
-
-fun pJsTest() {
-  pJs_platformOnly()
-  c_platformIndependentC()
-  c_platformDependentC()
+public class PJvmJavaClass {
+    public String doStuff() {
+       return "pJvm";
+    }
 }

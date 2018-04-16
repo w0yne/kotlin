@@ -7,8 +7,8 @@ actual fun cMain_platformDependentCMain(): String = "pJvmMain"
 fun pJvmMain_platformOnly() = "pJvmMain"
 
 fun pJvmMainTest() {
+  pJvmMain_platformOnly()
+  PJvmMainJavaClass().doStuff()
   cMain_platformIndependentCMain()
   cMain_platformDependentCMain()
-  pJvmMain_platformOnly()
-  JavaClass().doStuff()
 }

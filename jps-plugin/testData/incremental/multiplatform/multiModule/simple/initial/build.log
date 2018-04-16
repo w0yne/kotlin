@@ -12,7 +12,7 @@ End of files
 Exit code: OK
 ------------------------------------------
 Compiling files:
-  pJvm/src/JavaClass.java
+  pJvm/src/PJvmJavaClass.java
 End of files
 Cleaning output files:
   out/production/pJvm/META-INF/pJvm.kotlin_module

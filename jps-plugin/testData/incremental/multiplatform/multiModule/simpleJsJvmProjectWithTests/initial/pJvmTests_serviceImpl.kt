@@ -7,8 +7,12 @@ actual fun cTests_platformDependentCTests(): String = "pJvmTests"
 fun pJvmTests_platformOnly() = "pJvmTests"
 
 fun pJvmTestsTest() {
+  pJvmTests_platformOnly()
+  PJvmTestsJavaClass().doStuff()
+  pJvmMain_platformOnly()
+  PJvmMainJavaClass().doStuff()
+  cMain_platformIndependentCMain()
+  cMain_platformDependentCMain()
   cTests_platformIndependentCTests()
   cTests_platformDependentCTests()
-  pJvmTests_platformOnly()
-  JavaClass().doStuff()
 }
