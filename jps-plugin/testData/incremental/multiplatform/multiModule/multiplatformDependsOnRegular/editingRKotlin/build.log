@@ -1,0 +1,44 @@
+Building c
+Exit code: OK
+------------------------------------------
+Building pJs
+Exit code: OK
+------------------------------------------
+Building r
+Compiling files:
+  r/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  r/src/RJavaClass.java
+End of files
+Cleaning output files:
+  out/production/r/META-INF/r.kotlin_module
+  out/production/r/ServiceImplKt.class
+End of files
+Compiling files:
+  r/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Building pJvm
+Compiling files:
+  c/src/serviceCHeader.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------
+Compiling files:
+  pJvm/src/PJvmJavaClass.java
+End of files
+Cleaning output files:
+  out/production/pJvm/META-INF/pJvm.kotlin_module
+  out/production/pJvm/ServiceImplKt.class
+End of files
+Compiling files:
+  c/src/serviceCHeader.kt
+  pJvm/src/serviceImpl.kt
+End of files
+Exit code: OK
+------------------------------------------

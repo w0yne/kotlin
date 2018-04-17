@@ -19,8 +19,8 @@ import org.jetbrains.jps.util.JpsPathUtil
 import org.jetbrains.kotlin.cli.common.arguments.CommonCompilerArguments
 import org.jetbrains.kotlin.compilerRunner.JpsCompilerEnvironment
 import org.jetbrains.kotlin.compilerRunner.JpsKotlinCompilerRunner
+import org.jetbrains.kotlin.config.IncrementalCompilation
 import org.jetbrains.kotlin.jps.build.FSOperationsHelper
-import org.jetbrains.kotlin.jps.model.k2JsCompilerArguments
 import org.jetbrains.kotlin.jps.model.k2MetadataCompilerArguments
 import org.jetbrains.kotlin.jps.model.kotlinCompilerSettings
 import java.io.File
@@ -41,17 +41,19 @@ class KotlinCommonModuleBuildTarget(jpsModuleBuildTarget: ModuleBuildTarget) :
         require(chunk.representativeTarget() == jpsModuleBuildTarget)
         if (reportAndSkipCircular(chunk, environment)) return false
 
-        // Incremental compilation is not supported, so mark all dependents as dirty
-        FSOperations.markDirtyRecursively(context, CompilationRound.CURRENT, chunk)
+        if (!IncrementalCompilation.isEnabled()) {
+            // Mark all dependents as dirty if incremental compilation is not supported
+            FSOperations.markDirtyRecursively(context, CompilationRound.CURRENT, chunk)
+        }
 
-        JpsKotlinCompilerRunner().runK2MetadataCompiler(
-            commonArguments,
-            module.k2MetadataCompilerArguments,
-            module.kotlinCompilerSettings,
-            environment,
-            dependenciesOutputDirs + libraryFiles,
-            filesToCompile.get(jpsModuleBuildTarget)
-        )
+//        JpsKotlinCompilerRunner().runK2MetadataCompiler(
+//            commonArguments,
+//            module.k2MetadataCompilerArguments,
+//            module.kotlinCompilerSettings,
+//            environment,
+//            dependenciesOutputDirs + libraryFiles,
+//            filesToCompile.get(jpsModuleBuildTarget)
+//        )
 
         return true
     }
