@@ -26,8 +26,10 @@ import org.jetbrains.kotlin.diagnostics.DiagnosticSink
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.resolve.BindingContext
 import org.jetbrains.kotlin.resolve.jvm.diagnostics.JvmDeclarationOrigin
-import org.jetbrains.org.objectweb.asm.*
-import org.jetbrains.org.objectweb.asm.Opcodes.*
+import org.jetbrains.org.objectweb.asm.MethodVisitor
+import org.jetbrains.org.objectweb.asm.Opcodes
+import org.jetbrains.org.objectweb.asm.Opcodes.ACC_STATIC
+import org.jetbrains.org.objectweb.asm.Type
 import org.jetbrains.org.objectweb.asm.commons.InstructionAdapter
 
 class ParcelableClinitClassBuilderInterceptorExtension : ClassBuilderInterceptorExtension {
@@ -39,6 +41,9 @@ class ParcelableClinitClassBuilderInterceptorExtension : ClassBuilderInterceptor
         return ParcelableClinitClassBuilderFactory(interceptedFactory, bindingContext)
     }
 
+    // TODO: Called from light classes
+    // TODO: PsiClassImplUtil
+    // TODO: PsiSuperMethodUtil
     private inner class ParcelableClinitClassBuilderFactory(
             private val delegateFactory: ClassBuilderFactory,
             val bindingContext: BindingContext

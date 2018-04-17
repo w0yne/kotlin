@@ -76,7 +76,7 @@ fun buildLightClass(
     }
 }
 
-private fun createJavaFileStub(project: Project, packageFqName: FqName, files: Collection<KtFile>): PsiJavaFileStub {
+fun createJavaFileStub(project: Project, packageFqName: FqName, files: Collection<KtFile>): PsiJavaFileStub {
     val javaFileStub = PsiJavaFileStubImpl(packageFqName.asString(), /*compiled = */true)
     javaFileStub.psiFactory = ClsWrapperStubPsiFactory.INSTANCE
 

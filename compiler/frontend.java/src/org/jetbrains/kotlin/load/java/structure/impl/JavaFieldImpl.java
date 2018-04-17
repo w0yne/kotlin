@@ -44,6 +44,7 @@ public class JavaFieldImpl extends JavaMemberImpl<PsiField> implements JavaField
     @Nullable
     @Override
     public Object getInitializerValue() {
+        // TODO: PsiClassReferenceListStubImpl
         return getPsi().computeConstantValue();
     }
 

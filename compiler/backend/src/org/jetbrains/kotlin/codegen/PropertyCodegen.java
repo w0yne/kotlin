@@ -468,7 +468,7 @@ public class PropertyCodegen {
         Object value = null;
 
         if (shouldWriteFieldInitializer(propertyDescriptor)) {
-            ConstantValue<?> initializer = propertyDescriptor.getCompileTimeInitializer();
+            ConstantValue<?> initializer = null;// propertyDescriptor.getCompileTimeInitializer();
             if (initializer != null) {
                 value = initializer.getValue();
             }

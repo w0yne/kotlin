@@ -27,7 +27,6 @@ import org.jetbrains.kotlin.asJava.finder.JavaElementFinder
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.idea.caches.lightClasses.IDELightClassContexts
 import org.jetbrains.kotlin.idea.caches.lightClasses.LazyLightClassDataHolder
-import org.jetbrains.kotlin.idea.resolve.frontendService
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.resolve.lazy.NoDescriptorForDeclarationException
@@ -76,8 +75,8 @@ class IDELightClassGenerationSupport(project: Project) : LightClassGenerationSup
         )
     }
 
-    private fun KtElement.getDiagnosticsHolder() =
-        getResolutionFacade().frontendService<LazyLightClassDataHolder.DiagnosticsHolder>()
+    private fun KtElement.getDiagnosticsHolder() = this
+        //getResolutionFacade().frontendService<LazyLightClassDataHolder.DiagnosticsHolder>()
 
     override fun resolveToDescriptor(declaration: KtDeclaration): DeclarationDescriptor? {
         try {

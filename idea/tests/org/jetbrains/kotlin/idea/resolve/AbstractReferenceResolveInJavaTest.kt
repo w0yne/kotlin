@@ -19,6 +19,7 @@ package org.jetbrains.kotlin.idea.resolve
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.asJava.elements.KtLightElement
 import org.jetbrains.kotlin.idea.decompiler.classFile.KtClsFile
+import org.jetbrains.kotlin.idea.test.AstAccessControl
 import org.jetbrains.kotlin.idea.test.SdkAndMockLibraryProjectDescriptor
 import org.jetbrains.kotlin.idea.test.PluginTestCaseBase
 import org.jetbrains.kotlin.psi.KtDeclaration
@@ -28,10 +29,14 @@ private val FILE_WITH_KOTLIN_CODE = PluginTestCaseBase.TEST_DATA_DIR + "/resolve
 
 abstract class AbstractReferenceResolveInJavaTest : AbstractReferenceResolveTest() {
     override fun doTest(path: String) {
+        myFixture.setCaresAboutInjection(false)
+
         assert(path.endsWith(".java")) { path }
         myFixture.configureByFile(FILE_WITH_KOTLIN_CODE)
         myFixture.configureByFile(path)
-        performChecks()
+        AstAccessControl.testWithControlledAccessToAst(false, project, testRootDisposable) {
+            performChecks()
+        }
     }
 }
 

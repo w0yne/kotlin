@@ -54,6 +54,9 @@ interface LightClassData {
 
     val supertypes: Array<PsiClassType> get() { return clsDelegate.superTypes }
 
+    val extendsListNames: Array<String>? get() = null
+    val implementsListNames: Array<String>? get() = null
+
     fun getOwnFields(containingClass: KtLightClass): List<KtLightField>
     fun getOwnMethods(containingClass: KtLightClass): List<KtLightMethod>
 }

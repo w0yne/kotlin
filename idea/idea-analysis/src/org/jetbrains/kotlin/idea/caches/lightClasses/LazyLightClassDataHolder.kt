@@ -7,6 +7,7 @@ package org.jetbrains.kotlin.idea.caches.lightClasses
 
 import com.intellij.openapi.util.Key
 import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiClassType
 import com.intellij.psi.PsiMember
 import com.intellij.psi.PsiMethod
 import com.intellij.psi.impl.java.stubs.PsiJavaFileStub
@@ -18,16 +19,24 @@ import org.jetbrains.kotlin.asJava.elements.KtLightField
 import org.jetbrains.kotlin.asJava.elements.KtLightFieldImpl
 import org.jetbrains.kotlin.asJava.elements.KtLightMethod
 import org.jetbrains.kotlin.asJava.elements.KtLightMethodImpl
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.ClassKind
+import org.jetbrains.kotlin.idea.caches.resolve.getResolutionFacade
+import org.jetbrains.kotlin.idea.resolve.frontendService
 import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtElement
 import org.jetbrains.kotlin.psi.NotNullableUserDataProperty
 import org.jetbrains.kotlin.psi.debugText.getDebugText
+import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.diagnostics.Diagnostics
+import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.storage.StorageManager
 import org.jetbrains.kotlin.utils.KotlinExceptionWithAttachments
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 typealias ExactLightClassContextProvider = () -> LightClassConstructionContext
 typealias DummyLightClassContextProvider = (() -> LightClassConstructionContext?)?
-typealias DiagnosticsHolderProvider = () -> LazyLightClassDataHolder.DiagnosticsHolder
+typealias DiagnosticsHolderProvider = () -> KtElement
 
 sealed class LazyLightClassDataHolder(
     builder: LightClassBuilder,
@@ -51,7 +60,8 @@ sealed class LazyLightClassDataHolder(
 
     private val exactResultLazyValue = lazyPub {
         val (stub, _, diagnostics) = builder(exactContextProvider())
-        diagnosticsHolderProvider().putDiagnostics(this, diagnostics)
+        diagnosticsHolderProvider().getResolutionFacade().frontendService<LazyLightClassDataHolder.DiagnosticsHolder>()
+            .putDiagnostics(this, diagnostics)
         stub
     }
 
@@ -69,7 +79,9 @@ sealed class LazyLightClassDataHolder(
             // run light class builder
             exactResultLazyValue.value
 
-            return diagnosticsHolderProvider().getComputedDiagnostics(this) ?: Diagnostics.EMPTY
+            return diagnosticsHolderProvider().getResolutionFacade().frontendService<LazyLightClassDataHolder.DiagnosticsHolder>().getComputedDiagnostics(
+                this
+            ) ?: Diagnostics.EMPTY
         }
 
     // for facade or defaultImpls
@@ -114,9 +126,32 @@ sealed class LazyLightClassDataHolder(
 
         private val dummyDelegate: PsiClass? by lazyPub { inexactStub?.let(findDelegate) }
 
+        override val supertypes: Array<PsiClassType>
+            get() = super.supertypes
+
+
+        override val extendsListNames: Array<String>? by lazyPub {
+            computeSupertypeList(false)
+        }
+
+        private fun computeSupertypeList(interfaces: Boolean): Array<String> {
+            val klassOrObject = diagnosticsHolderProvider() as? KtClassOrObject ?: return emptyArray()
+            return (klassOrObject.getResolutionFacade().resolveToDescriptor(
+                klassOrObject,
+                BodyResolveMode.PARTIAL
+            ) as ClassDescriptor).typeConstructor.supertypes.mapNotNull {
+                it.constructor.declarationDescriptor?.safeAs<ClassDescriptor>()?.takeIf {
+                    it.kind.isInterfaceOnJvm() == interfaces
+                }?.fqNameSafe?.asString()
+            }.toTypedArray()
+        }
+
+        override val implementsListNames: Array<String> by lazyPub {
+            computeSupertypeList(true)
+        }
+
         override fun getOwnFields(containingClass: KtLightClass): List<KtLightField> {
             if (dummyDelegate == null) return KtLightFieldImpl.fromClsFields(clsDelegate, containingClass)
-
             return dummyDelegate!!.fields.map { dummyField ->
                 val fieldOrigin = KtLightFieldImpl.getOrigin(dummyField)
 
@@ -163,6 +198,8 @@ sealed class LazyLightClassDataHolder(
         return this
     }
 }
+
+private fun ClassKind.isInterfaceOnJvm() = this == ClassKind.INTERFACE || this == ClassKind.ANNOTATION_CLASS
 
 private sealed class LazyLightClassMemberMatchingError(message: String, containingClass: KtLightClass) :
     KotlinExceptionWithAttachments(message) {
