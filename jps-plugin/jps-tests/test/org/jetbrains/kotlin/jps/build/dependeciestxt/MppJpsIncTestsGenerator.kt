@@ -5,7 +5,6 @@
 
 package org.jetbrains.kotlin.jps.build.dependeciestxt
 
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.capitalizeFirstLetter
 import java.io.File
 
 /**
@@ -61,14 +60,14 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
 
     val actualFiles = mutableSetOf(rootDir)
 
-    val DependenciesTxt.Module.capitalName get() = name.capitalizeFirstLetter()
+    val DependenciesTxt.Module.capitalName get() = name.capitalize()
 
     fun actualize() {
         TestCase("initial").generateBaseContent()
 
         txt.modules.forEach {
             if (it.generateEditingTests) {
-                val nameSuffix = it.name.capitalizeFirstLetter()
+                val nameSuffix = it.name.capitalize()
                 TestCase("editing${nameSuffix}Kotlin").generateEditing(it, changeJavaClass = false)
 
                 when {
@@ -215,7 +214,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
         }
 
         private fun serviceName(commonModule: DependenciesTxt.Module, suffix: String) =
-            commonModule.name.capitalizeFirstLetter() + suffix
+            commonModule.name.capitalize() + suffix
 
         fun serviceKtFile(module: DependenciesTxt.Module, serviceName: String = "", fileNameSuffix: String = ""): File {
             val suffix = if (module.isCommonModule) "Header" else "Impl"
@@ -233,7 +232,7 @@ class MppJpsIncTestsGenerator(val txtFile: File, val txt: DependenciesTxt, val r
             serviceName: String = "",
             fileNameSuffix: String = ""
         ) {
-            val uniqServiceName = module.name.capitalizeFirstLetter() + serviceName
+            val uniqServiceName = module.name.capitalize() + serviceName
             serviceKtFile(module, uniqServiceName, fileNameSuffix).setFileContent(buildString {
                 appendln(generatedByComment)
 
