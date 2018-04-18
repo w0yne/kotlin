@@ -377,6 +377,7 @@ class K2JVMCompiler : CLICompiler<K2JVMCompilerArguments>() {
             configuration.put(JVMConfigurationKeys.DISABLE_CALL_ASSERTIONS, arguments.noCallAssertions)
             configuration.put(JVMConfigurationKeys.DISABLE_RECEIVER_ASSERTIONS, arguments.noReceiverAssertions)
             configuration.put(JVMConfigurationKeys.DISABLE_PARAM_ASSERTIONS, arguments.noParamAssertions)
+            configuration.put(JVMConfigurationKeys.ENABLE_LAZY_ASSERTIONS, arguments.lazyAssertions)
             configuration.put(
                 JVMConfigurationKeys.NO_EXCEPTION_ON_EXPLICIT_EQUALS_FOR_BOXED_NULL,
                 arguments.noExceptionOnExplicitEqualsForBoxedNull

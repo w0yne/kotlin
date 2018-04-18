@@ -234,6 +234,9 @@ class K2JVMCompilerArguments : CommonCompilerArguments() {
     @Argument(value = "-Xdisable-default-scripting-plugin", description = "Do not enable scripting plugin by default")
     var disableDefaultScriptingPlugin: Boolean by FreezableVar(false)
 
+    @Argument(value = "-Xassertions", description = "Enable lazy assertions")
+    var lazyAssertions: Boolean by FreezableVar(false)
+
     // Paths to output directories for friend modules.
     var friendPaths: Array<String>? by FreezableVar(null)
 

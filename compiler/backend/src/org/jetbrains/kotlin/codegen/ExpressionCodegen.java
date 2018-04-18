@@ -40,7 +40,6 @@ import org.jetbrains.kotlin.codegen.when.SwitchCodegenProvider;
 import org.jetbrains.kotlin.config.ApiVersion;
 import org.jetbrains.kotlin.config.LanguageFeature;
 import org.jetbrains.kotlin.descriptors.*;
-import org.jetbrains.kotlin.descriptors.impl.AnonymousFunctionDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.SyntheticFieldDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor;
@@ -2350,6 +2349,13 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
             @NotNull CallGenerator callGenerator,
             @NotNull ArgumentGenerator argumentGenerator
     ) {
+        boolean isAssert = isLazyAssertCall(resolvedCall);
+
+        Label elseLabelForLazyAssert = null;
+        if (isAssert) {
+            elseLabelForLazyAssert = generateAssertionCheck();
+        }
+
         boolean isSuspendNoInlineCall =
                 CoroutineCodegenUtilKt.isSuspendNoInlineCall(resolvedCall, this, state.getLanguageVersionSettings());
         boolean isConstructor = resolvedCall.getResultingDescriptor() instanceof ConstructorDescriptor;
@@ -2401,11 +2407,35 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
             addInlineMarker(v, false);
         }
 
+        if (isAssert) {
+            v.mark(elseLabelForLazyAssert);
+        }
+
         KotlinType returnType = resolvedCall.getResultingDescriptor().getReturnType();
         if (returnType != null && KotlinBuiltIns.isNothing(returnType)) {
             v.aconst(null);
             v.athrow();
         }
+    }
+
+    @NotNull
+    private Label generateAssertionCheck() {
+        StackValue assertionEnabled =
+                StackValue.field(Type.BOOLEAN_TYPE, Type.getType("Lkotlin/_Assertions;"), "ENABLED", true, StackValue.none());
+        Label elseLabel = new Label();
+        BranchedValue.Companion.condJump(assertionEnabled, elseLabel, true, v);
+        return elseLabel;
+    }
+
+    private boolean isLazyAssertCall(@NotNull ResolvedCall<?> resolvedCall) {
+        if (!state.isLazyAssertionsEnabled()) return false;
+        Collection<FunctionDescriptor> assertFunctionDescriptors = CodegenUtil.getAssertFunctionDescriptors(resolvedCall.getResultingDescriptor());
+        for (FunctionDescriptor descriptor : assertFunctionDescriptors) {
+            if (DescriptorEquivalenceForOverrides.INSTANCE.areEquivalent(descriptor, resolvedCall.getResultingDescriptor())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void putReceiverAndInlineMarkerIfNeeded(

@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.diagnostics.DiagnosticSink
 import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.psi.psiUtil.hasExpectModifier
@@ -31,10 +32,13 @@ import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import org.jetbrains.kotlin.resolve.bindingContextUtil.isUsedAsExpression
 import org.jetbrains.kotlin.resolve.calls.callUtil.getResolvedCall
+import org.jetbrains.kotlin.resolve.descriptorUtil.module
 import org.jetbrains.kotlin.resolve.multiplatform.ExpectedActualResolver
 import org.jetbrains.kotlin.types.KotlinType
 
 object CodegenUtil {
+    private lateinit var assertFunctionDescriptors: Collection<FunctionDescriptor>
+
     @JvmStatic
     fun getDelegatePropertyIfAny(
             expression: KtExpression, classDescriptor: ClassDescriptor, bindingContext: BindingContext
@@ -202,5 +206,16 @@ object CodegenUtil {
         }
 
         return descriptor.valueParameters
+    }
+
+    @JvmStatic
+    fun getAssertFunctionDescriptors(
+        descriptor: CallableDescriptor
+    ): Collection<FunctionDescriptor> {
+        if (!this::assertFunctionDescriptors.isInitialized) {
+            assertFunctionDescriptors = descriptor.module.getPackage(FqName("kotlin")).memberScope
+                .getContributedFunctions(Name.identifier("assert"), NoLookupLocation.FROM_BACKEND)
+        }
+        return assertFunctionDescriptors
     }
 }
