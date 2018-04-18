@@ -84,8 +84,8 @@ class JsClassGenerator(private val irClass: IrClass, val context: JsGenerationCo
     }
 
     private fun generateInheritanceCode(): List<JsStatement> {
-        val baseClass = irClass.superClasses.first { it.kind != ClassKind.INTERFACE }
-        if (baseClass.isAny) {
+        val baseClass = irClass.superClasses.firstOrNull { it.kind != ClassKind.INTERFACE }
+        if (baseClass == null || baseClass.isAny) {
             return emptyList()
         }
 
