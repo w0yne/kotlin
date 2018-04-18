@@ -5,16 +5,17 @@
 
 package org.jetbrains.kotlin.ir.backend.js.transformers.irToJs
 
-import org.jetbrains.kotlin.ir.backend.js.JsIntrinsics
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.ir.backend.js.JsIrBackendContext
+import org.jetbrains.kotlin.ir.backend.js.utils.JsGenerationContext
 import org.jetbrains.kotlin.ir.backend.js.utils.Namer
 import org.jetbrains.kotlin.ir.declarations.IrFunction
-import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.symbols.IrSymbol
+import org.jetbrains.kotlin.ir.symbols.impl.IrClassSymbolImpl
 import org.jetbrains.kotlin.js.backend.ast.*
 
-typealias IrCallTransformer = (IrCall, List<JsExpression>) -> JsExpression
+typealias IrCallTransformer = (IrCall, List<JsExpression>, JsGenerationContext) -> JsExpression
 
 class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
     private val transformers: Map<IrSymbol, IrCallTransformer>
@@ -62,13 +63,14 @@ class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
 
             binOp(intrinsics.jsInstanceOf, JsBinaryOperator.INSTANCEOF)
 
-            add(intrinsics.jsObjectCreate) { call, _ ->
+            add(intrinsics.jsObjectCreate) { call, _, context ->
                 val classToCreate = call.getTypeArgument(0)!!
-                val prototype = prototypeOf(classToCreate.constructor.declarationDescriptor!!.name.toJsName().makeRef())
+                val className = context.getNameForSymbol(IrClassSymbolImpl(classToCreate.constructor.declarationDescriptor as ClassDescriptor))
+                val prototype = prototypeOf(className.makeRef())
                 JsInvocation(Namer.JS_OBJECT_CREATE_FUNCTION, prototype)
             }
 
-            add(backendContext.sharedVariablesManager.closureBoxConstrctorTypeSymbol) { _, args ->
+            add(backendContext.sharedVariablesManager.closureBoxConstrctorTypeSymbol) { _, args, _ ->
                 val initializer = args[0]
                 val propertyInit = JsPropertyInitializer(JsNameRef("v"), initializer)
                 val objectLiteral = JsObjectLiteral()
@@ -89,13 +91,13 @@ private fun MutableMap<IrSymbol, IrCallTransformer>.add(function: IrFunction, t:
 }
 
 private fun MutableMap<IrSymbol, IrCallTransformer>.binOp(function: IrFunction, op: JsBinaryOperator) {
-    put(function.symbol, { _, args -> JsBinaryOperation(op, args[0], args[1]) })
+    put(function.symbol, { _, args, _ -> JsBinaryOperation(op, args[0], args[1]) })
 }
 
 private fun MutableMap<IrSymbol, IrCallTransformer>.prefixOp(function: IrFunction, op: JsUnaryOperator) {
-    put(function.symbol, { _, args -> JsPrefixOperation(op, args[0]) })
+    put(function.symbol, { _, args, _ -> JsPrefixOperation(op, args[0]) })
 }
 
 private fun MutableMap<IrSymbol, IrCallTransformer>.postfixOp(function: IrFunction, op: JsUnaryOperator) {
-    put(function.symbol, { _, args -> JsPostfixOperation(op, args[0]) })
+    put(function.symbol, { _, args, _ -> JsPostfixOperation(op, args[0]) })
 }
