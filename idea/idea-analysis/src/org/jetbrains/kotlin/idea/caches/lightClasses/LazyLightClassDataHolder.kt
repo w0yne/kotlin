@@ -25,10 +25,12 @@ import org.jetbrains.kotlin.idea.caches.resolve.getResolutionFacade
 import org.jetbrains.kotlin.idea.resolve.frontendService
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtElement
+import org.jetbrains.kotlin.psi.KtFunction
 import org.jetbrains.kotlin.psi.NotNullableUserDataProperty
 import org.jetbrains.kotlin.psi.debugText.getDebugText
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.diagnostics.Diagnostics
+import org.jetbrains.kotlin.resolve.jvm.diagnostics.JvmDeclarationOriginKind
 import org.jetbrains.kotlin.resolve.lazy.BodyResolveMode
 import org.jetbrains.kotlin.storage.StorageManager
 import org.jetbrains.kotlin.utils.KotlinExceptionWithAttachments
@@ -49,6 +51,7 @@ sealed class LazyLightClassDataHolder(
         private val computedLightClassDiagnostics = hashMapOf<LazyLightClassDataHolder, Diagnostics>()
 
         fun putDiagnostics(lazyLightClassDataHolder: LazyLightClassDataHolder, diagnostics: Diagnostics) {
+            if (diagnostics.isEmpty()) return
             storageManager.compute {
                 computedLightClassDiagnostics[lazyLightClassDataHolder] = diagnostics
             }
@@ -124,7 +127,7 @@ sealed class LazyLightClassDataHolder(
     ) : LightClassData {
         override val clsDelegate: PsiClass by lazyPub { findDelegate(javaFileStub) }
 
-        private val dummyDelegate: PsiClass? by lazyPub { inexactStub?.let(findDelegate) }
+        private val dummyDelegate: PsiClass? get() = clsDelegate//by lazyPub { /*inexactStub?.let(findDelegate)*/ }
 
         override val supertypes: Array<PsiClassType>
             get() = super.supertypes
@@ -163,7 +166,22 @@ sealed class LazyLightClassDataHolder(
         }
 
         override fun getOwnMethods(containingClass: KtLightClass): List<KtLightMethod> {
-            if (dummyDelegate == null) return KtLightMethodImpl.fromClsMethods(clsDelegate, containingClass)
+            //if (dummyDelegate == null) return KtLightMethodImpl.fromClsMethods(clsDelegate, containingClass)
+
+            containingClass.kotlinOrigin?.let {
+                return it.declarations.filterIsInstance<KtFunction>().map {
+                    KtLightMethodImpl.lazy(
+                        null,
+                        containingClass,
+                        LightMemberOriginForDeclaration(it, JvmDeclarationOriginKind.OTHER),
+                        name = it.name
+                    ) {
+                        val exactDelegateMethod = clsDelegate.findMethodsByName(it.name, false).firstOrNull()
+
+                        exactDelegateMethod!!
+                    }
+                }
+            }
 
             return dummyDelegate!!.methods.map { dummyMethod ->
                 val methodOrigin = KtLightMethodImpl.getOrigin(dummyMethod)

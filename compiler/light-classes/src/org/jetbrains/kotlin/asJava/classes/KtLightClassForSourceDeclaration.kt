@@ -63,6 +63,7 @@ import org.jetbrains.kotlin.psi.psiUtil.hasExpectModifier
 import org.jetbrains.kotlin.psi.psiUtil.parentsWithSelf
 import org.jetbrains.kotlin.psi.stubs.KotlinClassOrObjectStub
 import org.jetbrains.kotlin.resolve.DescriptorUtils
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.util.*
 import javax.swing.Icon
 
@@ -74,6 +75,29 @@ abstract class KtLightClassForSourceDeclaration(protected val classOrObject: KtC
 
     private val _filestub by lazyPub {
         createJavaFileStub(classOrObject.project, classOrObject.containingKtFile.packageFqName, listOf(classOrObject.containingKtFile))
+    }
+
+    private val methodNames: Set<String>? by lazyPub {
+        val destination = hashSetOf<String>()
+        classOrObject.declarations.mapNotNullTo(destination) {
+            //if (it.annotationEntries.isNotEmpty()) return@lazyPub null
+            it.name
+        }
+        for (companionObject in classOrObject.companionObjects) {
+            companionObject.declarations.mapNotNullTo(destination) {
+                //if (it.annotationEntries.isNotEmpty()) return@lazyPub null
+                it.name
+            }
+        }
+
+        destination
+    }
+
+    override fun findMethodsByName(name: String, checkBases: Boolean): Array<PsiMethod> {
+        val methodNames = methodNames
+        if (methodNames != null && name !in methodNames) return PsiMethod.EMPTY_ARRAY
+
+        return super.findMethodsByName(name, checkBases)
     }
 
     private val _extendsList by lazyPub {
@@ -102,6 +126,10 @@ abstract class KtLightClassForSourceDeclaration(protected val classOrObject: KtC
                     ?: super.getImplementsList()
                     ?: return@lazyPub null
         KtLightPsiReferenceList(listDelegate, this)
+    }
+
+    override fun getInterfaces(): Array<PsiClass> {
+        return implementsList?.referencedTypes?.mapNotNull { it.safeAs<PsiClassType>()?.resolve() }?.toTypedArray() ?: super.getInterfaces()
     }
 
     override val kotlinOrigin: KtClassOrObject = classOrObject

@@ -39,7 +39,8 @@ class KtLightMethodImpl private constructor(
         computeRealDelegate: () -> PsiMethod,
         lightMemberOrigin: LightMemberOrigin?,
         containingClass: KtLightClass,
-        private val dummyDelegate: PsiMethod? = null
+        private val dummyDelegate: PsiMethod? = null,
+        private val name_: String? = null
 ) : KtLightMemberImpl<PsiMethod>(computeRealDelegate, lightMemberOrigin, containingClass, dummyDelegate), KtLightMethod {
     private val returnTypeElem by lazyPub {
         val delegateTypeElement = clsDelegate.returnTypeElement as? ClsTypeElementImpl
@@ -53,6 +54,8 @@ class KtLightMethodImpl private constructor(
             clsDelegate.parameterList.parameters.mapIndexed { index, clsParameter -> KtLightParameter(clsParameter, index, this@KtLightMethodImpl) }
         }
     }
+
+    override fun getName() = name_ ?: super.getName()
 
     private val typeParamsList: CachedValue<PsiTypeParameterList> by lazyPub {
         val cacheManager = CachedValuesManager.getManager(clsDelegate.project)
@@ -188,12 +191,13 @@ class KtLightMethodImpl private constructor(
         }
 
         fun lazy(
-                dummyDelegate: PsiMethod?,
-                containingClass: KtLightClass,
-                origin: LightMemberOriginForDeclaration?,
-                computeRealDelegate: () -> PsiMethod
+            dummyDelegate: PsiMethod?,
+            containingClass: KtLightClass,
+            origin: LightMemberOriginForDeclaration?,
+            name: String? = null,
+            computeRealDelegate: () -> PsiMethod
         ): KtLightMethodImpl {
-            return KtLightMethodImpl(computeRealDelegate, origin, containingClass, dummyDelegate)
+            return KtLightMethodImpl(computeRealDelegate, origin, containingClass, dummyDelegate, name)
         }
 
         fun fromClsMethods(delegateClass: PsiClass, containingClass: KtLightClass) = delegateClass.methods.map {

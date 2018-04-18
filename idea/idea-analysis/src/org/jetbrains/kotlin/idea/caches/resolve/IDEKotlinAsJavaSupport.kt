@@ -14,7 +14,10 @@ import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.kotlin.asJava.KotlinAsJavaSupport
 import org.jetbrains.kotlin.asJava.builder.ClsWrapperStubPsiFactory
-import org.jetbrains.kotlin.asJava.classes.*
+import org.jetbrains.kotlin.asJava.classes.KtLightClass
+import org.jetbrains.kotlin.asJava.classes.KtLightClassForFacade
+import org.jetbrains.kotlin.asJava.classes.KtLightClassForScript
+import org.jetbrains.kotlin.asJava.classes.KtLightClassForSourceDeclaration
 import org.jetbrains.kotlin.fileClasses.javaFileFacadeFqName
 import org.jetbrains.kotlin.idea.caches.lightClasses.ClsJavaStubByVirtualFileCache
 import org.jetbrains.kotlin.idea.caches.lightClasses.KtLightClassForDecompiledDeclaration
@@ -148,11 +151,11 @@ class IDEKotlinAsJavaSupport(private val project: Project): KotlinAsJavaSupport(
 
         val lightClasses = ArrayList<PsiClass>()
         lightClasses.add(lightClassForFacade)
-        if (facadeFiles.size > 1) {
-            lightClasses.addAll(facadeFiles.map {
-                FakeLightClassForFileOfPackage(lightClassForFacade, it)
-            })
-        }
+//        if (facadeFiles.size > 1) {
+//            lightClasses.addAll(facadeFiles.map {
+//                FakeLightClassForFileOfPackage(lightClassForFacade, it)
+//            })
+//        }
         return lightClasses
     }
 

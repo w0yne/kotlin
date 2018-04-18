@@ -22,9 +22,9 @@ import org.gradle.api.internal.tasks.testing.filter.DefaultTestFilter
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.testing.Test
 import org.gradle.kotlin.dsl.extra
+import org.gradle.kotlin.dsl.project
 import org.gradle.kotlin.dsl.task
 import org.gradle.kotlin.dsl.the
-import org.gradle.kotlin.dsl.*
 import java.lang.Character.isLowerCase
 import java.lang.Character.isUpperCase
 
@@ -67,8 +67,8 @@ fun Project.projectTest(taskName: String = "test", body: Test.() -> Unit = {}): 
 
     dependsOn(":test-instrumenter:jar")
 
-    jvmArgs("-ea", "-XX:+HeapDumpOnOutOfMemoryError", "-Xmx1100m", "-XX:+UseCodeCacheFlushing", "-XX:ReservedCodeCacheSize=128m", "-Djna.nosys=true")
-    maxHeapSize = "1100m"
+    jvmArgs("-ea", "-XX:+HeapDumpOnOutOfMemoryError", "-Xmx5g", "-XX:+UseCodeCacheFlushing", "-XX:ReservedCodeCacheSize=128m", "-Djna.nosys=true")
+    maxHeapSize = "5g"
     systemProperty("idea.is.unit.test", "true")
     systemProperty("idea.home.path", intellijRootDir().canonicalPath)
     environment("NO_FS_ROOTS_ACCESS_CHECK", "true")
