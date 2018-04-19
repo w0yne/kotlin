@@ -6,16 +6,16 @@
   <version>@snapshot@</version>
   <vendor url="http://www.jetbrains.com">JetBrains</vendor>
 
-  <idea-version since-build="173.1" until-build="173.*"/>
+  <idea-version since-build="182.1" until-build="183.*"/>
 
   <depends>com.intellij.modules.platform</depends>
-  <depends>com.intellij.modules.remoteServers</depends>
 
   <!-- required for Kotlin/Native plugin -->
   <depends optional="true">org.jetbrains.kotlin.native.platform.deps</depends>
 
   <depends optional="true" config-file="junit.xml">JUnit</depends>
   <depends optional="true" config-file="gradle.xml">org.jetbrains.plugins.gradle</depends>
+  <depends optional="true" config-file="gradle-java.xml">org.jetbrains.plugins.gradle.java</depends>
   <depends optional="true" config-file="maven.xml">org.jetbrains.idea.maven</depends>
   <depends optional="true" config-file="testng-j.xml">TestNG-J</depends>
   <depends optional="true" config-file="kotlin-copyright.xml">com.intellij.copyright</depends>
@@ -28,6 +28,7 @@
   <!-- ULTIMATE-PLUGIN-PLACEHOLDER -->
 
   <!-- CIDR-PLUGIN-PLACEHOLDER-START -->
+  <depends>com.intellij.modules.idea</depends>
   <depends>com.intellij.modules.java</depends>
   <depends optional="true" config-file="javaScriptDebug.xml">JavaScriptDebugger</depends>
   <!-- CIDR-PLUGIN-PLACEHOLDER-END -->
@@ -82,9 +83,9 @@
 
     <group id = "ConvertJavaToKotlinGroup">
       <separator/>
-      <action id="ConvertJavaToKotlin" class="org.jetbrains.kotlin.idea.actions.JavaToKotlinAction"
-              text="Convert Java File to Kotlin File">
-        <keyboard-shortcut keymap="$default" first-keystroke="control alt shift K"/>
+    <action id="ConvertJavaToKotlin" class="org.jetbrains.kotlin.idea.actions.JavaToKotlinAction"
+            text="Convert Java File to Kotlin File">
+      <keyboard-shortcut keymap="$default" first-keystroke="control alt shift K"/>
       </action>
       <add-to-group group-id="CodeMenu" anchor="last"/>
       <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
@@ -1569,16 +1570,6 @@
 
     <intentionAction>
       <className>org.jetbrains.kotlin.idea.intentions.AddAnnotationUseSiteTargetIntention</className>
-      <category>Kotlin</category>
-    </intentionAction>
-
-    <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.JoinParameterListIntention</className>
-      <category>Kotlin</category>
-    </intentionAction>
-
-    <intentionAction>
-      <className>org.jetbrains.kotlin.idea.intentions.JoinArgumentListIntention</className>
       <category>Kotlin</category>
     </intentionAction>
 
