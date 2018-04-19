@@ -23,7 +23,9 @@ import org.jetbrains.kotlin.builtins.KotlinBuiltIns;
 import org.jetbrains.kotlin.codegen.binding.CalculatedClosure;
 import org.jetbrains.kotlin.codegen.binding.CodegenBinding;
 import org.jetbrains.kotlin.codegen.context.*;
-import org.jetbrains.kotlin.codegen.coroutines.*;
+import org.jetbrains.kotlin.codegen.coroutines.CoroutineCodegenForLambda;
+import org.jetbrains.kotlin.codegen.coroutines.CoroutineCodegenUtilKt;
+import org.jetbrains.kotlin.codegen.coroutines.ResolvedCallWithRealDescriptor;
 import org.jetbrains.kotlin.codegen.extensions.ExpressionCodegenExtension;
 import org.jetbrains.kotlin.codegen.inline.*;
 import org.jetbrains.kotlin.codegen.intrinsics.*;
@@ -40,7 +42,6 @@ import org.jetbrains.kotlin.codegen.when.SwitchCodegenProvider;
 import org.jetbrains.kotlin.config.ApiVersion;
 import org.jetbrains.kotlin.config.LanguageFeature;
 import org.jetbrains.kotlin.descriptors.*;
-import org.jetbrains.kotlin.descriptors.impl.AnonymousFunctionDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.LocalVariableDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.SyntheticFieldDescriptor;
 import org.jetbrains.kotlin.descriptors.impl.TypeAliasConstructorDescriptor;
@@ -2875,7 +2876,7 @@ public class ExpressionCodegen extends KtVisitor<StackValue, StackValue> impleme
                     v.dup();
                     StackValue rightSide = gen(arguments.get(i).getArgumentExpression());
                     StackValue
-                            .arrayElement(elementType, elementKotlinType, StackValue.onStack(type, outType), StackValue.constant(i, Type.INT_TYPE))
+                            .arrayElement(elementType, elementKotlinType, StackValue.onStack(type, outType), StackValue.constant(i))
                             .store(rightSide, v);
                 }
                 return Unit.INSTANCE;

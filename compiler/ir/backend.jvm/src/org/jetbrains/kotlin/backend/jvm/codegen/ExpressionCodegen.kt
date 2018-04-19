@@ -475,7 +475,7 @@ class ExpressionCodegen(
             val elementKotlinType = outType.constructor.builtIns.getArrayElementType(outType)
             for ((i, element)  in expression.elements.withIndex()) {
                 mv.dup()
-                StackValue.constant(i, Type.INT_TYPE).put(Type.INT_TYPE, mv)
+                StackValue.constant(i).put(Type.INT_TYPE, mv)
                 val rightSide = gen(element, elementType, data)
                 StackValue
                     .arrayElement(elementType, elementKotlinType, StackValue.onStack(elementType, outType), StackValue.onStack(Type.INT_TYPE))
