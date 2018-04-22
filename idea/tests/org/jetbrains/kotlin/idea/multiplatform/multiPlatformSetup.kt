@@ -11,18 +11,11 @@ import com.intellij.openapi.module.StdModuleTypes
 import com.intellij.openapi.roots.CompilerModuleExtension
 import com.intellij.openapi.roots.ModuleRootModificationUtil
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.testFramework.PlatformTestCase
 import junit.framework.TestCase
-import org.jetbrains.kotlin.codegen.forTestCompile.ForTestCompileRuntime
 import org.jetbrains.kotlin.config.JvmTarget
 import org.jetbrains.kotlin.config.TargetPlatformKind
-import org.jetbrains.kotlin.idea.framework.CommonLibraryKind
-import org.jetbrains.kotlin.idea.framework.JSLibraryKind
 import org.jetbrains.kotlin.idea.stubs.AbstractMultiModuleTest
 import org.jetbrains.kotlin.idea.stubs.createFacet
-import org.jetbrains.kotlin.idea.test.ConfigLibraryUtil
-import org.jetbrains.kotlin.idea.test.PluginTestCaseBase
-import org.jetbrains.kotlin.test.TestJdkKind
 import java.io.File
 
 // allows to configure a test mpp project
@@ -40,21 +33,7 @@ fun AbstractMultiModuleTest.setupMppProjectFromDirStructure(testRoot: File) {
     infosByModuleId.entries.forEach { (id, rootInfos) ->
         val module = modulesById[id]!!
         rootInfos.flatMap { it.dependencies }.forEach {
-            when (it) {
-                is ModuleDependency -> module.addDependency(modulesById[it.moduleId]!!)
-                is StdlibDependency -> when (id.platform) {
-                    is TargetPlatformKind.Common -> module.addLibrary(
-                        ForTestCompileRuntime.stdlibCommonForTests(), kind = CommonLibraryKind
-                    )
-                    is TargetPlatformKind.Jvm -> module.addLibrary(ForTestCompileRuntime.runtimeJarForTests())
-                    is TargetPlatformKind.JavaScript -> module.addLibrary(ForTestCompileRuntime.stdlibJsForTests(), kind = JSLibraryKind)
-                }
-                is FullJdkDependency -> {
-                    ConfigLibraryUtil.configureSdk(module, PluginTestCaseBase.addJdk(testRootDisposable) {
-                        PluginTestCaseBase.jdk(TestJdkKind.FULL_JDK)
-                    })
-                }
-            }
+            module.addDependency(modulesById[it]!!)
         }
     }
 
@@ -102,13 +81,13 @@ private fun setupJsTestOutput(module: Module) {
 }
 
 private fun AbstractMultiModuleTest.createModule(name: String): Module {
-    val moduleDir = PlatformTestCase.createTempDir("")
+    val moduleDir = createTempDir("")
     val module = createModule(moduleDir.toString() + "/" + name, StdModuleTypes.JAVA)
     val root = LocalFileSystem.getInstance().refreshAndFindFileByIoFile(moduleDir)
     TestCase.assertNotNull(root)
     object : WriteCommandAction.Simple<Unit>(module.project) {
         @Throws(Throwable::class)
-        override fun run() {
+        protected override fun run() {
             root!!.refresh(false, true)
         }
     }.execute().throwException()
@@ -117,11 +96,9 @@ private fun AbstractMultiModuleTest.createModule(name: String): Module {
 
 private val testSuffixes = setOf("test", "tests")
 private val platformNames = mapOf(
-    listOf("header", "common", "expect") to TargetPlatformKind.Common,
-    listOf("java", "jvm") to TargetPlatformKind.Jvm[JvmTarget.DEFAULT],
-    listOf("java8", "jvm8") to TargetPlatformKind.Jvm[JvmTarget.JVM_1_8],
-    listOf("java6", "jvm6") to TargetPlatformKind.Jvm[JvmTarget.JVM_1_6],
-    listOf("js", "javascript") to TargetPlatformKind.JavaScript
+    TargetPlatformKind.Common to listOf("header", "common", "expect"),
+    TargetPlatformKind.Jvm[JvmTarget.DEFAULT] to listOf("java", "jvm"),
+    TargetPlatformKind.JavaScript to listOf("js", "javascript")
 )
 
 private fun parseDirName(dir: File): RootInfo {
@@ -131,29 +108,20 @@ private fun parseDirName(dir: File): RootInfo {
 
 private fun parseDependencies(parts: List<String>) =
     parts.filter { it.startsWith("dep(") && it.endsWith(")") }.map {
-        parseDependency(it)
+        parseModuleId(it.removePrefix("dep(").removeSuffix(")").split("-"))
     }
-
-private fun parseDependency(it: String): Dependency {
-    val dependencyString = it.removePrefix("dep(").removeSuffix(")")
-
-    return when {
-        dependencyString.equals("stdlib", ignoreCase = true) -> StdlibDependency
-        dependencyString.equals("fulljdk", ignoreCase = true) -> FullJdkDependency
-        else -> ModuleDependency(parseModuleId(dependencyString.split("-")))
-    }
-}
 
 private fun parseModuleId(parts: List<String>): ModuleId {
-    val platform = parsePlatform(parts)
+    val platform = parsePlatform(parts).key
     val name = parseModuleName(parts)
-    return ModuleId(name, platform)
+    val moduleId = ModuleId(name, platform)
+    return moduleId
 }
 
 private fun parsePlatform(parts: List<String>) =
-    platformNames.entries.single { (names, _) ->
+    platformNames.entries.single { (_, names) ->
         names.any { name -> parts.any { part -> part.equals(name, ignoreCase = true) } }
-    }.value
+    }
 
 private fun parseModuleName(parts: List<String>) = when {
     parts.size > 1 -> parts.first()
@@ -181,10 +149,5 @@ private data class RootInfo(
     val moduleId: ModuleId,
     val isTestRoot: Boolean,
     val moduleRoot: File,
-    val dependencies: List<Dependency>
+    val dependencies: List<ModuleId>
 )
-
-private sealed class Dependency
-private class ModuleDependency(val moduleId: ModuleId) : Dependency()
-private object StdlibDependency : Dependency()
-private object FullJdkDependency : Dependency()
