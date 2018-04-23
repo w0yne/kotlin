@@ -127,6 +127,14 @@ class IrElementToJsExpressionTransformer : BaseIrElementToJsNodeTransformer<JsEx
             return it(expression, arguments, context)
         }
 
+        expression.superQualifierSymbol?.let {
+            val qualifierName = context.getNameForSymbol(it).makeRef()
+            val targetName = context.getNameForSymbol(symbol)
+            val qPrototype = JsNameRef(targetName, prototypeOf(qualifierName))
+            val callRef = JsNameRef(Namer.CALL_FUNCTION, qPrototype)
+            return JsInvocation(callRef, jsDispatchReceiver?. let { listOf(it) + arguments } ?: arguments)
+        }
+
         return if (symbol is IrConstructorSymbol) {
             JsNew(context.getNameForSymbol(symbol).makeRef(), arguments)
         } else {
