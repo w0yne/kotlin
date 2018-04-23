@@ -36,7 +36,7 @@ import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
 import org.jetbrains.org.objectweb.asm.Opcodes
 import java.util.*
 
-class JvmSpecialDescriptorsFactory(
+class JvmDescriptorsFactory(
         private val psiSourceManager: PsiSourceManager,
         private val builtIns: KotlinBuiltIns
 ) : DescriptorsFactory {
