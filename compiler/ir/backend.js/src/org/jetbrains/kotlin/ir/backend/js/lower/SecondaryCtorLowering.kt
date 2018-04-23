@@ -5,7 +5,7 @@
 
 package org.jetbrains.kotlin.ir.backend.js.lower
 
-import org.jetbrains.kotlin.backend.common.FileLoweringPass
+import org.jetbrains.kotlin.backend.common.DeclarationContainerLoweringPass
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.impl.LazyClassReceiverParameterDescriptor
 import org.jetbrains.kotlin.ir.IrElement
@@ -32,24 +32,32 @@ import org.jetbrains.kotlin.ir.visitors.IrElementTransformer
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.transformChildrenVoid
 
-class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransformerVoid(), FileLoweringPass {
+class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransformerVoid(), DeclarationContainerLoweringPass {
 
     private val oldCtorToNewMap = mutableMapOf<IrConstructorSymbol, JsIrBackendContext.SecondaryCtorPair>()
 
-    override fun lower(irFile: IrFile) {
-        irFile.accept(this, null)
-        context.secondaryConstructorsMap.putAll(oldCtorToNewMap)
-    }
+    override fun lower(irDeclarationContainer: IrDeclarationContainer) {
+//        irDeclarationContainer.accept(this, null)
 
-    override fun visitFile(irFile: IrFile): IrFile {
-        irFile.declarations.transformFlat { declaration ->
-            if (declaration is IrClass) {
-                listOf(declaration) + lowerClass(declaration)
+
+        irDeclarationContainer.declarations.transformFlat {
+            if (it is IrClass) {
+                listOf(it) + lowerClass(it)
             } else null
         }
 
-        return irFile
+        context.secondaryConstructorsMap.putAll(oldCtorToNewMap)
     }
+
+//    override fun visitFile(irFile: IrFile): IrFile {
+//        irFile.declarations.transformFlat { declaration ->
+//            if (declaration is IrClass) {
+//                listOf(declaration) + lowerClass(declaration)
+//            } else null
+//        }
+//
+//        return irFile
+//    }
 
     private fun lowerClass(irClass: IrClass): List<IrSimpleFunction> {
         val className = irClass.name.asString()
@@ -142,7 +150,7 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
 
                 valueParameters += (declaration.valueParameters + thisParam)
                 typeParameters += declaration.typeParameters
-                parent = declaration.parent
+//                parent = declaration.parent
                 body = JsIrBuilder.buildBlockBody(statements + retStmt).apply {
                     transformChildrenVoid(ThisUsageReplaceTransformer(it, thisSymbol))
                 }
@@ -169,7 +177,7 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
 
                 valueParameters += ctorOrig.valueParameters
                 typeParameters += ctorOrig.typeParameters
-                parent = ctorOrig.parent
+//                parent = ctorOrig.parent
 
                 val returnType = ctorOrig.returnType
                 val createFunctionIntrinsic = context.intrinsics.jsObjectCreate
@@ -200,6 +208,8 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
         override fun visitFunction(declaration: IrFunction, data: IrFunction?): IrStatement = super.visitFunction(declaration, declaration)
 
         override fun visitCall(expression: IrCall, ownerFunc: IrFunction?): IrElement {
+            super.visitCall(expression, ownerFunc)
+
             if (expression.symbol.isBound) {
 
                 val target = expression.symbol.owner as IrFunction
@@ -219,14 +229,16 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
         }
 
         override fun visitDelegatingConstructorCall(expression: IrDelegatingConstructorCall, ownerFunc: IrFunction?): IrElement {
-            val target = expression.symbol.owner
-            if (target.symbol.isPrimary) {
+            super.visitDelegatingConstructorCall(expression, ownerFunc)
+
+            val target = expression.symbol
+            if (target.isPrimary) {
                 // nothing to do here
                 return expression
             }
 
             val fromPrimary = ownerFunc!! is IrConstructor
-            val newCall = redirectCall(expression, context.secondaryConstructorsMap[target.symbol]!!.delegate)
+            val newCall = redirectCall(expression, context.secondaryConstructorsMap[target]!!.delegate)
 
             val readThis = if (fromPrimary) {
                 IrGetValueImpl(

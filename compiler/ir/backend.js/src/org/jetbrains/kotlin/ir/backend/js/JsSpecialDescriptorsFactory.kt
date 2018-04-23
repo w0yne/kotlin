@@ -24,6 +24,8 @@ import org.jetbrains.kotlin.descriptors.annotations.Annotations
 import org.jetbrains.kotlin.descriptors.impl.ClassConstructorDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.PropertyDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
+import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
+import org.jetbrains.kotlin.ir.symbols.impl.IrConstructorSymbolImpl
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import java.util.*
@@ -33,7 +35,7 @@ class JsSpecialDescriptorsFactory(
 ) : DescriptorsFactory {
     private val singletonFieldDescriptors = HashMap<ClassDescriptor, PropertyDescriptor>()
     private val outerThisDescriptors = HashMap<ClassDescriptor, PropertyDescriptor>()
-    private val innerClassConstructors = HashMap<ClassConstructorDescriptor, ClassConstructorDescriptor>()
+    private val innerClassConstructors = HashMap<ClassConstructorDescriptor, IrConstructorSymbol>()
 
     override fun getFieldDescriptorForEnumEntry(enumEntryDescriptor: ClassDescriptor): PropertyDescriptor = TODO()
 //        singletonFieldDescriptors.getOrPut(enumEntryDescriptor) {
@@ -76,7 +78,7 @@ class JsSpecialDescriptorsFactory(
             }
         }
 
-    override fun getInnerClassConstructorWithOuterThisParameter(innerClassConstructor: ClassConstructorDescriptor): ClassConstructorDescriptor {
+    override fun getInnerClassConstructorWithOuterThisParameter(innerClassConstructor: ClassConstructorDescriptor): IrConstructorSymbol {
         val innerClass = innerClassConstructor.containingDeclaration
         assert(innerClass.isInner) { "Class is not inner: $innerClass" }
 
@@ -85,7 +87,7 @@ class JsSpecialDescriptorsFactory(
         }
     }
 
-    private fun createInnerClassConstructorWithOuterThisParameter(oldDescriptor: ClassConstructorDescriptor): ClassConstructorDescriptor {
+    private fun createInnerClassConstructorWithOuterThisParameter(oldDescriptor: ClassConstructorDescriptor): IrConstructorSymbol {
         val classDescriptor = oldDescriptor.containingDeclaration
         val outerThisType = (classDescriptor.containingDeclaration as ClassDescriptor).defaultType
 
@@ -113,7 +115,7 @@ class JsSpecialDescriptorsFactory(
                     oldDescriptor.valueParameters.map { it.copy(newDescriptor, it.name, it.index + 1) }
         newDescriptor.initialize(newValueParameters, oldDescriptor.visibility)
         newDescriptor.returnType = oldDescriptor.returnType
-        return newDescriptor
+        return IrConstructorSymbolImpl(newDescriptor)
     }
 
 

@@ -26,6 +26,8 @@ import org.jetbrains.kotlin.descriptors.impl.ClassConstructorDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.PropertyDescriptorImpl
 import org.jetbrains.kotlin.fileClasses.JvmFileClassUtil
 import org.jetbrains.kotlin.ir.SourceManager
+import org.jetbrains.kotlin.ir.symbols.IrConstructorSymbol
+import org.jetbrains.kotlin.ir.symbols.impl.IrConstructorSymbolImpl
 import org.jetbrains.kotlin.load.java.JavaVisibilities
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.psi2ir.PsiSourceManager
@@ -40,7 +42,7 @@ class JvmSpecialDescriptorsFactory(
 ) : DescriptorsFactory {
     private val singletonFieldDescriptors = HashMap<ClassDescriptor, PropertyDescriptor>()
     private val outerThisDescriptors = HashMap<ClassDescriptor, PropertyDescriptor>()
-    private val innerClassConstructors = HashMap<ClassConstructorDescriptor, ClassConstructorDescriptor>()
+    private val innerClassConstructors = HashMap<ClassConstructorDescriptor, IrConstructorSymbol>()
 
     override fun getFieldDescriptorForEnumEntry(enumEntryDescriptor: ClassDescriptor): PropertyDescriptor =
             singletonFieldDescriptors.getOrPut(enumEntryDescriptor) {
@@ -72,7 +74,7 @@ class JvmSpecialDescriptorsFactory(
                 )
             }
 
-    override fun getInnerClassConstructorWithOuterThisParameter(innerClassConstructor: ClassConstructorDescriptor): ClassConstructorDescriptor {
+    override fun getInnerClassConstructorWithOuterThisParameter(innerClassConstructor: ClassConstructorDescriptor): IrConstructorSymbol {
         val innerClass = innerClassConstructor.containingDeclaration
         assert(innerClass.isInner) { "Class is not inner: $innerClass" }
 
@@ -81,7 +83,7 @@ class JvmSpecialDescriptorsFactory(
         }
     }
 
-    private fun createInnerClassConstructorWithOuterThisParameter(oldDescriptor: ClassConstructorDescriptor): ClassConstructorDescriptor {
+    private fun createInnerClassConstructorWithOuterThisParameter(oldDescriptor: ClassConstructorDescriptor): IrConstructorSymbol {
         val classDescriptor = oldDescriptor.containingDeclaration
         val outerThisType = (classDescriptor.containingDeclaration as ClassDescriptor).defaultType
 
@@ -96,7 +98,7 @@ class JvmSpecialDescriptorsFactory(
                 oldDescriptor.valueParameters.map { it.copy(newDescriptor, it.name, it.index + 1) }
         newDescriptor.initialize(newValueParameters, oldDescriptor.visibility)
         newDescriptor.returnType = oldDescriptor.returnType
-        return newDescriptor
+        return IrConstructorSymbolImpl(newDescriptor)
     }
 
 
