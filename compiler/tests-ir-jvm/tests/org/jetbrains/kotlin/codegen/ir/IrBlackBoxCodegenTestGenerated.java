@@ -11943,6 +11943,11 @@ public class IrBlackBoxCodegenTestGenerated extends AbstractIrBlackBoxCodegenTes
                 runTest("compiler/testData/codegen/box/multiplatform/defaultArguments/inlineFunctionWithDefaultLambda.kt");
             }
 
+            @TestMetadata("jvmOverloads.kt")
+            public void testJvmOverloads() throws Exception {
+                runTest("compiler/testData/codegen/box/multiplatform/defaultArguments/jvmOverloads.kt");
+            }
+
             @TestMetadata("kt23239.kt")
             public void testKt23239() throws Exception {
                 runTest("compiler/testData/codegen/box/multiplatform/defaultArguments/kt23239.kt");
@@ -13814,8 +13819,7 @@ public class IrBlackBoxCodegenTestGenerated extends AbstractIrBlackBoxCodegenTes
 
                 @TestMetadata("kt23260.kt")
                 public void testKt23260() throws Exception {
-                    String fileName = KotlinTestUtils.navigationMetadata("compiler/testData/codegen/box/properties/lateinit/local/kt23260.kt");
-                    doTest(fileName);
+                    runTest("compiler/testData/codegen/box/properties/lateinit/local/kt23260.kt");
                 }
 
                 @TestMetadata("localLateinit.kt")
