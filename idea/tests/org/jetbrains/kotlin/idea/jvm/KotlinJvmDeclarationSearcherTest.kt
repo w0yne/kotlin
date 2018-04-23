@@ -13,7 +13,6 @@ import com.intellij.lang.jvm.source.JvmDeclarationSearch
 import com.intellij.lang.jvm.source.JvmDeclarationSearcher
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiRecursiveElementVisitor
-import com.intellij.testFramework.UsefulTestCase
 import org.jetbrains.kotlin.idea.KotlinLanguage
 import org.jetbrains.kotlin.idea.test.KotlinLightCodeInsightFixtureTestCase
 import org.jetbrains.kotlin.idea.test.KotlinWithJdkAndRuntimeLightProjectDescriptor
@@ -37,7 +36,7 @@ class KotlinJvmDeclarationSearcherTest : KotlinLightCodeInsightFixtureTestCase()
                 fun foo():Unit {}
 
                 @JvmOverloads
-                fun bar(a: Long = 1L){}
+                fun bar(a: Long = 1L, b: Int = 2){}
 
             }
 
@@ -48,23 +47,22 @@ class KotlinJvmDeclarationSearcherTest : KotlinLightCodeInsightFixtureTestCase()
 
         assertMatches(
             psiElementToDeclatation.entries,
-            JvmDeclared("class SomeClass", JvmClass::class),
+            JvmDeclared("class SomeClass", JvmClass::class, JvmMethod::class),
             JvmDeclared("(val field: String)", JvmMethod::class),
             JvmDeclared("lateinit var anotherField", JvmMethod::class, JvmMethod::class, com.intellij.lang.jvm.JvmField::class),
             JvmDeclared("val field: String", JvmParameter::class, JvmMethod::class),
             JvmDeclared("constructor(i: Int)", JvmMethod::class),
             JvmDeclared("i: Int", JvmParameter::class),
-            JvmDeclared("a: Long", JvmParameter::class),
+            JvmDeclared("a: Long", JvmParameter::class, JvmParameter::class),
+            JvmDeclared("b: Int", JvmParameter::class),
             JvmDeclared("fun foo()", JvmMethod::class),
-            JvmDeclared("fun bar", JvmMethod::class, JvmMethod::class)
+            JvmDeclared("fun bar", JvmMethod::class, JvmMethod::class, JvmMethod::class)
         )
-
 
     }
 
 
     fun testClassDeclaration() {
-
         myFixture.configureByText(
             "Declaraions.kt", """
 
@@ -73,9 +71,19 @@ class KotlinJvmDeclarationSearcherTest : KotlinLightCodeInsightFixtureTestCase()
         )
 
         val elementsByIdentifier = JvmDeclarationSearch.getElementsByIdentifier(myFixture.file.findElementAt(myFixture.caretOffset)!!)
+        assertMatches(elementsByIdentifier.toList(), { it is JvmClass }, { it is com.intellij.lang.jvm.JvmMethod && it.isConstructor })
+    }
 
-        UsefulTestCase.assertNotEmpty(elementsByIdentifier.toList())
+    fun testClassDeclarationWithConstructor() {
+        myFixture.configureByText(
+            "Declaraions.kt", """
 
+            class Some<caret>Class constructor(val field: String)
+        """.trimIndent()
+        )
+
+        val elementsByIdentifier = JvmDeclarationSearch.getElementsByIdentifier(myFixture.file.findElementAt(myFixture.caretOffset)!!)
+        assertMatches(elementsByIdentifier.toList(), { it is JvmClass })
     }
 
     private fun collectJvmDeclarations(file: KtFile): MutableMap<PsiElement, List<JvmElement>> {

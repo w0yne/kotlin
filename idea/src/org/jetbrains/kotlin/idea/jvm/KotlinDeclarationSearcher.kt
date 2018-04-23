@@ -9,12 +9,20 @@ import com.intellij.lang.jvm.JvmElement
 import com.intellij.lang.jvm.source.JvmDeclarationSearcher
 import com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.asJava.toLightElements
+import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtElement
 
 class KotlinDeclarationSearcher : JvmDeclarationSearcher {
     override fun findDeclarations(declaringElement: PsiElement): Collection<JvmElement> =
         when (declaringElement) {
-            is KtElement -> declaringElement.toLightElements().mapNotNull { it as? JvmElement }
+            is KtClass -> {
+                val primaryConstructor = declaringElement.primaryConstructor
+                if (primaryConstructor?.hasConstructorKeyword() != false)
+                    declaringElement.toLightElements()
+                else
+                    declaringElement.toLightElements() + primaryConstructor.toLightElements()
+            }
+            is KtElement -> declaringElement.toLightElements()
             else -> emptyList()
-        }
+        }.mapNotNull { it as? JvmElement }
 }
