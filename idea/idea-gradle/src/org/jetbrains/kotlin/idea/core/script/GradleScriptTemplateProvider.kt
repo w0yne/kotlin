@@ -240,6 +240,8 @@ class GradleScriptDefinitionsContributor(private val project: Project) : ScriptD
 
         override fun isScript(fileName: String): Boolean =
             fileName.endsWith(GradleConstants.KOTLIN_DSL_SCRIPT_EXTENSION)
+
+        override val scriptExpectedLocations: List<ScriptExpectedLocation> = listOf(ScriptExpectedLocation.Project)
     }
 
     private class ErrorScriptDependenciesResolver(private val message: String? = null) : DependenciesResolver {

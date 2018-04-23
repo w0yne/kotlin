@@ -7,6 +7,8 @@ package org.jetbrains.kotlin.idea.util
 
 import com.intellij.ide.highlighter.ArchiveFileType
 import com.intellij.ide.highlighter.JavaClassFileType
+import com.intellij.ide.projectView.impl.ProjectRootsUtil
+import com.intellij.ide.scratch.ScratchFileService
 import com.intellij.injected.editor.VirtualFileWindow
 import com.intellij.openapi.extensions.ExtensionPointName
 import com.intellij.openapi.fileTypes.FileType
@@ -23,10 +25,14 @@ import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileSystemItem
 import org.jetbrains.kotlin.idea.KotlinModuleFileType
+import org.jetbrains.kotlin.idea.core.script.ScriptDefinitionsManager
 import org.jetbrains.kotlin.idea.core.script.ScriptDependenciesManager
+import org.jetbrains.kotlin.idea.core.script.scriptDependencies
 import org.jetbrains.kotlin.idea.decompiler.builtIns.KotlinBuiltInFileType
 import org.jetbrains.kotlin.idea.decompiler.js.KotlinJavaScriptMetaFileType
 import org.jetbrains.kotlin.idea.util.application.runReadAction
+import org.jetbrains.kotlin.script.getScriptDefinition
+import kotlin.script.experimental.location.ScriptExpectedLocation
 
 abstract class KotlinBinaryExtension(val fileType: FileType) {
     companion object {
@@ -62,6 +68,20 @@ object ProjectRootsUtil {
                                fileIndex: ProjectFileIndex = ProjectFileIndex.SERVICE.getInstance(project)): Boolean {
 
         if (includeProjectSource && fileIndex.isInSourceContentWithoutInjected(file)) return true
+
+        if (includeProjectSource && ScriptDefinitionsManager.getInstance(project).isScript(file.name)) {
+            if (ScratchFileService.isInScratchRoot(file)) return true
+
+            val scriptScope = ScriptDefinitionsManager.getInstance(project).findScriptDefinition(file)?.scriptExpectedLocations ?: return false
+            return when {
+                scriptScope.contains(ScriptExpectedLocation.Everywhere) -> true
+                scriptScope.contains(ScriptExpectedLocation.Project)
+                        && ProjectRootManager.getInstance(project).fileIndex.isInContent(file) -> true
+                scriptScope.contains(ScriptExpectedLocation.TestsOnly)
+                        && ProjectRootsUtil.isInTestSource(file, project) -> true
+                else -> false
+            }
+        }
 
         if (!includeLibraryClasses && !includeLibrarySource) return false
 

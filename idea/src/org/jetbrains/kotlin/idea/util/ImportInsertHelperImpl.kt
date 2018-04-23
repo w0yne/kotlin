@@ -46,6 +46,7 @@ import org.jetbrains.kotlin.resolve.scopes.utils.findClassifier
 import org.jetbrains.kotlin.resolve.scopes.utils.findFunction
 import org.jetbrains.kotlin.resolve.scopes.utils.findPackage
 import org.jetbrains.kotlin.resolve.scopes.utils.findVariable
+import org.jetbrains.kotlin.script.getScriptExternalDependencies
 import org.jetbrains.kotlin.utils.addIfNotNull
 import java.util.*
 
@@ -58,6 +59,17 @@ class ImportInsertHelperImpl(private val project: Project) : ImportInsertHelper(
         get() = ImportPathComparator
 
     override fun isImportedWithDefault(importPath: ImportPath, contextFile: KtFile): Boolean {
+        if (contextFile.isScript()) {
+            contextFile.originalFile.virtualFile
+                ?.let { getScriptExternalDependencies(it, contextFile.project)?.imports?.map { ImportPath.fromString(it) } }
+                ?.takeIf { it.isNotEmpty() }
+                ?.let {
+                    if (importPath.isImported(it, emptyList())) {
+                        return true
+                    }
+                }
+        }
+
         val defaultImportProvider = contextFile.getResolutionFacade().frontendService<DefaultImportProvider>()
         return importPath.isImported(defaultImportProvider.defaultImports, defaultImportProvider.excludedImports)
     }
