@@ -106,12 +106,10 @@ private class JvmDeclared(val textToContain: String, vararg jvmClasses: KClass<o
         val (psi, jvmElements) = p1
         if (!psi.text.contains(textToContain)) return false
 
-        return matchElementsToConditions(jvmElements, jvmClasses.map { it::isInstance }).succeed
+        return matchElementsToConditions(jvmElements, jvmClasses.map { { value: JvmElement -> it.isInstance(value) } }).succeed
     }
 
-    override fun toString(): String {
-        return "JvmDeclaration contains text '$textToContain' and produces $jvmClasses"
-    }
+    override fun toString(): String = "JvmDeclaration contains text '$textToContain' and produces $jvmClasses"
 }
 
 fun <T> assertMatches(elements: Collection<T>, vararg conditions: (T) -> Boolean) {
@@ -124,10 +122,7 @@ fun <T> assertMatches(elements: Collection<T>, vararg conditions: (T) -> Boolean
     }
 }
 
-private fun <T> matchElementsToConditions(
-    elements: Collection<T>,
-    conditions: List<(T) -> Boolean>
-): MatchResult<T> {
+private fun <T> matchElementsToConditions(elements: Collection<T>, conditions: List<(T) -> Boolean>): MatchResult<T> {
     val checkList = conditions.toMutableList()
     val elementsToCheck = elements.toMutableList()
 
@@ -139,12 +134,12 @@ private fun <T> matchElementsToConditions(
             throw IllegalStateException("cant remove matched element: $matched")
     }
     if (elementsToCheck.isEmpty())
-        return MatchResult.Matched()
+        return MatchResult.Matched
     return MatchResult.UnmatchedElements(elementsToCheck)
 }
 
-private sealed class MatchResult<T>(val succeed: Boolean) {
-    class Matched<T> : MatchResult<T>(true)
+private sealed class MatchResult<out T>(val succeed: Boolean) {
+    object Matched : MatchResult<Nothing>(true)
     class UnmatchedCondition<T>(val condition: (T) -> Boolean) : MatchResult<T>(false)
     class UnmatchedElements<T>(val elements: List<T>) : MatchResult<T>(false)
 }
