@@ -8,6 +8,7 @@ package org.jetbrains.kotlin.checkers
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.psi.search.GlobalSearchScope
+import junit.framework.TestCase
 import org.jetbrains.kotlin.analyzer.AnalysisResult
 import org.jetbrains.kotlin.analyzer.common.CommonAnalyzerFacade
 import org.jetbrains.kotlin.cli.jvm.compiler.NoScopeRecordCliBindingTrace
@@ -53,6 +54,9 @@ import org.jetbrains.kotlin.test.util.DescriptorValidator
 import org.jetbrains.kotlin.test.util.RecursiveDescriptorComparator
 import org.jetbrains.kotlin.test.util.RecursiveDescriptorComparator.RECURSIVE
 import org.jetbrains.kotlin.test.util.RecursiveDescriptorComparator.RECURSIVE_ALL
+import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.types.NonFixedType
+import org.jetbrains.kotlin.types.typeUtil.contains
 import org.jetbrains.kotlin.utils.keysToMap
 import org.junit.Assert
 import java.io.File
@@ -573,7 +577,9 @@ abstract class AbstractDiagnosticsTest : BaseDiagnosticsTest() {
 
             val lineAndColumn = DiagnosticUtils.getLineAndColumnInPsiFile(element.containingFile, element.textRange)
 
-            if (!configuredLanguageVersionSettings.supportsFeature(LanguageFeature.NewInference)) {
+            if (configuredLanguageVersionSettings.supportsFeature(LanguageFeature.NewInference)) {
+                checkResolvedCallContainOnlyFixedTypes(resolvedCall)
+            } else {
                 assertTrue(
                     "Resolved call for '${element.text}'$lineAndColumn is not completed",
                     (resolvedCall as MutableResolvedCall<*>).isCompleted
@@ -582,6 +588,26 @@ abstract class AbstractDiagnosticsTest : BaseDiagnosticsTest() {
         }
 
         checkResolvedCallsInDiagnostics(bindingContext, configuredLanguageVersionSettings)
+    }
+
+    private fun checkResolvedCallContainOnlyFixedTypes(resolvedCall: ResolvedCall<*>) {
+        val resultingDescriptor = resolvedCall.resultingDescriptor
+
+        checkTypeInsideResolvedCall(resolvedCall, resultingDescriptor.extensionReceiverParameter?.value?.type)
+        checkTypeInsideResolvedCall(resolvedCall, resultingDescriptor.dispatchReceiverParameter?.value?.type)
+
+        for (parameter in resultingDescriptor.valueParameters) {
+            checkTypeInsideResolvedCall(resolvedCall, parameter.type)
+        }
+
+        checkTypeInsideResolvedCall(resolvedCall, resultingDescriptor.returnType)
+    }
+
+    private fun checkTypeInsideResolvedCall(resolvedCall: ResolvedCall<*>, type: KotlinType?) {
+        if (type == null) return
+
+        assertFalse("Type: $type contains non fixed types inside call: ${resolvedCall.call} \n," +
+                            "it wasn't completed properly", type.contains { it.unwrap() is NonFixedType })
     }
 
     private fun checkResolvedCallsInDiagnostics(
