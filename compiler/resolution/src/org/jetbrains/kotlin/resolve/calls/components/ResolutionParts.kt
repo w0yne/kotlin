@@ -192,17 +192,21 @@ internal object CreateFreshVariablesSubstitutor : ResolutionPart() {
     }
 }
 
-internal object InferLaterInitializerResolutionPart : ResolutionPart() {
+internal object PostponedVariablesInitializerResolutionPart : ResolutionPart() {
     override fun KotlinResolutionCandidate.process(workIndex: Int) {
-        resolvedCall.argumentToCandidateParameter
+        val typesForCoroutineCall = resolvedCall.argumentToCandidateParameter
             .filter { (argument, parameter) -> callComponents.statelessCallbacks.isCoroutineCall(argument, parameter) }
-            .flatMap { (_, parameter) ->
-                resolvedCall.substitutor.freshVariables.filter { variable ->
-                    parameter.type.contains { it.constructor == variable.originalTypeParameter.typeConstructor }
-                }
+            .mapNotNull { callComponents.statelessCallbacks.getReceiverTypeFromFunctionType(it.value.type) }
+
+        if (typesForCoroutineCall.isEmpty()) return
+
+        for (freshVariable in resolvedCall.substitutor.freshVariables) {
+            val isPostponedVariable = typesForCoroutineCall.any { typeForCoroutineCall ->
+                typeForCoroutineCall.contains { it.constructor == freshVariable.originalTypeParameter.typeConstructor }
             }
-            .distinct()
-            .forEach { csBuilder.markPostponedVariable(it) }
+
+            csBuilder.markPostponedVariable(freshVariable)
+        }
     }
 }
 

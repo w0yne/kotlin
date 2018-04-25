@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.resolve.calls.tower
 
+import org.jetbrains.kotlin.builtins.getReceiverTypeFromFunctionType
 import org.jetbrains.kotlin.descriptors.CallableDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
@@ -31,6 +32,7 @@ import org.jetbrains.kotlin.resolve.calls.model.CallableReferenceKotlinCallArgum
 import org.jetbrains.kotlin.resolve.calls.model.KotlinCall
 import org.jetbrains.kotlin.resolve.calls.model.KotlinCallArgument
 import org.jetbrains.kotlin.resolve.calls.model.SimpleKotlinCallArgument
+import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 class KotlinResolutionStatelessCallbacksImpl(
@@ -63,4 +65,8 @@ class KotlinResolutionStatelessCallbacksImpl(
 
     override fun isCoroutineCall(argument: KotlinCallArgument, parameter: ValueParameterDescriptor): Boolean =
         isCoroutineCallWithAdditionalInference(parameter, argument.psiCallArgument.valueArgument)
+
+    override fun getReceiverTypeFromFunctionType(type: KotlinType): KotlinType? {
+        return type.getReceiverTypeFromFunctionType()
+    }
 }
