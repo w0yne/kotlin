@@ -97,17 +97,17 @@ open class CreateClassFromUsageFix<E : KtElement> protected constructor (
     override fun getText() = "Create ${classInfo.kind.description} '${classInfo.name}'"
 
     override fun isAvailable(project: Project, editor: Editor?, file: KtFile): Boolean {
-        with(classInfo) {
-            if (kind == DEFAULT) return false
-            if (applicableParents.isEmpty()) return false
-            applicableParents.forEach {
-                if (it is PsiClass) {
-                    if (kind == OBJECT || kind == ENUM_ENTRY) return false
-                    if (it.isInterface && inner) return false
-                }
-            }
-
-        }
+//        with(classInfo) {
+//            if (kind == DEFAULT) return false
+//            if (applicableParents.isEmpty()) return false
+//            applicableParents.forEach {
+//                if (it is PsiClass) {
+//                    if (kind == OBJECT || kind == ENUM_ENTRY) return false
+//                    if (it.isInterface && inner) return false
+//                }
+//            }
+//
+//        }
         return true
     }
 

@@ -1,6 +1,7 @@
 description 'Kotlin Runtime (deprecated, use kotlin-stdlib artifact instead)'
 
 apply plugin: 'kotlin'
+apply plugin: "jps-compatible"
 
 configureJvm6Project(project)
 configureDist(project)

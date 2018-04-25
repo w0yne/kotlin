@@ -228,7 +228,7 @@ class KotlinChangeSignature(
     }
 }
 
-@TestOnly fun createChangeInfo(
+  fun createChangeInfo(
         project: Project,
         callableDescriptor: CallableDescriptor,
         configuration: KotlinChangeSignatureConfiguration,

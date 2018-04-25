@@ -1,6 +1,7 @@
 description = 'Kotlin Test Common'
 
 apply plugin: 'kotlin-platform-common'
+apply plugin: "jps-compatible"
 
 configureDist(project)
 configurePublishing(project)

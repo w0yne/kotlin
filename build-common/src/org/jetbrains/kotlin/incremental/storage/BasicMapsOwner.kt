@@ -46,5 +46,5 @@ open class BasicMapsOwner(val cachesDir: File) {
         maps.forEach { it.flush(memoryCachesOnly) }
     }
 
-    @TestOnly fun dump(): String = maps.joinToString("\n\n") { it.dump() }
+      fun dump(): String = maps.joinToString("\n\n") { it.dump() }
 }

@@ -38,6 +38,6 @@ internal enum class InvocationKind {
 }
 
 @ContractsDsl
-@InlineOnly
+//@InlineOnly
 @SinceKotlin("1.2")
 internal inline fun contract(builder: ContractBuilder.() -> Unit) { }

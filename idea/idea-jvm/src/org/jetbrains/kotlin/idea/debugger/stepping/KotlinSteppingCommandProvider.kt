@@ -72,7 +72,7 @@ class KotlinSteppingCommandProvider : JvmSteppingCommandProvider() {
         return getStepOverCommand(suspendContext, ignoreBreakpoints, sourcePosition)
     }
 
-    @TestOnly
+
     fun getStepOverCommand(
             suspendContext: SuspendContextImpl,
             ignoreBreakpoints: Boolean,
@@ -144,7 +144,7 @@ class KotlinSteppingCommandProvider : JvmSteppingCommandProvider() {
         return false
     }
 
-    @TestOnly
+
     fun getStepOutCommand(suspendContext: SuspendContextImpl, debugContext: DebuggerContextImpl): DebugProcessImpl.ResumeCommand? {
         return getStepOutCommand(suspendContext, debugContext.sourcePosition)
     }

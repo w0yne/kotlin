@@ -538,7 +538,7 @@ public class InternalFinallyBlockInliner extends CoveringTryCatchNodeProcessor {
     }
 
     @SuppressWarnings({"UnusedDeclaration", "UseOfSystemOutOrSystemErr"})
-    @TestOnly
+
     private void flushCurrentState(@NotNull AbstractInsnNode curNonLocal) {
         substituteTryBlockNodes(inlineFun);
         System.out.println("Will process instruction at : " + inlineFun.instructions.indexOf(curNonLocal) + " " + curNonLocal.toString());

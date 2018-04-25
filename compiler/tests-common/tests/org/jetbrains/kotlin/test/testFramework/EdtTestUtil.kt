@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities
 
 class EdtTestUtil {
     companion object {
-        @TestOnly @JvmStatic fun runInEdtAndWait(runnable: Runnable) {
+          @JvmStatic fun runInEdtAndWait(runnable: Runnable) {
             runInEdtAndWait { runnable.run() }
         }
     }
@@ -34,7 +34,7 @@ class EdtTestUtil {
 // Test only because in production you must use Application.invokeAndWait(Runnable, ModalityState).
 // The problem is - Application logs errors, but not throws. But in tests must be thrown.
 // In any case name "runInEdtAndWait" is better than "invokeAndWait".
-@TestOnly
+
 fun runInEdtAndWait(runnable: () -> Unit) {
     if (SwingUtilities.isEventDispatchThread()) {
         runnable()

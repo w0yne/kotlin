@@ -54,7 +54,7 @@ public class IdeErrorMessages {
         return DefaultErrorMessages.render(diagnostic);
     }
 
-    @TestOnly
+
     public static boolean hasIdeSpecificMessage(@NotNull Diagnostic diagnostic) {
         return MAP.get(diagnostic.getFactory()) != null;
     }

@@ -23,7 +23,7 @@ internal abstract class TaskToFriendTaskMapper {
     operator fun get(task: Task): String? =
             getFriendByName(task.name)
 
-    @TestOnly
+
     operator fun get(name: String): String? =
             getFriendByName(name)
 

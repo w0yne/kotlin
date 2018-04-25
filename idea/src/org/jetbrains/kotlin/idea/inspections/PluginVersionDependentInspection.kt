@@ -20,5 +20,5 @@ import org.jetbrains.annotations.TestOnly
 
 interface PluginVersionDependentInspection {
     var testVersionMessage: String?
-        @TestOnly set
+          set
 }

@@ -20,6 +20,6 @@ import org.jetbrains.annotations.TestOnly
 
 object NameHighlighter {
     var namesHighlightingEnabled = true
-        @TestOnly set
+          set
 }
 

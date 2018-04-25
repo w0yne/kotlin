@@ -57,7 +57,7 @@ class NoScopeRecordCliBindingTrace : CliBindingTrace() {
     }
 }
 
-open class CliBindingTrace @TestOnly constructor() : BindingTraceContext() {
+open class CliBindingTrace   constructor() : BindingTraceContext() {
     private var kotlinCodeAnalyzer: KotlinCodeAnalyzer? = null
 
     override fun toString(): String {

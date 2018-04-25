@@ -32,12 +32,13 @@ abstract class CreateClassFromUsageFactory<E : KtElement> : KotlinIntentionActio
     ): List<QuickFixWithDelegateFactory> {
         val possibleClassKinds = getPossibleClassKinds(originalElementPointer.element ?: return emptyList(), diagnostic)
 
-        return possibleClassKinds.map { classKind ->
-            QuickFixWithDelegateFactory(classKind.actionPriority) {
-                val currentElement = originalElementPointer.element ?: return@QuickFixWithDelegateFactory null
-                val data = quickFixDataFactory() ?: return@QuickFixWithDelegateFactory null
-                CreateClassFromUsageFix.create(currentElement, data.copy(kind = classKind))
-            }
-        }
+        return listOf()
+//        return possibleClassKinds.map { classKind ->
+//            QuickFixWithDelegateFactory(classKind.actionPriority) {
+//                val currentElement = originalElementPointer.element ?: return@QuickFixWithDelegateFactory null
+//                val data = quickFixDataFactory() ?: return@QuickFixWithDelegateFactory null
+//                CreateClassFromUsageFix.create(currentElement, data.copy(kind = classKind))
+//            }
+//        }
     }
 }

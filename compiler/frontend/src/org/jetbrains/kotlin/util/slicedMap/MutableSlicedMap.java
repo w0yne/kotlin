@@ -27,6 +27,6 @@ public interface MutableSlicedMap extends SlicedMap {
     void clear();
 
     @NotNull
-    @TestOnly
+
     <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice);
 }

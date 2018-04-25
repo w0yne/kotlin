@@ -30,12 +30,12 @@ public class IncrementalCompilation {
         return "true".equals(System.getProperty(INCREMENTAL_COMPILATION_JS_PROPERTY));
     }
 
-    @TestOnly
+
     public static void setIsEnabled(boolean value) {
         System.setProperty(INCREMENTAL_COMPILATION_PROPERTY, String.valueOf(value));
     }
 
-    @TestOnly
+
     public static void setIsEnabledForJs(boolean value) {
         System.setProperty(INCREMENTAL_COMPILATION_JS_PROPERTY, String.valueOf(value));
     }

@@ -74,7 +74,7 @@ public class DiagnosticsWithSuppression implements Diagnostics {
         throw new IllegalStateException("Trying to obtain modification tracker for readonly DiagnosticsWithSuppression.");
     }
 
-    @TestOnly
+
     @NotNull
     public Collection<Diagnostic> getDiagnostics() {
         return diagnostics;

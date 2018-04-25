@@ -47,7 +47,7 @@ class OptimizedImportsBuilder(
         private val options: Options
 ) {
     companion object {
-        @TestOnly
+//
         var testLog: StringBuilder? = null
     }
 

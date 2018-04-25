@@ -84,7 +84,7 @@ class JpsUtils {
         return false;
     }
 
-    @TestOnly
+
     static void resetCaches() {
         IS_KOTLIN_JS_MODULE_CACHE.clear();
         IS_KOTLIN_JS_STDLIB_JAR_CACHE.clear();

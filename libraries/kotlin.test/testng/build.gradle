@@ -1,6 +1,7 @@
 description = 'Kotlin Test TestNG'
 
 apply plugin: 'kotlin-platform-jvm'
+apply plugin: "jps-compatible"
 
 configureJvm6Project(project)
 configureDist(project)

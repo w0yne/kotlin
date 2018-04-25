@@ -6,6 +6,7 @@ description = 'Kotlin Standard Library for JS'
 
 apply plugin: 'kotlin-platform-js'
 apply plugin: 'idea'
+apply plugin: "jps-compatible"
 
 configureDist(project)
 configurePublishing(project)

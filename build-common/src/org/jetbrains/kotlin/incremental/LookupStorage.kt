@@ -169,12 +169,12 @@ open class LookupStorage(targetDataDir: File) : BasicMapsOwner(targetDataDir) {
         }
     }
 
-    @TestOnly fun forceGC() {
+      fun forceGC() {
         removeGarbageIfNeeded(force = true)
         flush(false)
     }
 
-    @TestOnly fun dump(lookupSymbols: Set<LookupSymbol>, basePath: File? = null): String {
+      fun dump(lookupSymbols: Set<LookupSymbol>, basePath: File? = null): String {
         flush(false)
 
         val sb = StringBuilder()

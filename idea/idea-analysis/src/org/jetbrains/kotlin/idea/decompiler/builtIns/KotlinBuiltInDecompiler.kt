@@ -62,7 +62,7 @@ class BuiltInDefinitionFile(
 
     companion object {
         var FILTER_OUT_CLASSES_EXISTING_AS_JVM_CLASS_FILES = true
-            @TestOnly set
+              set
 
         fun read(contents: ByteArray, file: VirtualFile): FileWithMetadata? {
             val stream = ByteArrayInputStream(contents)

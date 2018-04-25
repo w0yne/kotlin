@@ -26,7 +26,7 @@ public class TestRunnerUtil {
   private TestRunnerUtil() {
   }
 
-  @TestOnly
+
   public static boolean isJUnit4TestClass(Class aClass) {
     int modifiers = aClass.getModifiers();
     if ((modifiers & Modifier.ABSTRACT) != 0) return false;

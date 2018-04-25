@@ -42,7 +42,7 @@ abstract class BasicMap<K : Comparable<K>, V>(
         storage.close()
     }
 
-    @TestOnly
+
     fun dump(): String {
         return with(StringBuilder()) {
             with(Printer(this)) {
@@ -60,10 +60,10 @@ abstract class BasicMap<K : Comparable<K>, V>(
         }.toString()
     }
 
-    @TestOnly
+
     protected abstract fun dumpKey(key: K): String
 
-    @TestOnly
+
     protected abstract fun dumpValue(value: V): String
 }
 

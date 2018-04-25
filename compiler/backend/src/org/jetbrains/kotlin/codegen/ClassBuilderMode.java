@@ -76,7 +76,6 @@ public class ClassBuilderMode {
             /* sourceRetention = */ true,
             /* generateMultiFileFacadePartClasses = */ true);
 
-    @TestOnly
     public final static ClassBuilderMode LIGHT_ANALYSIS_FOR_TESTS = new ClassBuilderMode(
             /* bodies = */ false,
             /* metadata = */ true,

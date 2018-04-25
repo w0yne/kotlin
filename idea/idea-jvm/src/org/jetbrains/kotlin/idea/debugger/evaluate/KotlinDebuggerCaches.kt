@@ -199,7 +199,7 @@ class KotlinDebuggerCaches(project: Project) {
             return state.typeMapper
         }
 
-        @TestOnly fun addTypeMapper(file: KtFile, typeMapper: KotlinTypeMapper) {
+          fun addTypeMapper(file: KtFile, typeMapper: KotlinTypeMapper) {
             getInstance(file.project).cachedTypeMappers.value[file] = typeMapper
         }
     }

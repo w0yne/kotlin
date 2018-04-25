@@ -34,12 +34,12 @@ fun showYesNoCancelDialog(key: String, project: Project, message: String, title:
 
 private val dialogResults = ConcurrentHashMap<String, Any>()
 
-@TestOnly
+
 fun setDialogsResult(key: String, result: Any) {
     dialogResults[key] = result
 }
 
-@TestOnly
+
 fun clearDialogsResults() {
     dialogResults.clear()
 }

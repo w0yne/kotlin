@@ -60,6 +60,6 @@ class MutableDiagnosticsWithSuppression @JvmOverloads constructor(
         modificationTracker.incModificationCount()
     }
 
-    @TestOnly
+
     fun getReadonlyView(): DiagnosticsWithSuppression = readonlyView()
 }

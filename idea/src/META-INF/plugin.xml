@@ -14,15 +14,15 @@
   <!-- required for Kotlin/Native plugin -->
   <depends optional="true">org.jetbrains.kotlin.native.platform.deps</depends>
 
-  <depends optional="true" config-file="junit.xml">JUnit</depends>
-  <depends optional="true" config-file="gradle.xml">org.jetbrains.plugins.gradle</depends>
-  <depends optional="true" config-file="maven.xml">org.jetbrains.idea.maven</depends>
-  <depends optional="true" config-file="testng-j.xml">TestNG-J</depends>
-  <depends optional="true" config-file="kotlin-copyright.xml">com.intellij.copyright</depends>
-  <depends optional="true" config-file="android.xml">org.jetbrains.android</depends>
-  <depends optional="true" config-file="coverage.xml">Coverage</depends>
-  <depends optional="true" config-file="i18n.xml">com.intellij.java-i18n</depends>
-  <depends optional="true" config-file="injection.xml">org.intellij.intelliLang</depends>
+  <!--<depends optional="true" config-file="junit.xml">JUnit</depends>-->
+  <!--<depends optional="true" config-file="gradle.xml">org.jetbrains.plugins.gradle</depends>-->
+  <!--<depends optional="true" config-file="maven.xml">org.jetbrains.idea.maven</depends>-->
+  <!--<depends optional="true" config-file="testng-j.xml">TestNG-J</depends>-->
+  <!--<depends optional="true" config-file="kotlin-copyright.xml">com.intellij.copyright</depends>-->
+  <!--<depends optional="true" config-file="android.xml">org.jetbrains.android</depends>-->
+  <!--<depends optional="true" config-file="coverage.xml">Coverage</depends>-->
+  <!--<depends optional="true" config-file="i18n.xml">com.intellij.java-i18n</depends>-->
+  <!--<depends optional="true" config-file="injection.xml">org.intellij.intelliLang</depends>-->
   <depends optional="true" config-file="decompiler.xml">org.jetbrains.java.decompiler</depends>
 
   <!-- ULTIMATE-PLUGIN-PLACEHOLDER -->

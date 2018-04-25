@@ -559,7 +559,7 @@ fun ByteArray.md5(): Long {
            )
 }
 
-@TestOnly
+
 fun <K : Comparable<K>, V> Map<K, V>.dumpMap(dumpValue: (V)->String): String =
         buildString {
             append("{")
@@ -574,5 +574,5 @@ fun <K : Comparable<K>, V> Map<K, V>.dumpMap(dumpValue: (V)->String): String =
             append("}")
         }
 
-@TestOnly fun <T : Comparable<T>> Collection<T>.dumpCollection(): String =
+  fun <T : Comparable<T>> Collection<T>.dumpCollection(): String =
         "[${sorted().joinToString(", ", transform = Any::toString)}]"

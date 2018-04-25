@@ -60,7 +60,7 @@ open class DelegatingBindingTrace(
             BindingContextUtils.addOwnDataTo(trace, null, commitDiagnostics, map, mutableDiagnostics)
         }
 
-        @TestOnly
+
         override fun <K, V> getSliceContents(slice: ReadOnlySlice<K, V>): ImmutableMap<K, V> {
             return ImmutableMap.copyOf(parentContext.getSliceContents(slice) + map.getSliceContents(slice))
         }

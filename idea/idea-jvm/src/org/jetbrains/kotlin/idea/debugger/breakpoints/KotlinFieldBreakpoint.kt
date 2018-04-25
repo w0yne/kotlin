@@ -328,17 +328,17 @@ class KotlinFieldBreakpoint(
         properties.myFieldName = fieldName
     }
 
-    @TestOnly
+
     fun setWatchAccess(value: Boolean) {
         properties.WATCH_ACCESS = value
     }
 
-    @TestOnly
+
     fun setWatchModification(value: Boolean) {
         properties.WATCH_MODIFICATION = value
     }
 
-    @TestOnly
+
     fun setWatchInitialization(value: Boolean) {
         properties.WATCH_INITIALIZATION = value
     }

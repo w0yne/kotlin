@@ -270,7 +270,7 @@ private class TemplateTokenSequence(private val inputString: String) : Sequence<
     override fun iterator(): Iterator<TemplateChunk> = iterTemplateChunks()
 }
 
-@TestOnly
+
 internal fun createTemplateSequenceTokenString(input: String): String {
     return TemplateTokenSequence(input).map {
         when (it) {

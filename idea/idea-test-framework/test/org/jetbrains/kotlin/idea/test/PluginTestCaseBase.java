@@ -46,7 +46,7 @@ public class PluginTestCaseBase {
     }
 
     @NotNull
-    @TestOnly
+
     private static Sdk createMockJdk(@NotNull String name, String path) {
         return ((JavaSdkImpl)JavaSdk.getInstance()).createMockJdk(name, path, false);
     }
@@ -77,7 +77,7 @@ public class PluginTestCaseBase {
         return getSdk("compiler/testData/mockJDK/jre", "1.8");
     }
 
-    @TestOnly
+
     @NotNull
     public static Sdk mockJdk9() {
         return getSdk("compiler/testData/mockJDK9/jre", "9");
@@ -117,7 +117,7 @@ public class PluginTestCaseBase {
         return StringUtil.startsWithIgnoreCase(testName, "allFilesPresentIn");
     }
 
-    @TestOnly
+
     public static void clearSdkTable(@NotNull Disposable disposable) {
         Disposer.register(disposable, () -> ApplicationManager.getApplication().runWriteAction(() -> {
             ProjectJdkTable jdkTable = ProjectJdkTable.getInstance();

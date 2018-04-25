@@ -63,7 +63,7 @@ class KotlinStructureViewElement(
     override fun getIcon(open: Boolean): Icon? = kotlinPresentation.getIcon(open)
     override fun getPresentableText(): String? = kotlinPresentation.presentableText
 
-    @TestOnly
+
     override fun putInfo(info: MutableMap<String, String?>) {
         // Sanity check for API consistency
         assert(presentation.presentableText == presentableText) { "Two different ways of getting presentableText" }

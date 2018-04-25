@@ -259,7 +259,7 @@ class KotlinConsoleRunner(
         return indicatorHighlighter.apply { gutterIconRenderer = indicator }
     }
 
-    @TestOnly fun dispose() {
+      fun dispose() {
         processHandler.destroyProcess()
         consoleTerminated.await(1, TimeUnit.SECONDS)
         Disposer.dispose(disposableDescriptor)

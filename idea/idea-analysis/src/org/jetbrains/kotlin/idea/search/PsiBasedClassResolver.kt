@@ -47,7 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Can quickly check whether a short name reference in a given file can resolve to the class/interface/type alias
  * with the given qualified name.
  */
-class PsiBasedClassResolver @TestOnly constructor(private val targetClassFqName: String) {
+class PsiBasedClassResolver   constructor(private val targetClassFqName: String) {
     private val targetShortName = targetClassFqName.substringAfterLast('.')
     private val targetPackage = targetClassFqName.substringBeforeLast('.', "")
     /**
@@ -63,9 +63,9 @@ class PsiBasedClassResolver @TestOnly constructor(private val targetClassFqName:
     private var forceAmbiguityForNonAnnotations: Boolean = false
 
     companion object {
-        @TestOnly val attempts = AtomicInteger()
-        @TestOnly val trueHits = AtomicInteger()
-        @TestOnly val falseHits = AtomicInteger()
+        val attempts = AtomicInteger()
+        val trueHits = AtomicInteger()
+        val falseHits = AtomicInteger()
 
         private val PSI_BASED_CLASS_RESOLVER_KEY = Key<CachedValue<PsiBasedClassResolver>>("PsiBasedClassResolver")
 
@@ -138,7 +138,7 @@ class PsiBasedClassResolver @TestOnly constructor(private val targetClassFqName:
         }
     }
 
-    @TestOnly fun addConflict(fqName: String) {
+      fun addConflict(fqName: String) {
         conflictingPackages.add(fqName.substringBeforeLast('.'))
     }
 

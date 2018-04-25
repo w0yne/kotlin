@@ -31,7 +31,7 @@ import org.jetbrains.plugins.groovy.lang.psi.api.statements.expressions.path.GrC
 
 class DifferentKotlinGradleVersionInspection : GradleBaseInspection(), PluginVersionDependentInspection {
     override var testVersionMessage: String? = null
-        @TestOnly set
+          set
 
     override fun buildVisitor(): BaseInspectionVisitor = MyVisitor()
 

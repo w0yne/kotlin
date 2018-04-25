@@ -1,6 +1,7 @@
 description = 'Kotlin Standard Library JDK 7 extension'
 
 apply plugin: 'kotlin'
+apply plugin: "jps-compatible"
 
 configureJvm6Project(project)
 configureDist(project)

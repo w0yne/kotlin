@@ -438,7 +438,7 @@ class KotlinCoreEnvironment private constructor(
             System.getProperties().setProperty("idea.plugins.compatible.build", ideaCompatibleBuildNumber)
         }
 
-        @TestOnly
+
         @JvmStatic
         fun createForTests(
                 parentDisposable: Disposable, initialConfiguration: CompilerConfiguration, extensionConfigs: EnvironmentConfigFiles

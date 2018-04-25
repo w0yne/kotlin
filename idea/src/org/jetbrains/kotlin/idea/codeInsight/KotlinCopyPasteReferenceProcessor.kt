@@ -380,6 +380,6 @@ class KotlinCopyPasteReferenceProcessor : CopyPastePostProcessor<KotlinReference
     }
 
     companion object {
-        @TestOnly var declarationsToImportSuggested: Collection<String> = emptyList()
+        var declarationsToImportSuggested: Collection<String> = emptyList()
     }
 }

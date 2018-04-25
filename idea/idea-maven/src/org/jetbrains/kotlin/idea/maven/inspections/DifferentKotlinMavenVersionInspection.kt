@@ -33,7 +33,7 @@ class DifferentKotlinMavenVersionInspection : DomElementsInspection<MavenDomProj
     private val idePluginVersion by lazy { bundledRuntimeVersion() }
 
     override var testVersionMessage: String? = null
-        @TestOnly set
+          set
 
     override fun checkFileElement(domFileElement: DomFileElement<MavenDomProjectModel>?, holder: DomElementAnnotationHolder?) {
         if (domFileElement == null || holder == null) {

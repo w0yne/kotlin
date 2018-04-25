@@ -68,7 +68,7 @@ public interface BindingContext {
         }
 
         @NotNull
-        @TestOnly
+
         @Override
         public <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice) {
             return ImmutableMap.of();
@@ -277,7 +277,7 @@ public interface BindingContext {
     <K, V> Collection<K> getKeys(WritableSlice<K, V> slice);
 
     /** This method should be used only for debug and testing */
-    @TestOnly
+
     @NotNull
     <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice);
 

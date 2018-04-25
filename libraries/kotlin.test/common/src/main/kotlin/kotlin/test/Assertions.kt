@@ -41,7 +41,7 @@ fun assertTrue(message: String? = null, block: () -> Boolean): Unit = assertTrue
 
 /** Asserts that the expression is `true` with an optional [message]. */
 fun assertTrue(actual: Boolean, message: String? = null) {
-    contract { returns() implies actual }
+//    contract { returns() implies actual }
     return asserter.assertTrue(message ?: "Expected value to be true.", actual)
 }
 
@@ -50,7 +50,7 @@ fun assertFalse(message: String? = null, block: () -> Boolean): Unit = assertFal
 
 /** Asserts that the expression is `false` with an optional [message]. */
 fun assertFalse(actual: Boolean, message: String? = null) {
-    contract { returns() implies (!actual) }
+//    contract { returns() implies (!actual) }
     return asserter.assertTrue(message ?: "Expected value to be false.", !actual)
 }
 
@@ -76,14 +76,14 @@ fun <@OnlyInputTypes T> assertNotSame(illegal: T, actual: T, message: String? = 
 
 /** Asserts that the [actual] value is not `null`, with an optional [message]. */
 fun <T : Any> assertNotNull(actual: T?, message: String? = null): T {
-    contract { returns() implies (actual != null) }
+//    contract { returns() implies (actual != null) }
     asserter.assertNotNull(message, actual)
     return actual!!
 }
 
 /** Asserts that the [actual] value is not `null`, with an optional [message] and a function [block] to process the not-null value. */
 fun <T : Any, R> assertNotNull(actual: T?, message: String? = null, block: (T) -> R) {
-    contract { returns() implies (actual != null) }
+//    contract { returns() implies (actual != null) }
     asserter.assertNotNull(message, actual)
     if (actual != null) {
         block(actual)

@@ -203,7 +203,7 @@ public abstract class AndroidLintInspectionBase extends GlobalInspectionTool {
     }
   }
 
-  @TestOnly
+
   public static void invalidateInspectionShortName2IssueMap() {
     ourIssue2InspectionShortName = null;
   }

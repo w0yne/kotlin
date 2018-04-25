@@ -411,7 +411,7 @@ import static org.jetbrains.kotlin.lexer.KtTokens.*;
     }
 
     @SuppressWarnings("UnusedDeclaration")
-    @TestOnly
+
     public String currentContext() {
         return StringsKt.substringWithContext(myBuilder.getOriginalText(), myBuilder.getCurrentOffset(), myBuilder.getCurrentOffset(), 20);
     }

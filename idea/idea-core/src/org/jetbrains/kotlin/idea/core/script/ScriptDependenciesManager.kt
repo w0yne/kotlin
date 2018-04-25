@@ -73,7 +73,7 @@ class ScriptDependenciesManager internal constructor(
 
         internal val log = Logger.getInstance(ScriptDependenciesManager::class.java)
 
-        @TestOnly
+
         fun updateScriptDependenciesSynchronously(virtualFile: VirtualFile, project: Project) {
             with(getInstance(project)) {
                 val scriptDefinition = ScriptDefinitionProvider.getInstance(project).findScriptDefinition(virtualFile)!!

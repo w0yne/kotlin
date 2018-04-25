@@ -144,7 +144,7 @@ public class KotlinTestUtils {
                 }
 
                 @NotNull
-                @TestOnly
+
                 @Override
                 public <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice) {
                     return ImmutableMap.of();
@@ -232,7 +232,7 @@ public class KotlinTestUtils {
                 }
 
                 @NotNull
-                @TestOnly
+
                 @Override
                 public <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice) {
                     return ImmutableMap.of();

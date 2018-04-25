@@ -34,7 +34,7 @@ class JSLibraryStdDescription(project: Project?) :
                 JSLibraryKind,
                 SUITABLE_LIBRARY_KINDS) {
 
-    @TestOnly
+
     fun createNewLibraryForTests(): NewLibraryConfiguration {
         return createConfigurationFromPluginPaths()
     }

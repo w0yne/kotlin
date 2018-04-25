@@ -26,7 +26,7 @@ import org.jetbrains.kotlin.incremental.components.LookupTracker
 
 private val TESTING_CONTEXT = JpsElementChildRoleBase.create<JpsSimpleElement<out TestingContext>>("Testing context")
 
-@TestOnly
+
 fun JpsProject.setTestingContext(context: TestingContext) {
     val dataContainer = JpsElementFactory.getInstance().createSimpleElement(context)
     container.setChild(TESTING_CONTEXT, dataContainer)

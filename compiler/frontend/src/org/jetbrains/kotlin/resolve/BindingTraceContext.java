@@ -60,7 +60,7 @@ public class BindingTraceContext implements BindingTrace {
         }
 
         @NotNull
-        @TestOnly
+
         @Override
         public <K, V> ImmutableMap<K, V> getSliceContents(@NotNull ReadOnlySlice<K, V> slice) {
             return map.getSliceContents(slice);
@@ -100,7 +100,7 @@ public class BindingTraceContext implements BindingTrace {
         this.filter = filter;
     }
 
-    @TestOnly
+
     public static BindingTraceContext createTraceableBindingTrace() {
         return new BindingTraceContext(new TrackingSlicedMap(TRACK_WITH_STACK_TRACES), BindingTraceFilter.Companion.getACCEPT_ALL());
     }

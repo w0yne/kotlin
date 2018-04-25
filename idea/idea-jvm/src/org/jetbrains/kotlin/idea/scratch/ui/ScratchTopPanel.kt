@@ -94,7 +94,7 @@ class ScratchTopPanel private constructor(val scratchFile: ScratchFile) : JPanel
     fun isRepl() = isReplCheckbox.isSelected
     fun isMakeBeforeRun() = isMakeBeforeRunCheckbox.isSelected
 
-    @TestOnly
+
     fun setReplMode(isSelected: Boolean) {
         isReplCheckbox.isSelected = isSelected
     }

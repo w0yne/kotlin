@@ -1,6 +1,7 @@
 description = 'Kotlin Standard Library for JVM'
 
 apply plugin: 'kotlin-platform-jvm'
+apply plugin: "jps-compatible"
 
 archivesBaseName = 'kotlin-stdlib'
 

@@ -1,6 +1,7 @@
 description = 'Kotlin Test for JS'
 
 apply plugin: 'kotlin-platform-js'
+apply plugin: "jps-compatible"
 
 configureDist(project)
 configurePublishing(project)

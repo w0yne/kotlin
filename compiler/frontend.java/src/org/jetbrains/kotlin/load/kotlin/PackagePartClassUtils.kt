@@ -41,7 +41,7 @@ object PackagePartClassUtils {
                 else -> str
             }
 
-    @TestOnly
+
     @JvmStatic fun getDefaultPartFqName(facadeClassFqName: FqName, file: VirtualFile): FqName =
             getPackagePartFqName(facadeClassFqName.parent(), file.name)
 

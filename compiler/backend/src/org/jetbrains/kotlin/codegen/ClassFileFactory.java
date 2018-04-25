@@ -180,7 +180,7 @@ public class ClassFileFactory implements OutputFileCollection {
     }
 
     @NotNull
-    @TestOnly
+
     public String createText() {
         StringBuilder answer = new StringBuilder();
 
@@ -211,7 +211,7 @@ public class ClassFileFactory implements OutputFileCollection {
     }
 
     @NotNull
-    @TestOnly
+
     public Map<String, String> createTextForEachFile() {
         Map<String, String> answer = new LinkedHashMap<>();
         for (OutputFile file : asList()) {
@@ -351,7 +351,7 @@ public class ClassFileFactory implements OutputFileCollection {
         }
     }
 
-    @TestOnly
+
     public List<KtFile> getInputFiles() {
         return state.getFiles();
     }
