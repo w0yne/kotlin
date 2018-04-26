@@ -57,10 +57,15 @@ fun Project.ideaUltimatePreloadedDeps(vararg artifactBaseNames: String, subdir: 
 
 fun Project.kotlinDep(artifactBaseName: String, version: String): String = "org.jetbrains.kotlin:kotlin-$artifactBaseName:$version"
 
-fun DependencyHandler.projectDist(name: String): ProjectDependency = project(name, configuration = "distJar").apply { isTransitive = false }
+//fun DependencyHandler.projectDist(name: String): ProjectDependency = project(name, configuration = "distJar").apply { isTransitive = false }
+//fun DependencyHandler.projectTests(name: String): ProjectDependency = project(name, configuration = "tests-jar")
+//fun DependencyHandler.projectRuntimeJar(name: String): ProjectDependency = project(name, configuration = "runtimeJar")
+//fun DependencyHandler.projectArchives(name: String): ProjectDependency = project(name, configuration = "archives")
+//fun DependencyHandler.projectClasses(name: String): ProjectDependency = project(name, configuration = "classes-dirs")
+fun DependencyHandler.projectDist(name: String): ProjectDependency = project(name)
 fun DependencyHandler.projectTests(name: String): ProjectDependency = project(name, configuration = "tests-jar")
-fun DependencyHandler.projectRuntimeJar(name: String): ProjectDependency = project(name, configuration = "runtimeJar")
-fun DependencyHandler.projectArchives(name: String): ProjectDependency = project(name, configuration = "archives")
+fun DependencyHandler.projectRuntimeJar(name: String): ProjectDependency = project(name)
+fun DependencyHandler.projectArchives(name: String): ProjectDependency = project(name)
 fun DependencyHandler.projectClasses(name: String): ProjectDependency = project(name, configuration = "classes-dirs")
 
 val protobufLiteProject = ":custom-dependencies:protobuf-lite"

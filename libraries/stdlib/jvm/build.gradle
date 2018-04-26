@@ -27,6 +27,8 @@ sourceSets {
             srcDir "${rootDir}/core/builtins/src"
             srcDir 'runtime'
             srcDir 'src'
+            srcDir "${rootDir}/core/runtime.jvm/src"
+            include 'org/jetbrains/annotations/**'
         }
     }
     experimental {
