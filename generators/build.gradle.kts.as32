@@ -30,7 +30,6 @@ dependencies {
     compile(projectTests(":generators:test-generator"))
     // testCompileOnly(intellijDep("jps-build-test"))
     builtinsCompile("org.jetbrains.kotlin:kotlin-stdlib:$bootstrapKotlinVersion")
-    testCompileOnly(intellijDep("jps-build-test"))
     testCompileOnly(project(":kotlin-reflect-api"))
     testCompile(builtinsSourceSet.output)
     testRuntime(intellijDep()) { includeJars("idea_rt") }
