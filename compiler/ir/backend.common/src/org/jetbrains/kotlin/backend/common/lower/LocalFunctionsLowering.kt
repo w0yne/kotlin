@@ -42,7 +42,7 @@ import org.jetbrains.kotlin.resolve.descriptorUtil.parentsWithSelf
 import org.jetbrains.kotlin.types.KotlinType
 import java.util.*
 
-class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerLoweringPass {
+class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainerLoweringPass {
     override fun lower(irDeclarationContainer: IrDeclarationContainer) {
         irDeclarationContainer.declarations.transformFlat { memberDeclaration ->
             if (memberDeclaration is IrFunction)
@@ -64,7 +64,7 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
         var index: Int = -1
 
         override fun toString(): String =
-                "LocalFunctionContext for ${declaration.descriptor}"
+            "LocalFunctionContext for ${declaration.descriptor}"
     }
 
     private inner class LocalFunctionsTransformer(val memberFunction: IrFunction) {
@@ -85,18 +85,18 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
         }
 
         private fun collectRewrittenDeclarations(): ArrayList<IrDeclaration> =
-                ArrayList<IrDeclaration>(localFunctions.size + 1).apply {
-                    add(memberFunction)
+            ArrayList<IrDeclaration>(localFunctions.size + 1).apply {
+                add(memberFunction)
 
-                    localFunctions.values.mapTo(this) {
-                        val original = it.declaration
-                        IrFunctionImpl(
-                                original.startOffset, original.endOffset, original.origin,
-                                it.transformedDescriptor,
-                                original.body
-                        )
-                    }
+                localFunctions.values.mapTo(this) {
+                    val original = it.declaration
+                    IrFunctionImpl(
+                        original.startOffset, original.endOffset, original.origin,
+                        it.transformedDescriptor,
+                        original.body
+                    )
                 }
+            }
 
         private inner class FunctionBodiesRewriter(val localFunctionContext: LocalFunctionContext?) : IrElementTransformerVoid() {
 
@@ -129,18 +129,23 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
                 return createNewCall(expression, newCallee).fillArguments(localFunctionData, expression)
             }
 
-            private fun <T : IrMemberAccessExpression> T.fillArguments(calleeContext: LocalFunctionContext, oldExpression: IrMemberAccessExpression): T {
+            private fun <T : IrMemberAccessExpression> T.fillArguments(
+                calleeContext: LocalFunctionContext,
+                oldExpression: IrMemberAccessExpression
+            ): T {
                 val closureParametersCount = calleeContext.closureParametersCount
 
                 mapValueParametersIndexed { index, newValueParameterDescriptor ->
-                    val capturedValueDescriptor = new2old[newValueParameterDescriptor] ?:
-                                                  throw AssertionError("Non-mapped parameter $newValueParameterDescriptor")
+                    val capturedValueDescriptor =
+                        new2old[newValueParameterDescriptor] ?: throw AssertionError("Non-mapped parameter $newValueParameterDescriptor")
                     if (index >= closureParametersCount)
                         oldExpression.getValueArgument(capturedValueDescriptor as ValueParameterDescriptor)
                     else {
                         val remappedValueDescriptor = localFunctionContext?.let { it.old2new[capturedValueDescriptor] }
-                        IrGetValueImpl(oldExpression.startOffset, oldExpression.endOffset,
-                                       remappedValueDescriptor ?: capturedValueDescriptor)
+                        IrGetValueImpl(
+                            oldExpression.startOffset, oldExpression.endOffset,
+                            remappedValueDescriptor ?: capturedValueDescriptor
+                        )
                     }
 
                 }
@@ -159,11 +164,11 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
                 val newCallee = localFunctionData.transformedDescriptor
 
                 return IrFunctionReferenceImpl(
-                        expression.startOffset, expression.endOffset,
-                        expression.type, // TODO functional type for transformed descriptor
-                        newCallee,
-                        remapTypeArguments(expression, newCallee),
-                        expression.origin
+                    expression.startOffset, expression.endOffset,
+                    expression.type, // TODO functional type for transformed descriptor
+                    newCallee,
+                    remapTypeArguments(expression, newCallee),
+                    expression.origin
                 ).fillArguments(localFunctionData, expression)
             }
 
@@ -174,9 +179,11 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
                 val localFunctionData = localFunctions[oldReturnTarget] ?: return expression
                 val newReturnTarget = localFunctionData.transformedDescriptor
 
-                return IrReturnImpl(expression.startOffset, expression.endOffset,
-                                    newReturnTarget,
-                                    expression.value)
+                return IrReturnImpl(
+                    expression.startOffset, expression.endOffset,
+                    newReturnTarget,
+                    expression.value
+                )
             }
         }
 
@@ -193,26 +200,29 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
         }
 
         private fun createNewCall(oldCall: IrCall, newCallee: FunctionDescriptor) =
-                when (oldCall) {
-                    is IrCallWithShallowCopy ->
-                        oldCall.shallowCopy(oldCall.origin, newCallee, oldCall.superQualifier)
-                    else ->
-                        IrCallImpl(
-                                oldCall.startOffset, oldCall.endOffset,
-                                newCallee,
-                                remapTypeArguments(oldCall, newCallee),
-                                oldCall.origin, oldCall.superQualifier
-                        )
-                }
+            when (oldCall) {
+                is IrCallWithShallowCopy ->
+                    oldCall.shallowCopy(oldCall.origin, newCallee, oldCall.superQualifier)
+                else ->
+                    IrCallImpl(
+                        oldCall.startOffset, oldCall.endOffset,
+                        newCallee,
+                        remapTypeArguments(oldCall, newCallee),
+                        oldCall.origin, oldCall.superQualifier
+                    )
+            }
 
-        private fun remapTypeArguments(oldExpression: IrMemberAccessExpression, newCallee: FunctionDescriptor): Map<TypeParameterDescriptor, KotlinType>? {
+        private fun remapTypeArguments(
+            oldExpression: IrMemberAccessExpression,
+            newCallee: FunctionDescriptor
+        ): Map<TypeParameterDescriptor, KotlinType>? {
             val oldCallee = oldExpression.descriptor
 
             return if (oldCallee.typeParameters.isEmpty())
                 null
             else oldCallee.original.typeParameters.associateBy(
-                    { newCallee.typeParameters[it.index] },
-                    { oldExpression.getTypeArgument(it)!! }
+                { newCallee.typeParameters[it.index] },
+                { oldExpression.getTypeArgument(it)!! }
             )
         }
 
@@ -231,33 +241,33 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
         }
 
         private fun generateNameForLiftedFunction(functionDescriptor: FunctionDescriptor): Name =
-                Name.identifier(
-                        functionDescriptor.parentsWithSelf
-                                .takeWhile { it is FunctionDescriptor }
-                                .toList().reversed()
-                                .joinToString(separator = "$") { suggestLocalName(it) }
-                        )
+            Name.identifier(
+                functionDescriptor.parentsWithSelf
+                    .takeWhile { it is FunctionDescriptor }
+                    .toList().reversed()
+                    .joinToString(separator = "$") { suggestLocalName(it) }
+            )
 
         private fun createTransformedDescriptor(localFunctionContext: LocalFunctionContext): FunctionDescriptor {
             val oldDescriptor = localFunctionContext.declaration.descriptor
 
             val memberOwner = memberFunction.descriptor.containingDeclaration
             val newDescriptor = SimpleFunctionDescriptorImpl.create(
-                    memberOwner,
-                    oldDescriptor.annotations,
-                    generateNameForLiftedFunction(oldDescriptor),
-                    CallableMemberDescriptor.Kind.SYNTHESIZED,
-                    oldDescriptor.source
+                memberOwner,
+                oldDescriptor.annotations,
+                generateNameForLiftedFunction(oldDescriptor),
+                CallableMemberDescriptor.Kind.SYNTHESIZED,
+                oldDescriptor.source
             )
 
             val closureParametersCount = localFunctionContext.closureParametersCount
             val newValueParametersCount = closureParametersCount + oldDescriptor.valueParameters.size
 
             val newDispatchReceiverParameter =
-                    if (memberOwner is ClassDescriptor && oldDescriptor.dispatchReceiverParameter != null)
-                        memberOwner.thisAsReceiverParameter
-                    else
-                        null
+                if (memberOwner is ClassDescriptor && oldDescriptor.dispatchReceiverParameter != null)
+                    memberOwner.thisAsReceiverParameter
+                else
+                    null
 
             // Do not substitute type parameters for now.
             val newTypeParameters = oldDescriptor.typeParameters
@@ -277,13 +287,13 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
             }
 
             newDescriptor.initialize(
-                    oldDescriptor.extensionReceiverParameter?.type,
-                    newDispatchReceiverParameter,
-                    newTypeParameters,
-                    newValueParameters,
-                    oldDescriptor.returnType,
-                    Modality.FINAL,
-                    Visibilities.PRIVATE
+                oldDescriptor.extensionReceiverParameter?.type,
+                newDispatchReceiverParameter,
+                newTypeParameters,
+                newValueParameters,
+                oldDescriptor.returnType,
+                Modality.FINAL,
+                Visibilities.PRIVATE
             )
 
             oldDescriptor.extensionReceiverParameter?.let {
@@ -293,39 +303,41 @@ class LocalFunctionsLowering(val context: BackendContext): DeclarationContainerL
             return newDescriptor
         }
 
-        private fun LocalFunctionContext.recordRemapped(oldDescriptor: ValueDescriptor, newDescriptor: ParameterDescriptor): ParameterDescriptor {
+        private fun LocalFunctionContext.recordRemapped(
+            oldDescriptor: ValueDescriptor,
+            newDescriptor: ParameterDescriptor
+        ): ParameterDescriptor {
             old2new[oldDescriptor] = newDescriptor
             new2old[newDescriptor] = oldDescriptor
             return newDescriptor
         }
 
         private fun suggestNameForCapturedValueParameter(valueDescriptor: ValueDescriptor): Name =
-                if (valueDescriptor.name.isSpecial) {
-                    val oldNameStr = valueDescriptor.name.asString()
-                    Name.identifier("$" + oldNameStr.substring(1, oldNameStr.length - 1))
-                }
-                else
-                    valueDescriptor.name
+            if (valueDescriptor.name.isSpecial) {
+                val oldNameStr = valueDescriptor.name.asString()
+                Name.identifier("$" + oldNameStr.substring(1, oldNameStr.length - 1))
+            } else
+                valueDescriptor.name
 
         private fun createUnsubstitutedCapturedValueParameter(
-                newParameterOwner: CallableMemberDescriptor,
-                valueDescriptor: ValueDescriptor,
-                index: Int
+            newParameterOwner: CallableMemberDescriptor,
+            valueDescriptor: ValueDescriptor,
+            index: Int
         ): ValueParameterDescriptor =
-                ValueParameterDescriptorImpl(
-                        newParameterOwner, null, index,
-                        valueDescriptor.annotations,
-                        suggestNameForCapturedValueParameter(valueDescriptor),
-                        valueDescriptor.type,
-                        false, false, false, null, valueDescriptor.source
-                )
+            ValueParameterDescriptorImpl(
+                newParameterOwner, null, index,
+                valueDescriptor.annotations,
+                suggestNameForCapturedValueParameter(valueDescriptor),
+                valueDescriptor.type,
+                false, false, false, null, valueDescriptor.source
+            )
 
         private fun createUnsubstitutedParameter(
-                newParameterOwner: CallableMemberDescriptor,
-                valueParameterDescriptor: ValueParameterDescriptor,
-                newIndex: Int
+            newParameterOwner: CallableMemberDescriptor,
+            valueParameterDescriptor: ValueParameterDescriptor,
+            newIndex: Int
         ): ValueParameterDescriptor =
-                valueParameterDescriptor.copy(newParameterOwner, valueParameterDescriptor.name, newIndex)
+            valueParameterDescriptor.copy(newParameterOwner, valueParameterDescriptor.name, newIndex)
 
 
         private fun collectClosures() {
