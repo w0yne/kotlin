@@ -37,9 +37,6 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
     private val oldCtorToNewMap = mutableMapOf<IrConstructorSymbol, JsIrBackendContext.SecondaryCtorPair>()
 
     override fun lower(irDeclarationContainer: IrDeclarationContainer) {
-//        irDeclarationContainer.accept(this, null)
-
-
         irDeclarationContainer.declarations.transformFlat {
             if (it is IrClass) {
                 listOf(it) + lowerClass(it)
@@ -48,16 +45,6 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
 
         context.secondaryConstructorsMap.putAll(oldCtorToNewMap)
     }
-
-//    override fun visitFile(irFile: IrFile): IrFile {
-//        irFile.declarations.transformFlat { declaration ->
-//            if (declaration is IrClass) {
-//                listOf(declaration) + lowerClass(declaration)
-//            } else null
-//        }
-//
-//        return irFile
-//    }
 
     private fun lowerClass(irClass: IrClass): List<IrSimpleFunction> {
         val className = irClass.name.asString()
@@ -210,6 +197,7 @@ class SecondaryCtorLowering(val context: JsIrBackendContext) : IrElementTransfor
         override fun visitCall(expression: IrCall, ownerFunc: IrFunction?): IrElement {
             super.visitCall(expression, ownerFunc)
 
+            // TODO: figure out the reason why symbol is not bound
             if (expression.symbol.isBound) {
 
                 val target = expression.symbol.owner as IrFunction

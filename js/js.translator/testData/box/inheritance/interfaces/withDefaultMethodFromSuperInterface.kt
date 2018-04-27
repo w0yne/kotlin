@@ -5,7 +5,6 @@ interface I {
 
 interface J : I
 
-open class A : J
-class B : A()
+class A : J
 
-fun box() = B().foo()
+fun box() = A().foo()

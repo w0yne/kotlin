@@ -70,11 +70,10 @@ class JsIntrinsicTransformers(backendContext: JsIrBackendContext) {
                 JsInvocation(Namer.JS_OBJECT_CREATE_FUNCTION, prototype)
             }
 
-            add(backendContext.sharedVariablesManager.closureBoxConstrctorTypeSymbol) { _, args, _ ->
+            add(backendContext.sharedVariablesManager.closureBoxConstructorTypeSymbol) { _, args, _ ->
                 val initializer = args[0]
                 val propertyInit = JsPropertyInitializer(JsNameRef("v"), initializer)
-                val objectLiteral = JsObjectLiteral()
-                objectLiteral.apply { propertyInitializers += propertyInit }
+                JsObjectLiteral(listOf(propertyInit))
             }
         }
     }

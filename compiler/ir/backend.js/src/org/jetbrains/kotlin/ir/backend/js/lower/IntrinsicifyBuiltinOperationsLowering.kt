@@ -101,6 +101,7 @@ class IntrinsicifyBuiltinOperationsLowering(private val context: JsIrBackendCont
                         return irCall(call, it.symbol)
                     }
 
+                    // TODO: get rid of unbound symbols
                     if (symbol.isBound) {
 
                         (symbol.owner as? IrFunction)?.dispatchReceiverParameter?.let {
