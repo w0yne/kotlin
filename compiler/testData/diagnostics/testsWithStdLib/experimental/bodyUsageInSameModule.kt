@@ -46,7 +46,7 @@ inline var inlineUse2: Unit
         <!EXPERIMENTAL_API_USAGE!>compilation<!>()
         <!EXPERIMENTAL_API_USAGE!>linkage<!>()
     }
-    set(value) {
+    set(<!UNUSED_PARAMETER!>value<!>) {
         <!EXPERIMENTAL_API_USAGE!>compilation<!>()
         <!EXPERIMENTAL_API_USAGE!>linkage<!>()
     }
@@ -58,7 +58,7 @@ var inlineUse3: Unit
     }
     @ExperimentalCompilationAPI
     @ExperimentalLinkageAPI
-    inline set(value) {
+    inline set(<!UNUSED_PARAMETER!>value<!>) {
         compilation()
         linkage()
     }
@@ -91,7 +91,7 @@ private inline var privateInline3: Unit
         compilation()
         linkage()
     }
-    set(value) {
+    set(<!UNUSED_PARAMETER!>value<!>) {
         compilation()
         linkage()
     }
