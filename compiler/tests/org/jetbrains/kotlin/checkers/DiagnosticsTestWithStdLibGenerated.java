@@ -2176,6 +2176,11 @@ public class DiagnosticsTestWithStdLibGenerated extends AbstractDiagnosticsTestW
         public void testUseExperimentalWithSeveralAnnotations() throws Exception {
             runTest("compiler/testData/diagnostics/testsWithStdLib/experimental/useExperimentalWithSeveralAnnotations.kt");
         }
+
+        @TestMetadata("wasExperimental.kt")
+        public void testWasExperimental() throws Exception {
+            runTest("compiler/testData/diagnostics/testsWithStdLib/experimental/wasExperimental.kt");
+        }
     }
 
     @TestMetadata("compiler/testData/diagnostics/testsWithStdLib/forInArrayLoop")

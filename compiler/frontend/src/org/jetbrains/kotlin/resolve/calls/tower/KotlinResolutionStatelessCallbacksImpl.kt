@@ -24,6 +24,7 @@ import org.jetbrains.kotlin.resolve.DescriptorToSourceUtils
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isConventionCall
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isInfixCall
 import org.jetbrains.kotlin.resolve.calls.callResolverUtil.isSuperOrDelegatingConstructorCall
+import org.jetbrains.kotlin.resolve.calls.components.KotlinResolutionCallbacks
 import org.jetbrains.kotlin.resolve.calls.components.KotlinResolutionStatelessCallbacks
 import org.jetbrains.kotlin.resolve.calls.model.CallableReferenceKotlinCallArgument
 import org.jetbrains.kotlin.resolve.calls.model.KotlinCall
@@ -46,8 +47,15 @@ class KotlinResolutionStatelessCallbacksImpl(
     override fun isSuperOrDelegatingConstructorCall(kotlinCall: KotlinCall) =
         kotlinCall is PSIKotlinCallImpl && isSuperOrDelegatingConstructorCall(kotlinCall.psiCall)
 
-    override fun isHiddenInResolution(descriptor: DeclarationDescriptor, kotlinCall: KotlinCall) =
-        deprecationResolver.isHiddenInResolution(descriptor, isSuperOrDelegatingConstructorCall(kotlinCall))
+    override fun isHiddenInResolution(
+        descriptor: DeclarationDescriptor, kotlinCall: KotlinCall, resolutionCallbacks: KotlinResolutionCallbacks
+    ) =
+        deprecationResolver.isHiddenInResolution(
+            descriptor,
+            (kotlinCall as? PSIKotlinCall)?.psiCall,
+            (resolutionCallbacks as? KotlinResolutionCallbacksImpl)?.trace?.bindingContext,
+            isSuperOrDelegatingConstructorCall(kotlinCall)
+        )
 
     override fun isSuperExpression(receiver: SimpleKotlinCallArgument?): Boolean =
         receiver?.psiExpression is KtSuperExpression
