@@ -17,7 +17,6 @@
 package org.jetbrains.kotlin.jps.build;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.TestOnly;
 import org.jetbrains.jps.incremental.ModuleBuildTarget;
 import org.jetbrains.jps.model.java.JpsJavaClasspathKind;
 import org.jetbrains.jps.model.java.JpsJavaDependenciesEnumerator;
@@ -84,7 +83,6 @@ class JpsUtils {
         return false;
     }
 
-    @TestOnly
     static void resetCaches() {
         IS_KOTLIN_JS_MODULE_CACHE.clear();
         IS_KOTLIN_JS_STDLIB_JAR_CACHE.clear();
