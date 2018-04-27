@@ -17,7 +17,7 @@ import kotlin.internal.InlineOnly
  * This function creates and start a new, fresh instance of suspendable computation every time it is invoked.
  * The [completion] continuation is invoked when coroutine completes with result or exception.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 public fun <R, T> (suspend R.() -> T).startCoroutine(
         receiver: R,
@@ -31,7 +31,7 @@ public fun <R, T> (suspend R.() -> T).startCoroutine(
  * This function creates and start a new, fresh instance of suspendable computation every time it is invoked.
  * The [completion] continuation is invoked when coroutine completes with result or exception.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 public fun <T> (suspend  () -> T).startCoroutine(
         completion: Continuation<T>
@@ -47,7 +47,7 @@ public fun <T> (suspend  () -> T).startCoroutine(
  * The [completion] continuation is invoked when coroutine completes with result or exception.
  * Repeated invocation of any resume function on the resulting continuation produces [IllegalStateException].
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 public fun <R, T> (suspend R.() -> T).createCoroutine(
         receiver: R,
@@ -62,7 +62,7 @@ public fun <R, T> (suspend R.() -> T).createCoroutine(
  * The [completion] continuation is invoked when coroutine completes with result or exception.
  * Repeated invocation of any resume function on the resulting continuation produces [IllegalStateException].
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 public fun <T> (suspend () -> T).createCoroutine(
         completion: Continuation<T>
@@ -76,7 +76,7 @@ public fun <T> (suspend () -> T).createCoroutine(
  * the same stack-frame where suspension function is run or asynchronously later in the same thread or
  * from a different thread of execution. Repeated invocation of any resume function produces [IllegalStateException].
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public suspend inline fun <T> suspendCoroutine(crossinline block: (Continuation<T>) -> Unit): T =
         suspendCoroutineOrReturn { c: Continuation<T> ->
             val safe = SafeContinuation(c)
@@ -92,7 +92,7 @@ public suspend inline fun <T> suspendCoroutine(crossinline block: (Continuation<
  * and [async](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/async.html),
  * but still provide easy access to coroutine context.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("WRONG_MODIFIER_TARGET")
 @InlineOnly
 public suspend inline val coroutineContext: CoroutineContext
@@ -102,7 +102,7 @@ public suspend inline val coroutineContext: CoroutineContext
 
 // INTERNAL DECLARATIONS
 
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @kotlin.internal.InlineOnly
 internal inline fun processBareContinuationResume(completion: Continuation<*>, block: () -> Any?) {
     try {

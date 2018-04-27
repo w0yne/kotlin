@@ -28,7 +28,7 @@ import kotlin.coroutines.*
  * in the same stackframe where suspension function is run. Use [suspendCoroutine] as a safer way to obtain current
  * continuation instance.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @kotlin.internal.InlineOnly
 @Suppress("UNUSED_PARAMETER")
 public suspend inline fun <T> suspendCoroutineOrReturn(crossinline block: (Continuation<T>) -> Any?): T =
@@ -40,7 +40,7 @@ public suspend inline fun <T> suspendCoroutineOrReturn(crossinline block: (Conti
  *
  * Unlike [suspendCoroutineOrReturn] it does not intercept continuation.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @kotlin.internal.InlineOnly
 public suspend inline fun <T> suspendCoroutineUninterceptedOrReturn(crossinline block: (Continuation<T>) -> Any?): T =
         throw NotImplementedError("Implementation of suspendCoroutineUninterceptedOrReturn is intrinsic")
@@ -48,7 +48,7 @@ public suspend inline fun <T> suspendCoroutineUninterceptedOrReturn(crossinline 
 /**
  * Intercept continuation with [ContinuationInterceptor].
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @kotlin.internal.InlineOnly
 public inline fun <T> Continuation<T>.intercepted(): Continuation<T> =
         throw NotImplementedError("Implementation of intercepted is intrinsic")
@@ -57,6 +57,6 @@ public inline fun <T> Continuation<T>.intercepted(): Continuation<T> =
  * This value is used as a return value of [suspendCoroutineOrReturn] `block` argument to state that
  * the execution was suspended and will not return any result immediately.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public val COROUTINE_SUSPENDED: Any = Any()
 

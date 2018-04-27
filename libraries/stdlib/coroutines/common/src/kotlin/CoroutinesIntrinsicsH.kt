@@ -14,7 +14,7 @@ import kotlin.coroutines.Continuation
  * This function is designed to be used from inside of [suspendCoroutineOrReturn] to resume the execution of suspended
  * coroutine using a reference to the suspending function.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public expect inline fun <T> (suspend () -> T).startCoroutineUninterceptedOrReturn(
         completion: Continuation<T>
 ): Any?
@@ -26,18 +26,18 @@ public expect inline fun <T> (suspend () -> T).startCoroutineUninterceptedOrRetu
  * This function is designed to be used from inside of [suspendCoroutineOrReturn] to resume the execution of suspended
  * coroutine using a reference to the suspending function.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public expect inline fun <R, T> (suspend R.() -> T).startCoroutineUninterceptedOrReturn(
         receiver: R,
         completion: Continuation<T>
 ): Any?
 
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public expect fun <T> (suspend () -> T).createCoroutineUnchecked(
         completion: Continuation<T>
 ): Continuation<Unit>
 
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public expect fun <R, T> (suspend R.() -> T).createCoroutineUnchecked(
         receiver: R,
         completion: Continuation<T>

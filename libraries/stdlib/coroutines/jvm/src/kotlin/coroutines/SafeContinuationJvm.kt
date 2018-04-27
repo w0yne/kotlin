@@ -10,7 +10,7 @@ import kotlin.*
 import kotlin.coroutines.intrinsics.COROUTINE_SUSPENDED
 
 @PublishedApi
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 internal actual class SafeContinuation<in T>
 internal actual constructor(
         private val delegate: Continuation<T>,

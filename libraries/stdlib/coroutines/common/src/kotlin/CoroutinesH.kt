@@ -6,7 +6,7 @@
 package kotlin.coroutines
 
 @PublishedApi
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 internal expect class SafeContinuation<in T> : Continuation<T> {
     internal constructor(delegate: Continuation<T>, initialResult: Any?)
 

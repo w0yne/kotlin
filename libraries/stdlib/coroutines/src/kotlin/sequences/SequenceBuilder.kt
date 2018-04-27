@@ -19,7 +19,7 @@ import kotlin.coroutines.intrinsics.*
  * @sample samples.collections.Sequences.Building.buildSequenceYieldAll
  * @sample samples.collections.Sequences.Building.buildFibonacciSequence
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public fun <T> buildSequence(builderAction: suspend SequenceBuilder<T>.() -> Unit): Sequence<T> = Sequence { buildIterator(builderAction) }
 
 /**
@@ -28,7 +28,7 @@ public fun <T> buildSequence(builderAction: suspend SequenceBuilder<T>.() -> Uni
  * @sample samples.collections.Sequences.Building.buildIterator
  * @sample samples.collections.Iterables.Building.iterable
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public fun <T> buildIterator(builderAction: suspend SequenceBuilder<T>.() -> Unit): Iterator<T> {
     val iterator = SequenceBuilderIterator<T>()
     iterator.nextStep = builderAction.createCoroutineUnchecked(receiver = iterator, completion = iterator)
@@ -45,7 +45,7 @@ public fun <T> buildIterator(builderAction: suspend SequenceBuilder<T>.() -> Uni
  * @sample samples.collections.Sequences.Building.buildFibonacciSequence
  */
 @RestrictsSuspension
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public abstract class SequenceBuilder<in T> internal constructor() {
     /**
      * Yields a value to the [Iterator] being built.

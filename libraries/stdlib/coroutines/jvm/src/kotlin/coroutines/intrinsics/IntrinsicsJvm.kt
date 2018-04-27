@@ -17,7 +17,7 @@ import kotlin.coroutines.*
  * This function is designed to be used from inside of [suspendCoroutineOrReturn] to resume the execution of suspended
  * coroutine using a reference to the suspending function.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 @kotlin.internal.InlineOnly
 public actual inline fun <T> (suspend () -> T).startCoroutineUninterceptedOrReturn(
@@ -31,7 +31,7 @@ public actual inline fun <T> (suspend () -> T).startCoroutineUninterceptedOrRetu
  * This function is designed to be used from inside of [suspendCoroutineOrReturn] to resume the execution of suspended
  * coroutine using a reference to the suspending function.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("UNCHECKED_CAST")
 @kotlin.internal.InlineOnly
 public actual inline fun <R, T> (suspend R.() -> T).startCoroutineUninterceptedOrReturn(
@@ -52,7 +52,7 @@ public actual inline fun <R, T> (suspend R.() -> T).startCoroutineUninterceptedO
  * This function is _unchecked_. Repeated invocation of any resume function on the resulting continuation corrupts the
  * state machine of the coroutine and may result in arbitrary behaviour or exception.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public actual fun <T> (suspend () -> T).createCoroutineUnchecked(
         completion: Continuation<T>
 ): Continuation<Unit> =
@@ -74,7 +74,7 @@ public actual fun <T> (suspend () -> T).createCoroutineUnchecked(
  * This function is _unchecked_. Repeated invocation of any resume function on the resulting continuation corrupts the
  * state machine of the coroutine and may result in arbitrary behaviour or exception.
  */
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 public actual fun <R, T> (suspend R.() -> T).createCoroutineUnchecked(
         receiver: R,
         completion: Continuation<T>

@@ -28,7 +28,7 @@ import kotlin.reflect.KClass
  */
 @Target(ANNOTATION_CLASS)
 @Retention(BINARY)
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 @Suppress("ANNOTATION_CLASS_WITH_BODY", "ANNOTATION_CLASS_MEMBER", "ReplaceArrayOfWithLiteral")
 annotation class Experimental(
     val level: Level = Level.ERROR,
@@ -87,7 +87,7 @@ annotation class Experimental(
  */
 @Target(CLASS, PROPERTY, LOCAL_VARIABLE, VALUE_PARAMETER, CONSTRUCTOR, FUNCTION, PROPERTY_GETTER, PROPERTY_SETTER, EXPRESSION, FILE)
 @Retention(SOURCE)
-@SinceKotlin("1.3")
+/* @SinceKotlin("1.3") */
 annotation class UseExperimental(
     vararg val markerClass: KClass<out Annotation>
 )
