@@ -63,7 +63,7 @@ class JvmLower(val context: JvmBackendContext) {
         ObjectClassLowering(context).lower(irFile)
         InitializersLowering(context, JvmLoweredDeclarationOrigin.CLASS_STATIC_INITIALIZER, true).runOnFilePostfix(irFile)
         SingletonReferencesLowering(context).runOnFilePostfix(irFile)
-        SyntheticAccessorLowering(context).lower(irFile)
+        //SyntheticAccessorLowering(context).lower(irFile)
         BridgeLowering(context).runOnFilePostfix(irFile)
 
         TailrecLowering(context).runOnFilePostfix(irFile)

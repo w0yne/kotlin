@@ -154,7 +154,6 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
                     if (index >= closureParametersCount)
                         oldExpression.getValueArgument(capturedValueDescriptor as ValueParameterDescriptor)
                     else {
-
                         val remapped = localFunctionContext?.let { localFunctionContext.new2ir[it] }
                         IrGetValueImpl(
                             oldExpression.startOffset, oldExpression.endOffset,

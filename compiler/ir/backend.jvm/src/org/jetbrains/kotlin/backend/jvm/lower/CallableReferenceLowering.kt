@@ -338,11 +338,11 @@ class CallableReferenceLowering(val context: JvmBackendContext): FileLoweringPas
                 val endOffset = irFunctionReference.endOffset
                 val ourSymbol = symbol
                 return IrFunctionImpl(
-                        startOffset = startOffset,
-                        endOffset = endOffset,
-                        origin = DECLARATION_ORIGIN_FUNCTION_REFERENCE_IMPL,
-                        symbol = ourSymbol).apply {
-
+                    startOffset = startOffset,
+                    endOffset = endOffset,
+                    origin = DECLARATION_ORIGIN_FUNCTION_REFERENCE_IMPL,
+                    symbol = ourSymbol
+                ).apply {
                     val function = this
                     val irBuilder = context.createIrBuilder(function.symbol, startOffset, endOffset)
 
@@ -357,7 +357,7 @@ class CallableReferenceLowering(val context: JvmBackendContext): FileLoweringPas
                                         val argument =
                                                 if (!unboundArgsSet.contains(it))
                                                 // Bound parameter - read from field.
-                                                    irGetField(irGet(functionReferenceThis), argumentToPropertiesMap[it]!!)
+                                                    irGetField(irGet(dispatchReceiverParameter!!.symbol), argumentToPropertiesMap[it]!!)
                                                 else {
                                                     if (ourSymbol.descriptor.isSuspend && unboundIndex == valueParameters.size)
                                                     // For suspend functions the last argument is continuation and it is implicit.
