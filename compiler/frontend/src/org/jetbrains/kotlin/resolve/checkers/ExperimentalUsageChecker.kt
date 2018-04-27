@@ -26,9 +26,7 @@ import org.jetbrains.kotlin.diagnostics.Errors
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import org.jetbrains.kotlin.psi.KtAnnotated
-import org.jetbrains.kotlin.psi.KtDeclaration
-import org.jetbrains.kotlin.psi.KtNamedDeclaration
+import org.jetbrains.kotlin.psi.*
 import org.jetbrains.kotlin.resolve.*
 import org.jetbrains.kotlin.resolve.calls.checkers.CallChecker
 import org.jetbrains.kotlin.resolve.calls.checkers.CallCheckerContext
@@ -245,13 +243,47 @@ class ExperimentalUsageChecker(project: Project) : CallChecker {
 
             val experimentalities = targetDescriptor.loadExperimentalities(moduleAnnotationsResolver)
             reportNotAcceptedExperimentalities(experimentalities, element, context)
+
+            val targetClass = when (targetDescriptor) {
+                is ClassDescriptor -> targetDescriptor
+                is TypeAliasDescriptor -> targetDescriptor.classDescriptor
+                else -> null
+            }
+            if (targetClass != null && targetClass.loadExperimentalityForMarkerAnnotation() != null) {
+                if (!element.isUsageAsAnnotationOrQualifier() && !element.isUsageAsUseExperimentalArgument(context.trace.bindingContext)) {
+                    context.trace.report(
+                        Errors.EXPERIMENTAL_MARKER_CAN_ONLY_BE_USED_AS_ANNOTATION_OR_ARGUMENT_IN_USE_EXPERIMENTAL.on(element)
+                    )
+                }
+            }
         }
 
         private fun checkUsageOfKotlinExperimentalOrUseExperimental(element: PsiElement, context: CheckerContext) {
             if (EXPERIMENTAL_FQ_NAME.asString() !in context.languageVersionSettings.getFlag(AnalysisFlag.useExperimental)) {
                 context.trace.report(Errors.EXPERIMENTAL_IS_NOT_ENABLED.on(element))
             }
+
+            if (!element.isUsageAsAnnotationOrQualifier()) {
+                context.trace.report(Errors.EXPERIMENTAL_CAN_ONLY_BE_USED_AS_ANNOTATION.on(element))
+            }
         }
+
+        private fun PsiElement.isUsageAsAnnotationOrQualifier(): Boolean =
+            if (parent is KtUserType)
+                parent.parent is KtTypeReference &&
+                        parent.parent.parent is KtConstructorCalleeExpression &&
+                        parent.parent.parent.parent is KtAnnotationEntry
+            else true // TODO: disallow usages on LHS of class literals
+
+        private fun PsiElement.isUsageAsUseExperimentalArgument(bindingContext: BindingContext): Boolean =
+            parent is KtClassLiteralExpression &&
+                    parent.parent is KtValueArgument &&
+                    parent.parent.parent is KtValueArgumentList &&
+                    parent.parent.parent.parent.let { entry ->
+                        entry is KtAnnotationEntry && bindingContext.get(BindingContext.ANNOTATION, entry)?.let { annotation ->
+                            annotation.fqName == USE_EXPERIMENTAL_FQ_NAME
+                        } == true
+                    }
     }
 
     class Overrides(project: Project) : DeclarationChecker {
