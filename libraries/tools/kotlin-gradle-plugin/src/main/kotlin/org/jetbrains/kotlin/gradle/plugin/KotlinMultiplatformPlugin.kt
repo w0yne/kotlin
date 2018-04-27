@@ -18,6 +18,7 @@ package org.jetbrains.kotlin.gradle.plugin
 
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.GradleException
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.ProjectDependency
@@ -25,7 +26,6 @@ import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.SourceSetContainer
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompile
 
 abstract class KotlinPlatformPluginBase(protected val platformName: String) : Plugin<Project> {
@@ -51,11 +51,8 @@ const val IMPLEMENT_DEPRECATION_WARNING = "The '$IMPLEMENT_CONFIG_NAME' configur
 
 open class KotlinPlatformImplementationPluginBase(platformName: String) : KotlinPlatformPluginBase(platformName) {
     private val commonProjects = arrayListOf<Project>()
-    private val platformKotlinTasksBySourceSetName = hashMapOf<String, AbstractKotlinCompile<*>>()
 
     override fun apply(project: Project) {
-        project.tasks.filterIsInstance<AbstractKotlinCompile<*>>().associateByTo(platformKotlinTasksBySourceSetName) { it.sourceSetName }
-
         val implementConfig = project.configurations.create(IMPLEMENT_CONFIG_NAME)
         val expectedByConfig = project.configurations.create(EXPECTED_BY_CONFIG_NAME)
 
@@ -107,16 +104,48 @@ open class KotlinPlatformImplementationPluginBase(platformName: String) : Kotlin
                         "dependency to non-common project $commonProject")
             }
 
-            commonProject.sourceSets.all { commonSourceSet ->
-                // todo: warn if not found
+            // Since the two projects may add source sets in arbitrary order, and both may do that after the plugin is applied,
+            // we need to handle all source sets of the two projects and connect them once we've got a match:
+            // todo warn if no match found
+            matchSymmetricallyByNames(commonProject.sourceSets, platformProject.sourceSets) { commonSourceSet, _ ->
                 addCommonSourceSetToPlatformSourceSet(commonSourceSet, platformProject)
             }
         }
     }
 
+    /**
+     * Applies [whenMatched] to pairs of items with the same name in [containerA] and [containerB],
+     * regardless of the order in which they are added to the containers.
+     */
+    private fun <A, B> matchSymmetricallyByNames(
+        containerA: NamedDomainObjectContainer<A>,
+        containerB: NamedDomainObjectContainer<B>,
+        whenMatched: (A, B) -> Unit
+    ) {
+        val matchedNames = mutableSetOf<String>()
+
+        fun <T, R> NamedDomainObjectContainer<T>.matchAllWith(other: NamedDomainObjectContainer<R>, match: (T, R) -> Unit) {
+            this@matchAllWith.all { item ->
+                val itemName = this@matchAllWith.namer.determineName(item)
+                if (itemName !in matchedNames) {
+                    val otherItem = other.findByName(itemName)
+                    if (otherItem != null) {
+                        matchedNames += itemName
+                        match(item, otherItem)
+                    }
+                }
+            }
+        }
+        containerA.matchAllWith(containerB) { a, b -> whenMatched(a, b) }
+        containerB.matchAllWith(containerA) { b, a -> whenMatched(a, b) }
+    }
+
     protected open fun addCommonSourceSetToPlatformSourceSet(commonSourceSet: SourceSet, platformProject: Project) {
-        val platformTask = platformKotlinTasksBySourceSetName[commonSourceSet.name]
-        commonSourceSet.kotlin!!.srcDirs.forEach { platformTask?.source(it) }
+        val platformTask = platformProject.tasks
+            .filterIsInstance<AbstractKotlinCompile<*>>()
+            .firstOrNull { it.sourceSetName == commonSourceSet.name }
+
+        platformTask?.source(commonSourceSet.kotlin)
     }
 
     protected val SourceSet.kotlin: SourceDirectorySet?
