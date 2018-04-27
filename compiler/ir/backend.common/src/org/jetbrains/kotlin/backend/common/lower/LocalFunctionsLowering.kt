@@ -25,13 +25,11 @@ import org.jetbrains.kotlin.descriptors.impl.SimpleFunctionDescriptorImpl
 import org.jetbrains.kotlin.descriptors.impl.ValueParameterDescriptorImpl
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrDeclaration
-import org.jetbrains.kotlin.ir.declarations.IrDeclarationContainer
-import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.declarations.impl.IrFunctionImpl
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
+import org.jetbrains.kotlin.ir.util.createParameterDeclarations
 import org.jetbrains.kotlin.ir.util.transformFlat
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
@@ -60,8 +58,11 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
         lateinit var transformedDescriptor: FunctionDescriptor
 
         val old2new: MutableMap<ValueDescriptor, ParameterDescriptor> = HashMap()
+        val new2ir: MutableMap<ParameterDescriptor, IrValueParameter> = HashMap()
 
         var index: Int = -1
+
+        lateinit var newDeclaration: IrFunction
 
         override fun toString(): String =
             "LocalFunctionContext for ${declaration.descriptor}"
@@ -79,22 +80,34 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
 
             transformDescriptors()
 
-            rewriteBodies()
-
-            return collectRewrittenDeclarations()
+            return createNewDeclarations().also {
+                rewriteBodies()
+            }
         }
 
-        private fun collectRewrittenDeclarations(): ArrayList<IrDeclaration> =
+        private fun createNewDeclarations(): ArrayList<IrDeclaration> =
             ArrayList<IrDeclaration>(localFunctions.size + 1).apply {
                 add(memberFunction)
 
-                localFunctions.values.mapTo(this) {
-                    val original = it.declaration
+                localFunctions.values.mapTo(this) { context: LocalFunctionContext ->
+                    val original = context.declaration
                     IrFunctionImpl(
                         original.startOffset, original.endOffset, original.origin,
-                        it.transformedDescriptor,
+                        context.transformedDescriptor,
                         original.body
-                    )
+                    ).also {
+                        context.newDeclaration = it
+                        it.createParameterDeclarations()
+                        it.valueParameters.map { parameter ->
+                            context.new2ir[parameter.descriptor] = parameter
+                        }
+                        it.extensionReceiverParameter?.let { parameter ->
+                            context.new2ir[parameter.descriptor] = parameter
+                        }
+                        it.dispatchReceiverParameter?.let { parameter ->
+                            context.new2ir[parameter.descriptor] = parameter
+                        }
+                    }
                 }
             }
 
@@ -111,11 +124,11 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
             }
 
             override fun visitGetValue(expression: IrGetValue): IrExpression {
-                val remapped = localFunctionContext?.let { it.old2new[expression.descriptor] }
+                val remapped = localFunctionContext?.let { it.old2new[expression.descriptor]?.let { localFunctionContext.new2ir[it] } }
                 return if (remapped == null)
                     expression
                 else
-                    IrGetValueImpl(expression.startOffset, expression.endOffset, remapped, expression.origin)
+                    IrGetValueImpl(expression.startOffset, expression.endOffset, remapped.symbol, expression.origin)
             }
 
             override fun visitCall(expression: IrCall): IrExpression {
@@ -141,10 +154,11 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
                     if (index >= closureParametersCount)
                         oldExpression.getValueArgument(capturedValueDescriptor as ValueParameterDescriptor)
                     else {
-                        val remappedValueDescriptor = localFunctionContext?.let { it.old2new[capturedValueDescriptor] }
+
+                        val remapped = localFunctionContext?.let { localFunctionContext.new2ir[it] }
                         IrGetValueImpl(
                             oldExpression.startOffset, oldExpression.endOffset,
-                            remappedValueDescriptor ?: capturedValueDescriptor
+                            remapped!!.symbol
                         )
                     }
 
@@ -193,7 +207,7 @@ class LocalFunctionsLowering(val context: BackendContext) : DeclarationContainer
 
         private fun rewriteBodies() {
             localFunctions.values.forEach {
-                rewriteFunctionDeclaration(it.declaration, it)
+                rewriteFunctionDeclaration(it.newDeclaration, it)
             }
 
             rewriteFunctionDeclaration(memberFunction, null)
