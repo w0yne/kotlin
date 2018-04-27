@@ -59,11 +59,13 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
         private fun createOuterThisField() {
             outerThisFieldDescriptor = context.specialDescriptorsFactory.getOuterThisFieldDescriptor(irClass.descriptor)
 
-            irClass.declarations.add(IrFieldImpl(
+            irClass.declarations.add(
+                IrFieldImpl(
                     irClass.startOffset, irClass.endOffset,
                     JvmLoweredDeclarationOrigin.FIELD_FOR_OUTER_THIS,
                     outerThisFieldDescriptor
-            ))
+                )
+            )
         }
 
         private fun lowerConstructors() {
@@ -93,29 +95,28 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
             if (instanceInitializerIndex >= 0) {
                 // Initializing constructor: initialize 'this.this$0' with '$outer'
                 blockBody.statements.add(
-                        instanceInitializerIndex,
-                        IrSetFieldImpl(
-                                startOffset, endOffset, outerThisFieldDescriptor,
-                                IrGetValueImpl(startOffset, endOffset, classDescriptor.thisAsReceiverParameter),
-                                IrGetValueImpl(startOffset, endOffset, outerThisValueParameter)
-                        )
+                    instanceInitializerIndex,
+                    IrSetFieldImpl(
+                        startOffset, endOffset, outerThisFieldDescriptor,
+                        IrGetValueImpl(startOffset, endOffset, classDescriptor.thisAsReceiverParameter),
+                        IrGetValueImpl(startOffset, endOffset, outerThisValueParameter)
+                    )
                 )
-            }
-            else {
+            } else {
                 // Delegating constructor: invoke old constructor with dispatch receiver '$outer'
-                val delegatingConstructorCall = (blockBody.statements.find { it is IrDelegatingConstructorCall } ?:
-                                                 throw AssertionError("Delegating constructor call expected: ${irConstructor.dump()}")
-                                                ) as IrDelegatingConstructorCall
+                val delegatingConstructorCall = (blockBody.statements.find { it is IrDelegatingConstructorCall }
+                        ?: throw AssertionError("Delegating constructor call expected: ${irConstructor.dump()}")
+                        ) as IrDelegatingConstructorCall
                 delegatingConstructorCall.dispatchReceiver = IrGetValueImpl(
-                        delegatingConstructorCall.startOffset, delegatingConstructorCall.endOffset, outerThisValueParameter
+                    delegatingConstructorCall.startOffset, delegatingConstructorCall.endOffset, outerThisValueParameter
                 )
             }
 
             return IrConstructorImpl(
-                    startOffset, endOffset,
-                    irConstructor.origin, // TODO special origin for lowered inner class constructors?
-                    newDescriptor,
-                    blockBody
+                startOffset, endOffset,
+                irConstructor.origin, // TODO special origin for lowered inner class constructors?
+                newDescriptor,
+                blockBody
             )
         }
 
@@ -128,14 +129,13 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
 
 
                 override fun visitClass(declaration: IrClass): IrStatement =
-                        //TODO: maybe add another transformer that skips specified elements
-                        declaration
+                //TODO: maybe add another transformer that skips specified elements
+                    declaration
 
                 override fun visitGetValue(expression: IrGetValue): IrExpression {
                     expression.transformChildrenVoid(this)
 
-                    val implicitThisClass = expression.descriptor.getClassDescriptorForImplicitThis() ?:
-                                            return expression
+                    val implicitThisClass = expression.descriptor.getClassDescriptorForImplicitThis() ?: return expression
 
                     if (implicitThisClass == classDescriptor) return expression
 
@@ -158,7 +158,7 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
 
                         val outer = classDescriptor.containingDeclaration
                         innerClass = outer as? ClassDescriptor ?:
-                                     throw AssertionError("Unexpected containing declaration for inner class $innerClass: $outer")
+                                throw AssertionError("Unexpected containing declaration for inner class $innerClass: $outer")
                     }
 
                     return irThis
@@ -190,13 +190,13 @@ class InnerClassConstructorCallsLowering(val context: JvmBackendContext) : BodyL
 
                 val newCallee = context.specialDescriptorsFactory.getInnerClassConstructorWithOuterThisParameter(callee)
                 val newCall = IrCallImpl(
-                        expression.startOffset, expression.endOffset, newCallee,
-                        null, // TODO type arguments map
-                        expression.origin
+                    expression.startOffset, expression.endOffset, newCallee,
+                    null, // TODO type arguments map
+                    expression.origin
                 )
 
                 newCall.putValueArgument(0, dispatchReceiver)
-                for (i in 1 .. newCallee.valueParameters.lastIndex) {
+                for (i in 1..newCallee.valueParameters.lastIndex) {
                     newCall.putValueArgument(i, expression.getValueArgument(i - 1))
                 }
 
@@ -212,12 +212,12 @@ class InnerClassConstructorCallsLowering(val context: JvmBackendContext) : BodyL
 
                 val newCallee = context.specialDescriptorsFactory.getInnerClassConstructorWithOuterThisParameter(callee)
                 val newCall = IrDelegatingConstructorCallImpl(
-                        expression.startOffset, expression.endOffset, newCallee,
-                        null // TODO type arguments map
+                    expression.startOffset, expression.endOffset, newCallee,
+                    null // TODO type arguments map
                 )
 
                 newCall.putValueArgument(0, dispatchReceiver)
-                for (i in 1 .. newCallee.valueParameters.lastIndex) {
+                for (i in 1..newCallee.valueParameters.lastIndex) {
                     newCall.putValueArgument(i, expression.getValueArgument(i - 1))
                 }
 
