@@ -24,10 +24,12 @@ import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.impl.IrConstructorImpl
 import org.jetbrains.kotlin.ir.declarations.impl.IrFieldImpl
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
+import org.jetbrains.kotlin.ir.util.createParameterDeclarations
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.transformFlat
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
@@ -45,7 +47,7 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
 
         lateinit var outerThisFieldDescriptor: PropertyDescriptor
 
-        val oldConstructorParameterToNew = HashMap<ValueDescriptor, ValueDescriptor>()
+        val oldConstructorParameterToNew = HashMap<ValueDescriptor, IrValueParameter>()
 
         fun lowerInnerClass() {
             if (!irClass.descriptor.isInner) return
@@ -83,10 +85,17 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
             val endOffset = irConstructor.endOffset
 
             val newDescriptor = context.specialDescriptorsFactory.getInnerClassConstructorWithOuterThisParameter(oldDescriptor)
-            val outerThisValueParameter = newDescriptor.valueParameters[0]
+            val loweredConstructor = IrConstructorImpl(
+                startOffset, endOffset,
+                irConstructor.origin, // TODO special origin for lowered inner class constructors?
+                newDescriptor,
+                null
+            )
+            loweredConstructor.createParameterDeclarations()
+            val outerThisValueParameter = loweredConstructor.valueParameters[0].symbol
 
             oldDescriptor.valueParameters.forEach { oldValueParameter ->
-                oldConstructorParameterToNew[oldValueParameter] = newDescriptor.valueParameters[oldValueParameter.index + 1]
+                oldConstructorParameterToNew[oldValueParameter] = loweredConstructor.valueParameters[oldValueParameter.index + 1]
             }
 
             val blockBody = irConstructor.body as? IrBlockBody ?: throw AssertionError("Unexpected constructor body: ${irConstructor.body}")
@@ -98,7 +107,7 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
                     instanceInitializerIndex,
                     IrSetFieldImpl(
                         startOffset, endOffset, outerThisFieldDescriptor,
-                        IrGetValueImpl(startOffset, endOffset, classDescriptor.thisAsReceiverParameter),
+                        IrGetValueImpl(startOffset, endOffset, irClass.thisReceiver!!.symbol),
                         IrGetValueImpl(startOffset, endOffset, outerThisValueParameter)
                     )
                 )
@@ -112,12 +121,8 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
                 )
             }
 
-            return IrConstructorImpl(
-                startOffset, endOffset,
-                irConstructor.origin, // TODO special origin for lowered inner class constructors?
-                newDescriptor,
-                blockBody
-            )
+            loweredConstructor.body = blockBody
+            return loweredConstructor
         }
 
         private fun lowerConstructorParameterUsages() {
@@ -143,7 +148,7 @@ class InnerClassesLowering(val context: JvmBackendContext) : ClassLoweringPass {
                     val endOffset = expression.endOffset
                     val origin = expression.origin
 
-                    var irThis: IrExpression = IrGetValueImpl(startOffset, endOffset, classDescriptor.thisAsReceiverParameter, origin)
+                    var irThis: IrExpression = IrGetValueImpl(startOffset, endOffset, irClass.thisReceiver!!.symbol, origin)
                     var innerClass = classDescriptor
 
                     while (innerClass != implicitThisClass) {

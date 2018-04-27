@@ -16,24 +16,23 @@
 
 package org.jetbrains.kotlin.backend.jvm.lower
 
-import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ValueDescriptor
-import org.jetbrains.kotlin.descriptors.VariableDescriptor
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrGetValueImpl
 import org.jetbrains.kotlin.ir.visitors.IrElementTransformerVoid
 
 abstract class AbstractVariableRemapper : IrElementTransformerVoid() {
-    protected abstract fun remapVariable(value: ValueDescriptor): ValueDescriptor?
+    protected abstract fun remapVariable(value: ValueDescriptor): IrValueParameter?
 
     override fun visitGetValue(expression: IrGetValue): IrExpression =
         remapVariable(expression.descriptor)?.let {
-            IrGetValueImpl(expression.startOffset, expression.endOffset, it, expression.origin)
+            IrGetValueImpl(expression.startOffset, expression.endOffset, it.symbol, expression.origin)
         } ?: expression
 }
 
-class VariableRemapper(val mapping: Map<ValueDescriptor, ValueDescriptor>) : AbstractVariableRemapper() {
-    override fun remapVariable(value: ValueDescriptor): ValueDescriptor? =
+class VariableRemapper(val mapping: Map<ValueDescriptor, IrValueParameter>) : AbstractVariableRemapper() {
+    override fun remapVariable(value: ValueDescriptor): IrValueParameter? =
         mapping[value]
 }
