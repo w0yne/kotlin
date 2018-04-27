@@ -13,9 +13,19 @@ import com.intellij.openapi.projectRoots.Sdk
 import com.intellij.openapi.roots.JdkOrderEntry
 import com.intellij.openapi.roots.LibraryOrderEntry
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.roots.ProjectRootModificationTracker
+import com.intellij.psi.util.CachedValueProvider
 import org.jetbrains.kotlin.resolve.TargetPlatform
 
-fun collectAllModuleInfosFromIdeaModel(project: Project, platform: TargetPlatform): List<IdeaModuleInfo> {
+fun getModuleInfosFromIdeaModel(project: Project, platform: TargetPlatform): List<IdeaModuleInfo> =
+    project.cached(CachedValueProvider {
+        CachedValueProvider.Result(collectModuleInfosFromIdeaModel(project, platform), ProjectRootModificationTracker.getInstance(project))
+    })
+
+private fun collectModuleInfosFromIdeaModel(
+    project: Project,
+    platform: TargetPlatform
+): List<IdeaModuleInfo> {
     val ideaModules = ModuleManager.getInstance(project).modules.toList()
     val modulesSourcesInfos = ideaModules.flatMap(Module::correspondingModuleInfos)
 
