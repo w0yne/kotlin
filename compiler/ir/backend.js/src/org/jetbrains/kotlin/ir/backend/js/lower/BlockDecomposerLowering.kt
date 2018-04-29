@@ -461,17 +461,19 @@ class BlockDecomposerLowering(val context: JsIrBackendContext) : FunctionLowerin
             argResults: List<Pair<IrExpression?, VisitResult?>>,
             toDecompose: Int,
             newStatements: MutableList<IrStatement>
-        ): List<IrExpression?> = argResults.map {
-            val original = it.first
-            val result = it.second
+        ): List<IrExpression?> {
             var decomposed = 0
-            val needWrap = decomposed < toDecompose
-            original?.let {
-                val evaluated = result!!.evaluate(it) {
-                    newStatements += statements
-                    resultValue.apply { decomposed++ }
+            return argResults.map {
+                val original = it.first
+                val result = it.second
+                val needWrap = decomposed < toDecompose
+                original?.let {
+                    val evaluated = result!!.evaluate(it) {
+                        newStatements += statements
+                        resultValue.apply { decomposed++ }
+                    }
+                    prepareArgument(evaluated, needWrap, newStatements)
                 }
-                prepareArgument(evaluated, needWrap, newStatements)
             }
         }
 
